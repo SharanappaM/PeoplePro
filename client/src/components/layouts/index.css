@@ -1,0 +1,5 @@
+.activeLink {
+    background-color: #f0f0f0;  /* Active background */
+    color: #1976d2;  /* Active text color */
+    font-weight: bold;  /* Optional: Make active text bold */
+}
