@@ -12,7 +12,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
-import { Link ,NavLink} from 'react-router-dom';
+import { Link ,NavLink, Outlet} from 'react-router-dom';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import { Typography,Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar ,Box,AppBar,Drawer} from '@mui/material';
@@ -20,7 +20,7 @@ import CardTravelIcon from '@mui/icons-material/CardTravel';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-const drawerWidth = 260;
+const drawerWidth = 270;
 
 
 
@@ -68,7 +68,7 @@ function Dashboard(props) {
            
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={NavLink} to="/home">
+                    <ListItemButton component={NavLink} to="">
                         <ListItemIcon>
                             <HomeIcon/>
                         </ListItemIcon>
@@ -79,7 +79,7 @@ function Dashboard(props) {
 
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="employees">
                         <ListItemIcon>
                             <GroupIcon/>
                         </ListItemIcon>
@@ -99,19 +99,19 @@ function Dashboard(props) {
                 </ListItemButton>
                 <Collapse in={openSubMenu === 'coreHR'} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/core-hr/department">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/department">
                             <ListItemIcon>
                               
                             </ListItemIcon>
                             <ListItemText primary="Department" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/core-hr/designation">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/designation">
                             <ListItemIcon>
                               
                             </ListItemIcon>
                             <ListItemText primary="Designation" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/core-hr/org-chart">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/org-chart">
                             <ListItemIcon>
                                
                             </ListItemIcon>
@@ -132,23 +132,23 @@ function Dashboard(props) {
                 </ListItemButton>
                 <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/attendance/overview">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overview">
                             <ListItemIcon>
                               
                             </ListItemIcon>
                             <ListItemText primary="Attendance Overview" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/attendance/manual">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
                             <ListItemIcon>
                               
                             </ListItemIcon>
                             <ListItemText primary="Manual Attendance" />
                         </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="/attendance/org-chart">
+                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overtime">
                             <ListItemIcon>
                                 
                             </ListItemIcon>
-                            <ListItemText primary="Organization Chart" />
+                            <ListItemText primary="Overtime Request" />
                         </ListItemButton>
                     </List>
                 </Collapse>
@@ -157,7 +157,7 @@ function Dashboard(props) {
 
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="finance">
                         <ListItemIcon>
                             <CardTravelIcon/>
                         </ListItemIcon>
@@ -167,7 +167,7 @@ function Dashboard(props) {
             </List>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="tasks">
                         <ListItemIcon>
                             <AssignmentIcon/>
                         </ListItemIcon>
@@ -177,7 +177,7 @@ function Dashboard(props) {
             </List>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="projects">
                         <ListItemIcon>
                             <AccountTreeIcon/>
                         </ListItemIcon>
@@ -187,7 +187,7 @@ function Dashboard(props) {
             </List>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="leads">
                         <ListItemIcon>
                             <RecordVoiceOverIcon/>
                         </ListItemIcon>
@@ -197,7 +197,7 @@ function Dashboard(props) {
             </List>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton component={Link} to="/employees">
+                    <ListItemButton component={Link} to="leaverequest">
                         <ListItemIcon>
                             <RecordVoiceOverIcon/>
                         </ListItemIcon>
@@ -269,20 +269,7 @@ function Dashboard(props) {
             </Box>
             <Box p={2}>
                 <Toolbar />
-                <Typography sx={{ marginBottom: 2 }}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-                    enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-                    imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-                    Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-                    Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                    adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-                    nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-                    leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-                    feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-                    consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-                    sapien faucibus et molestie ac.
-                </Typography>
+                <Outlet/>
 
             </Box>
         </Box>
