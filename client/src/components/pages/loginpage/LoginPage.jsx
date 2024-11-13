@@ -4,6 +4,7 @@ import authImg from "../../../assets/img-auth-big.jpg";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import styled from '@emotion/styled';
+import { useNavigate } from "react-router-dom"
 
 const ButtonsLoginAs = styled(Button)({
   textTransform: "capitalize"
@@ -15,6 +16,7 @@ const LoginPage = () => {
     password: null
   })
 
+  const navigate = useNavigate();
 
 
   const handelAsAdmin = () => {
@@ -22,6 +24,7 @@ const LoginPage = () => {
       username: "admin",
       password: "admin@123"
     })
+    navigate("/dashboard")
 
   }
   const handelAsEmployee = () => {
@@ -38,6 +41,8 @@ const LoginPage = () => {
     })
 
   }
+
+
   return (
     <div>
       <Box display="flex" height="100vh" >

@@ -24,8 +24,8 @@ const Routers = () => {
             <Route path='/dashboard' element={<Dashboard/>}>
             <Route path='' element={<MainPage/>}/>
             <Route path='employees' element={<Employees/>}/>
-            <Route path='core-hr/designation' element={<Department/>}/>
-            <Route path='core-hr/department' element={<Designation/>}/>
+            <Route path='core-hr/department' element={<Department/>}/>
+            <Route path='core-hr/designation' element={<Designation/>}/>
             <Route path='core-hr/org-chart' element={<OrganizationChart/>}/>
 
 
