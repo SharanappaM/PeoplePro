@@ -137,6 +137,7 @@ const Designation = () => {
           <Box sx={{ mt: 2 }}>
             <DataTable
               columns={columns}
+              // data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
               data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
               pagination
               paginationPerPage={entries}

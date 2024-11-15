@@ -1,8 +1,10 @@
 import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel, Modal, Grid2, Grid } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import RequiredStar from '../../RequiredStar';
 
+import axios, {} from "axios"
+import { customStyles } from '../ReactDataTableStyle';
 
 
 const style = {
@@ -20,8 +22,9 @@ const style = {
 
 
 
+
 const Employees = () => {
-  const [data, setData] = useState([]);
+  const [employeesData, setEmployeesData] = useState([]);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -29,30 +32,72 @@ const Employees = () => {
   const handleOpenEmployeeModal = () => setOpenEmployeeModal(true);
   const handleCloseEmployeeModal = () => setOpenEmployeeModal(false);
 
+
+
+
+  const getEmployeeData = ()=>{
+    axios.get("http://localhost:8787/auth/listEmployees")
+    .then(res=>{
+      setEmployeesData(res.data.result)
+      console.log(res.data.result);
+
+    }).catch(err=>{
+      console.log(err);
+      
+    })
+  
+    
+  }
+  useEffect(()=>{
+    getEmployeeData();
+  },[])
+
   const columns = [
     {
-      name: 'Department Head',
-      selector: (row) => row.department,
+      name: 'First Name',
+      selector: (row) => row.firstname,
       sortable: true,
     },
     {
-      name: 'Designation Name',
+      name: 'Last Name',
+      selector: (row) => row.lastname,
+      sortable: true,
+    },
+    {
+      name: 'Contact Number',
+      selector: (row) => row.contactnumber,
+      sortable: true,
+    },
+    {
+      name: 'Gender',
+      selector: (row) => row.gender,
+      sortable: true,
+    },
+    {
+      name: 'Designation',
       selector: (row) => row.designation,
       sortable: true,
     },
     {
-      name: 'Description',
-      selector: (row) => row.description,
+      name: 'Role',
+      selector: (row) => row.role,
       sortable: true,
     },
+    
+    {
+      name: 'Status',
+      selector: (row) => "Active",
+      sortable: true,
+    },
+
     // Add more columns as needed
   ];
 
 
   return (
     <>
-      <Card sx={{ width: "100%", padding: 2 }}>
-        <Typography variant="h6" mb={2}>Employees</Typography>
+      <Card sx={{width:"75vw", padding: 2 }}>
+        <Typography variant="h6" mb={2}>List All Employees</Typography>
         <Divider />
 
         <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -88,9 +133,11 @@ const Employees = () => {
         <Box sx={{ mt: 2 }}>
           <DataTable
             columns={columns}
-            data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+            // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+            data={employeesData}
             pagination
             paginationPerPage={entries}
+            customStyles={customStyles}
           />
         </Box>
       </Card>

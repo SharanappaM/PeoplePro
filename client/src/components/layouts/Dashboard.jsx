@@ -217,6 +217,7 @@ function Dashboard(props) {
             <AppBar
                 position="fixed"
                 sx={{
+                    bgcolor:"#1c232f",
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                     ml: { sm: `${drawerWidth}px` },
                 }}
@@ -267,7 +268,7 @@ function Dashboard(props) {
                     {drawer}
                 </Drawer>
             </Box>
-            <Box p={2}>
+            <Box p={2} bgcolor="#f8f9fa" minHeight="100vh" minWidth="82.4vw">
                 <Toolbar />
                 <Outlet/>
 
