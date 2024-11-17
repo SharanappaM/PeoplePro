@@ -1,6 +1,8 @@
 import express from "express"
 import cors from "cors"
-import { adminRouter } from "./Routers/AdminRoute.js";
+import { employeeRouters } from "./Routers/adminRouter/EmployeeRoutes.js";
+import { departmentRouters } from "./Routers/adminRouter/DepartmentRoutes.js";
+import { designationRouter } from "./Routers/adminRouter/DesignationRoutes.js";
 
 
 
@@ -21,7 +23,11 @@ app.use(cors({
     credentials:true
 }))
 app.use(express.json())
-app.use("/auth", adminRouter)
+
+
+app.use("/auth", employeeRouters)
+app.use("/auth", departmentRouters)
+app.use("/auth", designationRouter)
 
 
 

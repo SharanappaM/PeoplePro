@@ -1,108 +1,152 @@
-
-
-
 import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel } from '@mui/material';
-import React, { useState } from 'react';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { toast, ToastContainer } from 'react-toastify';
+import { customStyles } from '../../ReactDataTableStyle';
 
 const Designation = () => {
-  const [data, setData] = useState([]);
-  const [department, setDepartment] = useState('');
-  const [designationName, setDesignationName] = useState('');
-  const [description, setDescription] = useState('');
-  const [entries, setEntries] = useState(10);
+  const [designationData, setDesignationData] = useState([]);
+  const [entries, setEntries] = useState(7);
   const [searchTerm, setSearchTerm] = useState('');
+  const [depratmentName, setDepartmentName] = useState([])
+  const [addedDesignation, setAddedDesignation] = useState(false)
+
 
   const columns = [
     {
-      name: 'Department Head',
-      selector: (row) => row.department,
+      name: 'Department',
+      selector: (row) => row.department_name,
       sortable: true,
     },
     {
       name: 'Designation Name',
-      selector: (row) => row.designation,
+      selector: (row) => row.designation_name,
       sortable: true,
-    },
-    {
-      name: 'Description',
-      selector: (row) => row.description,
-      sortable: true,
-    },
-    // Add more columns as needed
+    }
   ];
 
-  const handleSave = () => {
-    const newData = {
-      department,
-      designation: designationName,
-      description,
-    };
-    setData([...data, newData]);
-    setDepartment('');
-    setDesignationName('');
-    setDescription('');
-  };
+
+
+  const getByDepartmetHeadName = () => {
+    axios.get("http://localhost:8787/auth/getByDepartmentName")
+      .then(res => {
+        console.log(res.data);
+        setDepartmentName(res.data.getDepartment_name);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+  }
+  const getByDepartmets = () => {
+    axios.get("http://localhost:8787/auth/listDesignations")
+      .then(res => {
+        console.log(res.data);
+        setDesignationData(res.data.result);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+  }
+
+
+  const handelDeleteAlltDesignations=()=>{
+
+  }
+
+  useEffect(() => {
+    getByDepartmetHeadName()
+    getByDepartmets();
+  }, [addedDesignation])
+
+  const formKi = useFormik({
+    initialValues: {
+      department_name: null,
+
+      designation_name: null,
+      description: null
+    },
+    onSubmit: (values) => {
+      axios.post("http://localhost:8787/auth/createDesignation", values)
+        .then(res => {
+          toast.success(res.data.msg)
+          setAddedDesignation(addedDesignation === false ? true : false)
+
+        }).catch(err => {
+          console.log(err);
+        })
+
+    }
+  }
+
+  )
 
   return (
     <>
+     <ToastContainer position='bottom-right' />
       <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
         {/* Left Section: Form for Adding New Designation */}
-        <Card sx={{ p: 4, width: "45%" }}>
+        <Card sx={{ p: 4, width: "35%", height:"50%"   }}>
           <Typography variant="h6" mb={2}>Add New Designation</Typography>
           <Divider />
 
           {/* Department Head */}
-          <Box sx={{ mt: 2 }}>
-            <FormLabel>Department Head</FormLabel>
-            <Select
-              labelId="department-select-label"
-              id="department-select"
-              fullWidth
-              size="small"
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              <MenuItem value="HR">HR</MenuItem>
-              <MenuItem value="IT">IT</MenuItem>
-              <MenuItem value="Finance">Finance</MenuItem>
-              {/* Add more departments here */}
-            </Select>
-          </Box>
+          <form action="" onSubmit={formKi.handleSubmit}>
+            <Box sx={{ mt: 2 }}>
+              <FormLabel>Department</FormLabel>
+              <Select
+                labelId="department-select-label"
+                id="department-select"
+                fullWidth
+                size="small"
+                name='department_name'
+                value={formKi.values.department_name}
+                onChange={formKi.handleChange}
 
-          {/* Designation Name */}
-          <Box sx={{ mt: 2 }}>
-            <FormLabel>Designation Name</FormLabel>
-            <TextField
-              placeholder="Enter designation name"
-              size="small"
-              fullWidth
-              value={designationName}
-              onChange={(e) => setDesignationName(e.target.value)}
-            />
-          </Box>
+              >
+                {depratmentName.map((items, index) => (
+                  <MenuItem key={index} value={items}>{items}</MenuItem>
 
-          {/* Description */}
-          <Box sx={{ mt: 2 }}>
-            <FormLabel>Description</FormLabel>
-            <TextField
-              placeholder="Enter description"
-              size="small"
-              fullWidth
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Box>
+                ))}
+              </Select>
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <FormLabel>Designation Name</FormLabel>
+              <TextField
+                placeholder="Enter designation name"
+                size="small"
+                fullWidth
+                name='designation_name'
+                value={formKi.values.designation_name}
+                onChange={formKi.handleChange}
 
-          {/* Save Button */}
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" onClick={handleSave}>
-              Save
-            </Button>
-          </Box>
+              />
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <FormLabel>Description</FormLabel>
+              <TextField
+                placeholder="Enter description"
+                size="small"
+                fullWidth
+                name='description'
+                value={formKi.values.description}
+                onChange={formKi.handleChange}
+
+              />
+            </Box>
+
+            <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
+              <Button type='submit' variant="contained" >
+                Save
+              </Button>
+            </Box>
+          </form>
         </Card>
 
-        <Card sx={{ width: "50%", padding: 2 }}>
+        <Card sx={{ width: "60%", padding: 2 }}>
           <Typography variant="h6" mb={2}>Designation List</Typography>
           <Divider />
 
@@ -132,15 +176,20 @@ const Designation = () => {
                 variant="outlined"
               />
             </Box>
+
+
+            <Button onClick={handelDeleteAlltDesignations}>Delete All Designations</Button>
+
           </Box>
 
           <Box sx={{ mt: 2 }}>
             <DataTable
               columns={columns}
               // data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+              data={designationData}
               pagination
               paginationPerPage={entries}
+              customStyles={customStyles}
             />
           </Box>
         </Card>
