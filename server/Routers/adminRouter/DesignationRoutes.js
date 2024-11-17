@@ -59,5 +59,34 @@ router.get("/listDesignations", (req, res)=>{
     })
 })
 
+router.delete("/deleteAllDesignations", (req,res)=>{
+    const q = "DELETE FROM designations"
+
+    con.query(q, (err, result)=>{
+        if(err){
+            console.error("error while delteing Designations", err);
+            return res.status(500).json({status:false, msg:"query error "})
+            
+        }
+        return res.status(200).json({status:true, msg:"Designations Deleted"})
+
+    })
+})
+
+
+router.get("/getBydesignationName", (req,res)=>{
+    const q = "SELECT designation_name FROM designations";
+    con.query(q, (err, result)=>{
+        if(err){
+            console.error('Query error:', err);
+            return res.status(500).json({status:false, msg:"Query error"})
+            
+        }
+
+        const designation_name = result.map(emp => emp.designation_name);
+        return res.status(200).json({designation_name});
+    })
+})
+
 
 export { router as designationRouter }

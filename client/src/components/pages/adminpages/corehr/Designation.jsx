@@ -29,7 +29,7 @@ const Designation = () => {
 
 
 
-  const getByDepartmetHeadName = () => {
+  const getByDepartmetName = () => {
     axios.get("http://localhost:8787/auth/getByDepartmentName")
       .then(res => {
         console.log(res.data);
@@ -40,6 +40,7 @@ const Designation = () => {
 
       })
   }
+
   const getByDepartmets = () => {
     axios.get("http://localhost:8787/auth/listDesignations")
       .then(res => {
@@ -54,11 +55,20 @@ const Designation = () => {
 
 
   const handelDeleteAlltDesignations=()=>{
+    axios.delete("http://localhost:8787/auth/deleteAllDesignations")
+    .then(res=>{
+      console.log(res.data.msg);
+      toast.success(res.data.msg)
+      
+    }).catch(err=>{
+      console.log(err);
+      
+    })
 
   }
 
   useEffect(() => {
-    getByDepartmetHeadName()
+    getByDepartmetName()
     getByDepartmets();
   }, [addedDesignation])
 

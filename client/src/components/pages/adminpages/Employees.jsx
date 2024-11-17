@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import RequiredStar from '../../RequiredStar';
 
-import axios, {} from "axios"
+import axios, { } from "axios"
 import { customStyles } from '../ReactDataTableStyle';
+import { useFormik } from 'formik';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const style = {
@@ -25,6 +27,8 @@ const style = {
 
 const Employees = () => {
   const [employeesData, setEmployeesData] = useState([]);
+  const [departmentName, setDepartmentName] = useState([]);
+  const [designationName, setDesignationName] = useState([]);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -33,24 +37,88 @@ const Employees = () => {
   const handleCloseEmployeeModal = () => setOpenEmployeeModal(false);
 
 
+  const formKi = useFormik({
+    initialValues: {
+      firstname: null,
+      lastname: null,
+      employeeid: null,
+      contactnumber: null,
+      gender: "",
+      email: null,
+      username: null,
+      officeshift: "",
+      password: null,
+      role: "",
+      department: "",
+      designation: "",
+      basicsalary: null,
+      hourlyrate: null,
+      paysliptype: "",
+      profilepicture: null
+    },
+    onSubmit: (values) => {
+      axios.post("http://localhost:8787/auth/addEmployees", values)
+        .then(res => {
+          console.log(res.data.msg);
+          toast.success(res.data.msg)
+          if(res.data.status===true){
+            setOpenEmployeeModal(false)
+          }
+          
+
+        }).catch(err => {
+          console.log(err);
+
+        })
+    }
+  })
 
 
-  const getEmployeeData = ()=>{
-    axios.get("http://localhost:8787/auth/listEmployees")
-    .then(res=>{
-      setEmployeesData(res.data.result)
-      console.log(res.data.result);
+  const getByDepartmetName = () => {
+    axios.get("http://localhost:8787/auth/getByDepartmentName")
+      .then(res => {
+        console.log(res.data);
+        setDepartmentName(res.data.getDepartment_name);
 
-    }).catch(err=>{
-      console.log(err);
-      
-    })
-  
-    
+      }).catch(err => {
+        console.log(err);
+
+      })
   }
-  useEffect(()=>{
+
+
+
+  const getByDesignationName = () => {
+    axios.get("http://localhost:8787/auth/getBydesignationName")
+      .then(res => {
+        console.log(res.data);
+        setDesignationName(res.data.designation_name);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+  }
+
+
+  const getEmployeeData = () => {
+    axios.get("http://localhost:8787/auth/listEmployees")
+      .then(res => {
+        setEmployeesData(res.data.result)
+        console.log(res.data.result);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+  useEffect(() => {
     getEmployeeData();
-  },[])
+    getByDepartmetName();
+    getByDesignationName()
+  }, [])
 
   const columns = [
     {
@@ -83,7 +151,7 @@ const Employees = () => {
       selector: (row) => row.role,
       sortable: true,
     },
-    
+
     {
       name: 'Status',
       selector: (row) => "Active",
@@ -96,7 +164,8 @@ const Employees = () => {
 
   return (
     <>
-      <Card sx={{width:"75vw", padding: 2 }}>
+      <ToastContainer position='bottom-right' />
+      <Card sx={{ width: "75vw", padding: 2 }}>
         <Typography variant="h6" mb={2}>List All Employees</Typography>
         <Divider />
 
@@ -153,185 +222,254 @@ const Employees = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add New Employee
           </Typography>
+          <form action="" onSubmit={formKi.handleSubmit}>
 
 
-          <Grid container spacing={2}  >
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Name<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter  name"
-                size="small"
-                fullWidth />
-            </Grid>
-            <Grid item mt={2} lg={4} >
-              <FormLabel>last Name<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter last name"
-                size="small"
-                fullWidth />
-            </Grid>
+            <Grid container spacing={2}  >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Name<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter firstname"
+                  size="small"
+                  fullWidth
+                  name="firstname"
+                  value={formKi.values.firstname}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+              <Grid item mt={2} lg={4} >
+                <FormLabel>last Name<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter last name"
+                  size="small"
+                  fullWidth
+                  name="lastname"
+                  value={formKi.values.lastname}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
 
 
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Employee ID <RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter  Employee ID "
-                size="small"
-                fullWidth />
-            </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Employee ID <RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter  Employee ID "
+                  size="small"
+                  fullWidth
+                  name="employeeid"
+                  value={formKi.values.employeeid}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
 
-          </Grid>
-
-          <Grid container spacing={2} >
-
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Contact Number<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Contact Number"
-                size="small"
-                fullWidth />
-            </Grid>
-
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Gender <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
             </Grid>
 
+            <Grid container spacing={2} >
 
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Email<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Email"
-                size="small"
-                fullWidth />
-            </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Contact Number<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Contact Number"
+                  size="small"
+                  fullWidth
+                  name="contactnumber"
+                  value={formKi.values.contactnumber}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
 
-          </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Gender <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='gender'
+                  displayEmpty
 
-
-
-
-          <Grid container spacing={2} >
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Username<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Username"
-                size="small"
-                fullWidth />
-            </Grid>
-
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Password<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Password"
-                size="small"
-                fullWidth />
-            </Grid>
-
+                  value={formKi.values.gender}
+                  onChange={formKi.handleChange}
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Others">Others</MenuItem>
+                </Select>
+              </Grid>
 
 
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Office Shift <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Email<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Email"
+                  size="small"
+                  fullWidth
+                  name="email"
+                  value={formKi.values.email}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+
             </Grid>
 
 
-          </Grid>
+
+
+            <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Username<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Username"
+                  size="small"
+                  fullWidth
+                  name="username"
+                  value={formKi.values.username}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Password<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Password"
+                  size="small"
+                  fullWidth
+                  name="password"
+                  value={formKi.values.password}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
 
 
 
-          <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Office Shift <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='officeshift'
+                  value={formKi.values.officeshift}
+                  onChange={formKi.handleChange}
+                >
+                  <MenuItem value="Morning Shift">Morning Shift</MenuItem>
+                  <MenuItem value="Afternoon Shift">Afternoon Shift</MenuItem>
+                  <MenuItem value="Night Shift">Night Shift</MenuItem>
+                </Select>
+              </Grid>
 
 
-
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Role <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
             </Grid>
 
 
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Department <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Designation <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
-            </Grid>
 
-
-          </Grid>
+            <Grid container spacing={2} >
 
 
 
-          <Grid container spacing={2} >
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Basic Salary <RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Basic Salary "
-                size="small"
-                fullWidth />
-            </Grid>
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Hourly Rate<RequiredStar /> </FormLabel>
-              <TextField
-                placeholder="Enter Hourly Rate"
-                size="small"
-                fullWidth />
-            </Grid>
-
-            <Grid item mt={2} lg={4}>
-              <FormLabel> Payslip Type  <RequiredStar /> </FormLabel>
-              <Select
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="HR">Sharan</MenuItem>
-              </Select>
-            </Grid>
-
-          </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Role <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                >
+                  <MenuItem value="Normal Role">Normal Role</MenuItem>
+                </Select>
+              </Grid>
 
 
-          <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Department <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='department'
+                  value={formKi.values.department}
+                  onChange={formKi.handleChange}
 
-            <Grid item mt={2} lg={4}>
-              <FormLabel>Profile Picture <RequiredStar /> </FormLabel>
-              <input type="file" />
+                >
+                  {departmentName.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Designation <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='designation'
+                  value={formKi.values.designation}
+                  onChange={formKi.handleChange}
+
+                >
+                  {designationName.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+
+                  ))}
+                </Select>
+              </Grid>
+
+
             </Grid>
 
-          </Grid>
 
 
-        <Box mt={2}>
-          <Button variant='contained'>Reset</Button>
-          <Button variant='contained' sx={{ml:5}}>Save</Button>
-        </Box>
+            <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Basic Salary <RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Basic Salary "
+                  size="small"
+                  fullWidth
+                  name="basicsalary"
+                  value={formKi.values.basicsalary}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Hourly Rate<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter Hourly Rate"
+                  size="small"
+                  fullWidth
+                  name="hourlyrate"
+                  value={formKi.values.hourlyrate}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Payslip Type  <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                >
+                  <MenuItem value="Per Month">Per Month</MenuItem>
+                </Select>
+              </Grid>
+
+            </Grid>
+
+
+            <Grid container spacing={2} >
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel>Profile Picture <RequiredStar /> </FormLabel>
+                <input type="file"
+                  name="profilepicture"
+                  value={formKi.values.profilepicture}
+                  onChange={formKi.handleChange}
+                />
+              </Grid>
+
+            </Grid>
+
+
+            <Box mt={2}>
+              <Button variant='contained'>Reset</Button>
+              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+            </Box>
+
+          </form>
 
         </Box>
       </Modal>
