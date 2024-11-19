@@ -1,61 +1,188 @@
-import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel, Modal, Grid2, Grid } from '@mui/material';
+import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel, Modal, Grid2, Grid, IconButton } from '@mui/material';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DataTable from 'react-data-table-component';
 import { customStyles } from '../ReactDataTableStyle';
+import RequiredStar from '../../RequiredStar';
+import axios from 'axios';
+import { useFormik } from 'formik';
+import { toast, ToastContainer } from 'react-toastify';
+
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 800,
+  bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+
 
 const Projects = () => {
-
-  const [employeesData, setEmployeesData] = useState([]);
-  const [departmentName, setDepartmentName] = useState([]);
-  const [designationName, setDesignationName] = useState([]);
+  const [addedProject, setAddedProject] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
+  const [openEditProjectModal, setOpenEditProjectModal] = useState(false)
+  const [employeesNameData, setEmployeesNameData] = useState([])
+  const [projectList, setProjectList] = useState([])
+
+
+
+  const getEmployeesNameData = async () => {
+    await axios.get("http://localhost:8787/auth/getEmployeesName")
+      .then(res => {
+        setEmployeesNameData(res.data.employeeNames)
+        console.log(res.data.employeeNames);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+  const getProjectList = async () => {
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects`)
+      .then(res => {
+        setProjectList(res.data.result)
+        console.log(res.data.result);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+
+
+  useEffect(() => {
+    getEmployeesNameData();
+    getProjectList();
+  }, [addedProject])
+
+
+  const formki = useFormik({
+    initialValues: {
+      tital: null,
+      client: null,
+      start_date: null,
+      end_date: null,
+      summary: null,
+      team: null,
+      estimated_hour: null,
+      priority: null,
+      description: null,
+    },
+    onSubmit: (values) => {
+      axios.post("http://localhost:8787/auth/createProject", values)
+        .then(res => {
+          console.log(res.data.msg);
+          toast.success(res.data.msg);
+          setOpenCreateProjectModal(false)
+          setAddedProject(addedProject === false ? true : false)
+
+        }).catch(err => {
+          console.log(err);
+
+        })
+    }
+  })
+  const formKiForEditProject = useFormik({
+    initialValues: {
+      tital: employeesNameData.map((item)=>{item.tital}),
+      client: null,
+      start_date: null,
+      end_date: null,
+      summary: null,
+      team: null,
+      estimated_hour: null,
+      priority: null,
+      description: null,
+    },
+    onSubmit: (values) => {
+      axios.post("http://localhost:8787/auth/createProject", values)
+        .then(res => {
+          console.log(res.data.msg);
+          toast.success(res.data.msg);
+          setOpenCreateProjectModal(false)
+          setAddedProject(addedProject === false ? true : false)
+
+        }).catch(err => {
+          console.log(err);
+
+        })
+    }
+  })
+
+
+
 
 
   const columns = [
     {
-      name: 'First Name',
-      selector: (row) => row.firstname,
+      name: 'Tital',
+      selector: (row) => row.tital,
       sortable: true,
     },
     {
-      name: 'Last Name',
-      selector: (row) => row.lastname,
+      name: 'Client',
+      selector: (row) => row.client,
       sortable: true,
     },
     {
-      name: 'Contact Number',
-      selector: (row) => row.contactnumber,
+      name: 'Team',
+      selector: (row) => row.team,
       sortable: true,
     },
     {
-      name: 'Gender',
-      selector: (row) => row.gender,
+      name: 'Start Date',
+      selector: (row) => row.start_date,
       sortable: true,
     },
     {
-      name: 'Designation',
-      selector: (row) => row.designation,
+      name: 'End Date',
+      selector: (row) => row.end_date,
       sortable: true,
     },
     {
-      name: 'Role',
-      selector: (row) => row.role,
+      name: 'Estimated Hour',
+      selector: (row) => row.estimated_hour,
+      sortable: true,
+    },
+    {
+      name: 'Priority',
+      selector: (row) => row.priority,
+      sortable: true,
+    },
+    {
+      name: 'Progress',
+      selector: (row) => row.progress,
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      // selector: (row) => row.progress,
+      cell: row => <IconButton onClick={()=>setOpenEditProjectModal(true)} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
       sortable: true,
     },
 
-    {
-      name: 'Status',
-      selector: (row) => "Active",
-      sortable: true,
-    },
+
 
     // Add more columns as needed
   ];
   return (
     <Box>
+      <ToastContainer position='bottom-right' />
       <Box>
         <Grid container spacing={4}>
           <Grid item >
@@ -155,14 +282,14 @@ const Projects = () => {
               />
             </Box>
 
-            <Button variant='outlined'> Add  </Button>
+            <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}> Add  </Button>
           </Box>
 
           <Box sx={{ mt: 2 }}>
             <DataTable
               columns={columns}
               // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={employeesData}
+              data={projectList}
               pagination
               paginationPerPage={entries}
               customStyles={customStyles}
@@ -171,6 +298,338 @@ const Projects = () => {
         </Card>
 
       </Box>
+
+
+      <Modal
+        open={openCreateProjectModal}
+        onClose={() => setOpenCreateProjectModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+
+        <Box sx={style}>
+          <form action="" onSubmit={formki.handleSubmit} >
+
+
+            <Grid container spacing={2}  >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Title<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter tital"
+                  size="small"
+                  fullWidth
+                  name="tital"
+                  value={formki.values.tital}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Client <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='client'
+                  displayEmpty
+                  value={formki.values.client}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="Sharan">Sharan</MenuItem>
+                  <MenuItem value="Raju">Raju</MenuItem>
+                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Priority <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='priority'
+                  displayEmpty
+                  value={formki.values.priority}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="High">High</MenuItem>
+                  <MenuItem value="noraml">Noraml</MenuItem>
+                  <MenuItem value="Low">Low</MenuItem>
+                </Select>
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Estimated Hour<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter estimated hour"
+                  size="small"
+                  fullWidth
+                  name="estimated_hour"
+                  value={formki.values.estimated_hour}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Start Date<RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="start_date"
+                  value={formki.values.start_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> End Date <RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="end_date"
+                  value={formki.values.end_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Summary<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter summary"
+                  type='text'
+                  size="small"
+                  fullWidth
+                  name="summary"
+                  value={formki.values.summary}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+
+
+            <Grid container spacing={2}  >
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Team <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='team'
+                  displayEmpty
+                  value={formki.values.team}
+                  onChange={formki.handleChange}
+                >
+                  {employeesNameData.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+                  ))}
+
+
+                </Select>
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Description </FormLabel>
+                <TextField
+                  placeholder="Enter title"
+                  size="small"
+                  fullWidth
+                  name="description"
+                  value={formki.values.description}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+
+
+            </Grid>
+
+            <Box mt={2}>
+              <Button variant='contained'>Reset</Button>
+              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+            </Box>
+
+
+
+
+          </form>
+
+        </Box>
+      </Modal>
+
+
+
+
+
+
+      <Modal
+        open={openEditProjectModal}
+        onClose={() => setOpenEditProjectModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+
+        <Box sx={style}>
+          <form action="" onSubmit={formki.handleSubmit} >
+
+
+            <Grid container spacing={2}  >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Title<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter tital"
+                  size="small"
+                  fullWidth
+                  name="tital"
+                  value={formKiForEditProject.values.tital}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Client <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='client'
+                  displayEmpty
+                  value={formki.values.client}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="Sharan">Sharan</MenuItem>
+                  <MenuItem value="Raju">Raju</MenuItem>
+                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Priority <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='priority'
+                  displayEmpty
+                  value={formki.values.priority}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="High">High</MenuItem>
+                  <MenuItem value="noraml">Noraml</MenuItem>
+                  <MenuItem value="Low">Low</MenuItem>
+                </Select>
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Estimated Hour<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter estimated hour"
+                  size="small"
+                  fullWidth
+                  name="estimated_hour"
+                  value={formki.values.estimated_hour}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Start Date<RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="start_date"
+                  value={formki.values.start_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> End Date <RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="end_date"
+                  value={formki.values.end_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Summary<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter summary"
+                  type='text'
+                  size="small"
+                  fullWidth
+                  name="summary"
+                  value={formki.values.summary}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+
+
+            <Grid container spacing={2}  >
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Team <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='team'
+                  displayEmpty
+                  value={formki.values.team}
+                  onChange={formki.handleChange}
+                >
+                  {employeesNameData.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+                  ))}
+
+
+                </Select>
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Description </FormLabel>
+                <TextField
+                  placeholder="Enter title"
+                  size="small"
+                  fullWidth
+                  name="description"
+                  value={formki.values.description}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+
+
+            </Grid>
+
+            <Box mt={2}>
+              <Button variant='contained'>Reset</Button>
+              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+            </Box>
+
+
+
+
+          </form>
+
+        </Box>
+      </Modal>
 
     </Box>
   )

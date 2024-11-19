@@ -3,6 +3,7 @@ import cors from "cors"
 import { employeeRouters } from "./Routers/adminRouter/EmployeeRoutes.js";
 import { departmentRouters } from "./Routers/adminRouter/DepartmentRoutes.js";
 import { designationRouter } from "./Routers/adminRouter/DesignationRoutes.js";
+import { projectRouter } from "./Routers/adminRouter/ProjectRouter.js";
 
 
 
@@ -28,6 +29,7 @@ app.use(express.json())
 app.use("/auth", employeeRouters)
 app.use("/auth", departmentRouters)
 app.use("/auth", designationRouter)
+app.use("/auth", projectRouter)
 
 
 
