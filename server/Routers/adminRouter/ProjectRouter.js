@@ -69,6 +69,17 @@ router.get("/listProjects", (req, res)=>{
         return res.status(200).json({result})
     })
 })
+router.get("/getByProjectName", (req, res)=>{
+    const q = "SELECT tital FROM projects";
+    con.query(q, (err, result)=>{
+        if(err){
+            console.log("Error while creating project ", err);
+            return res.status(500).json({status:false, msg:"query error"})
+        }
+        const projectNames = result.map(names => names.tital)
+        return res.status(200).json({projectNames})
+    })
+})
 
 
 

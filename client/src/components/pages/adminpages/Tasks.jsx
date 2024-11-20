@@ -32,15 +32,17 @@ const Tasks = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false)
   const [openEditTaskModal, setOpenEditTaskModal] = useState(false)
-  const [projectNameData, setProjectNameData] = useState([])
+  const [employeesNames, setEmployeesNames] = useState([])
+  const [projectNames, setProjectsNames] = useState([])
   const [tasksList, setTasksList] = useState([])
+
 
 
 
   const getEmployeesNameData = async () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
-        setProjectNameData(res.data.employeeNames)
+        setEmployeesNames(res.data.employeeNames)
         console.log(res.data.employeeNames);
 
       }).catch(err => {
@@ -50,8 +52,20 @@ const Tasks = () => {
 
 
   }
+  const getProjectsNames = async () => {
+    await axios.get("http://localhost:8787/auth/getByProjectName")
+      .then(res => {
+        setProjectsNames(res.data.projectNames)
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
   const getProjectList = async () => {
-    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects`)
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks`)
       .then(res => {
         setTasksList(res.data.result)
         console.log(res.data.result);
@@ -68,13 +82,14 @@ const Tasks = () => {
   useEffect(() => {
     getEmployeesNameData();
     getProjectList();
+    getProjectsNames();
   }, [addedTask])
 
 
   const formki = useFormik({
     initialValues: {
       tital: null,
-      client: null,
+      project: null,
       start_date: null,
       end_date: null,
       summary: null,
@@ -84,10 +99,15 @@ const Tasks = () => {
       description: null,
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createProject", values)
+      axios.post("http://localhost:8787/auth/createTasks", values)
         .then(res => {
+          if (res.data.status === 500) {
+            toast.error("Error while creating task")
+          }
+
           console.log(res.data.msg);
           toast.success(res.data.msg);
+
           setOpenCreateTaskModal(false)
           setAddedTask(addedTask === false ? true : false)
 
@@ -99,8 +119,9 @@ const Tasks = () => {
   })
   const formKiForEditProject = useFormik({
     initialValues: {
-      tital: projectNameData.map((item)=>{item.tital}),
-      client: null,
+      // tital: projectNameData.map((item)=>{item.tital}),
+      tital: null,
+      project: null,
       start_date: null,
       end_date: null,
       summary: null,
@@ -110,7 +131,7 @@ const Tasks = () => {
       description: null,
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createProject", values)
+      axios.post("http://localhost:8787/auth/createtasks", values)
         .then(res => {
           console.log(res.data.msg);
           toast.success(res.data.msg);
@@ -135,8 +156,8 @@ const Tasks = () => {
       sortable: true,
     },
     {
-      name: 'Client',
-      selector: (row) => row.client,
+      name: 'Project',
+      selector: (row) => row.project,
       sortable: true,
     },
     {
@@ -172,7 +193,7 @@ const Tasks = () => {
     {
       name: 'Action',
       // selector: (row) => row.progress,
-      cell: row => <IconButton onClick={()=>setOpenEditTaskModal(true)} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
+      cell: row => <IconButton onClick={() => setOpenEditTaskModal(true)} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
       sortable: true,
     },
 
@@ -309,6 +330,7 @@ const Tasks = () => {
 
         <Box sx={style}>
           <form action="" onSubmit={formki.handleSubmit} >
+            <Typography>Add New Task</Typography>
 
 
             <Grid container spacing={2}  >
@@ -324,21 +346,26 @@ const Tasks = () => {
                 />
               </Grid>
 
+
               <Grid item mt={2} lg={4}>
-                <FormLabel> Client <RequiredStar /> </FormLabel>
+                <FormLabel> Project <RequiredStar /> </FormLabel>
                 <Select
                   fullWidth
                   size="small"
-                  name='client'
+                  name='project'
                   displayEmpty
-                  value={formki.values.client}
+                  value={formki.values.project}
                   onChange={formki.handleChange}
                 >
-                  <MenuItem value="Sharan">Sharan</MenuItem>
-                  <MenuItem value="Raju">Raju</MenuItem>
-                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                  {projectNames.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+                  ))}
+
+
                 </Select>
               </Grid>
+
+
               <Grid item mt={2} lg={4}>
                 <FormLabel> Priority <RequiredStar /> </FormLabel>
                 <Select
@@ -424,7 +451,7 @@ const Tasks = () => {
                   value={formki.values.team}
                   onChange={formki.handleChange}
                 >
-                  {projectNameData.map((items, index) => (
+                  {employeesNames.map((items, index) => (
                     <MenuItem key={index} value={items}>{items}</MenuItem>
                   ))}
 
@@ -477,6 +504,7 @@ const Tasks = () => {
 
         <Box sx={style}>
           <form action="" onSubmit={formki.handleSubmit} >
+            <Typography>Edit Task </Typography>
 
 
             <Grid container spacing={2}  >
@@ -592,7 +620,7 @@ const Tasks = () => {
                   value={formki.values.team}
                   onChange={formki.handleChange}
                 >
-                  {projectNameData.map((items, index) => (
+                  {employeesNames.map((items, index) => (
                     <MenuItem key={index} value={items}>{items}</MenuItem>
                   ))}
 

@@ -185,6 +185,19 @@ function Dashboard(props) {
                     </ListItemButton>
                 </ListItem>
             </List>
+
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="manageClinets">
+                        <ListItemIcon>
+                            <RecordVoiceOverIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Manage Clinets" />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+
+            
             <List>
                 <ListItem disablePadding>
                     <ListItemButton component={Link} to="leads">
@@ -205,6 +218,7 @@ function Dashboard(props) {
                     </ListItemButton>
                 </ListItem>
             </List>
+           
         </Box>
     );
 

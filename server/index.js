@@ -4,6 +4,8 @@ import { employeeRouters } from "./Routers/adminRouter/EmployeeRoutes.js";
 import { departmentRouters } from "./Routers/adminRouter/DepartmentRoutes.js";
 import { designationRouter } from "./Routers/adminRouter/DesignationRoutes.js";
 import { projectRouter } from "./Routers/adminRouter/ProjectRouter.js";
+import { tasksRouter } from "./Routers/adminRouter/TasksRouters.js";
+import { clinetRouters } from "./Routers/adminRouter/manageClientRouter.js";
 
 
 
@@ -30,6 +32,8 @@ app.use("/auth", employeeRouters)
 app.use("/auth", departmentRouters)
 app.use("/auth", designationRouter)
 app.use("/auth", projectRouter)
+app.use("/auth", tasksRouter)
+app.use("/auth", clinetRouters)
 
 
 
