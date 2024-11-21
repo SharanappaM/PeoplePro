@@ -10,16 +10,17 @@ first_name VARCHAR(45) NOT NULL,
 last_name VARCHAR(45) NOT NULL, 
 email VARCHAR(45) NOT NULL, 
 username VARCHAR(45) NOT NULL, 
-status VARCHAR(45)  NULL, 
+
 password VARCHAR(45) NOT NULL, 
 contact_number  VARCHAR(45) NOT NULL, 
 gender  VARCHAR(45) NOT NULL, 
 client_picture  VARCHAR(45)  NOT NULL, 
-country  VARCHAR(45) NOT NULL, 
-address  VARCHAR(85) NOT NULL, 
+country  VARCHAR(45)  NULL, 
+address  VARCHAR(85)  NULL, 
 city  VARCHAR(45)  NULL, 
 state  VARCHAR(45)  NULL, 
-zip_code  VARCHAR(45)  NULL
+zip_code  VARCHAR(45)  NULL,
+status VARCHAR(45)  NULL
 
 
 )

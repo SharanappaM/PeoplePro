@@ -29,6 +29,8 @@ const ManageClinets = () => {
     const [clientData, setClientData] = useState([]);
     const [entries, setEntries] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
+    const [clientCreated, setClientCreated] = useState(false);
+
 
     const [openAddClientModal, setAddCliantModal] = React.useState(false);
     const handleOpenClientModal = () => setAddCliantModal(true);
@@ -54,7 +56,8 @@ const ManageClinets = () => {
                     }
                     console.log(res.data.msg);
                     toast.success(res.data.msg)
-                
+                    setClientCreated(clientCreated === false ? true : false)
+
                     if (res.data.status === true) {
                         setAddCliantModal(false)
                     }
@@ -75,7 +78,7 @@ const ManageClinets = () => {
 
 
     const getEmployeeData = () => {
-        axios.get("http://localhost:8787/auth/listEmployees")
+        axios.get("http://localhost:8787/auth/listClients")
             .then(res => {
                 setClientData(res.data.result)
                 console.log(res.data.result);
@@ -89,7 +92,7 @@ const ManageClinets = () => {
     }
     useEffect(() => {
         getEmployeeData();
-    }, [])
+    }, [clientCreated])
 
     const columns = [
         {
@@ -103,6 +106,11 @@ const ManageClinets = () => {
             sortable: true,
         },
         {
+            name: 'Username',
+            selector: (row) => row.username,
+            sortable: true,
+        },
+        {
             name: 'Contact Number',
             selector: (row) => row.contact_number,
             sortable: true,
@@ -110,6 +118,11 @@ const ManageClinets = () => {
         {
             name: 'Gender',
             selector: (row) => row.gender,
+            sortable: true,
+        },
+        {
+            name: 'Country',
+            selector: (row) => row.country,
             sortable: true,
         },
 

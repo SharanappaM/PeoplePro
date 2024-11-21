@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS tasks(
     priority VARCHAR(85) NOT NULL,
     description VARCHAR(105) NULL,
     progress VARCHAR(65) NULL,
-    status VARCHAR (65) NULL 
+    status VARCHAR (225) NULL 
 
 
 )

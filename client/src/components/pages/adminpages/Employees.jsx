@@ -27,6 +27,7 @@ const style = {
 
 const Employees = () => {
   const [employeesData, setEmployeesData] = useState([]);
+  const [employeeCreated, setEmployeesCreated] = useState(false);
   const [departmentName, setDepartmentName] = useState([]);
   const [designationName, setDesignationName] = useState([]);
   const [entries, setEntries] = useState(10);
@@ -39,32 +40,32 @@ const Employees = () => {
 
   const formKi = useFormik({
     initialValues: {
-      firstname: null,
-      lastname: null,
-      employeeid: null,
-      contactnumber: null,
+      first_name: null,
+      last_name: null,
+      contact_number: null,
       gender: "",
       email: null,
       username: null,
-      officeshift: "",
+      office_shift: "",
       password: null,
       role: "",
       department: "",
       designation: "",
-      basicsalary: null,
-      hourlyrate: null,
-      paysliptype: "",
-      profilepicture: null
+      basic_salary: null,
+      hourly_rate: null,
+      payslip_type: "",
+      employee_picture: null
     },
     onSubmit: (values) => {
       axios.post("http://localhost:8787/auth/addEmployees", values)
         .then(res => {
           console.log(res.data.msg);
           toast.success(res.data.msg)
-          if(res.data.status===true){
+          setEmployeesCreated(employeeCreated === false ? true : false)
+          if (res.data.status === true) {
             setOpenEmployeeModal(false)
           }
-          
+
 
         }).catch(err => {
           console.log(err);
@@ -118,22 +119,22 @@ const Employees = () => {
     getEmployeeData();
     getByDepartmetName();
     getByDesignationName()
-  }, [])
+  }, [employeeCreated])
 
   const columns = [
     {
       name: 'First Name',
-      selector: (row) => row.firstname,
+      selector: (row) => row.first_name,
       sortable: true,
     },
     {
       name: 'Last Name',
-      selector: (row) => row.lastname,
+      selector: (row) => row.last_name,
       sortable: true,
     },
     {
       name: 'Contact Number',
-      selector: (row) => row.contactnumber,
+      selector: (row) => row.contact_number,
       sortable: true,
     },
     {
@@ -232,8 +233,8 @@ const Employees = () => {
                   placeholder="Enter firstname"
                   size="small"
                   fullWidth
-                  name="firstname"
-                  value={formKi.values.firstname}
+                  name="first_name"
+                  value={formKi.values.first_name}
                   onChange={formKi.handleChange}
                 />
               </Grid>
@@ -243,24 +244,14 @@ const Employees = () => {
                   placeholder="Enter last name"
                   size="small"
                   fullWidth
-                  name="lastname"
-                  value={formKi.values.lastname}
+                  name="last_name"
+                  value={formKi.values.last_name}
                   onChange={formKi.handleChange}
                 />
               </Grid>
 
 
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Employee ID <RequiredStar /> </FormLabel>
-                <TextField
-                  placeholder="Enter  Employee ID "
-                  size="small"
-                  fullWidth
-                  name="employeeid"
-                  value={formKi.values.employeeid}
-                  onChange={formKi.handleChange}
-                />
-              </Grid>
+
 
             </Grid>
 
@@ -272,8 +263,8 @@ const Employees = () => {
                   placeholder="Enter Contact Number"
                   size="small"
                   fullWidth
-                  name="contactnumber"
-                  value={formKi.values.contactnumber}
+                  name="contact_number"
+                  value={formKi.values.contact_number}
                   onChange={formKi.handleChange}
                 />
               </Grid>
@@ -345,8 +336,8 @@ const Employees = () => {
                 <Select
                   fullWidth
                   size="small"
-                  name='officeshift'
-                  value={formKi.values.officeshift}
+                  name='office_shift'
+                  value={formKi.values.office_shift}
                   onChange={formKi.handleChange}
                 >
                   <MenuItem value="Morning Shift">Morning Shift</MenuItem>
@@ -369,6 +360,9 @@ const Employees = () => {
                 <Select
                   fullWidth
                   size="small"
+                  name='role'
+                  value={formKi.values.role}
+                  onChange={formKi.handleChange}
                 >
                   <MenuItem value="Normal Role">Normal Role</MenuItem>
                 </Select>
@@ -420,8 +414,8 @@ const Employees = () => {
                   placeholder="Enter Basic Salary "
                   size="small"
                   fullWidth
-                  name="basicsalary"
-                  value={formKi.values.basicsalary}
+                  name="basic_salary"
+                  value={formKi.values.basic_salary}
                   onChange={formKi.handleChange}
                 />
               </Grid>
@@ -431,8 +425,8 @@ const Employees = () => {
                   placeholder="Enter Hourly Rate"
                   size="small"
                   fullWidth
-                  name="hourlyrate"
-                  value={formKi.values.hourlyrate}
+                  name="hourly_rate"
+                  value={formKi.values.hourly_rate}
                   onChange={formKi.handleChange}
                 />
               </Grid>
@@ -442,6 +436,10 @@ const Employees = () => {
                 <Select
                   fullWidth
                   size="small"
+                  name="payslip_type"
+                  value={formKi.values.payslip_type}
+                  onChange={formKi.handleChange}
+
                 >
                   <MenuItem value="Per Month">Per Month</MenuItem>
                 </Select>
@@ -455,8 +453,8 @@ const Employees = () => {
               <Grid item mt={2} lg={4}>
                 <FormLabel>Profile Picture <RequiredStar /> </FormLabel>
                 <input type="file"
-                  name="profilepicture"
-                  value={formKi.values.profilepicture}
+                  name="employee_picture"
+                  value={formKi.values.employee_picture}
                   onChange={formKi.handleChange}
                 />
               </Grid>
