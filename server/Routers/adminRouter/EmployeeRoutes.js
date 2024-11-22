@@ -106,8 +106,8 @@ router.post("/addEmployees", (req, res) => {
             return res.json({ status: false, error: "Error generating employee_id" });
         }
 
-        const q = "INSERT INTO employees (`first_name`, `last_name`, `employee_id`, `contact_number`, `gender`, `email`, `username`, `password`, `office_shift`, `role`, `department`, `designation`, `basic_salary`, `hourly_rate`, `payslip_type`, `employee_picture`) VALUES (?)";
-
+        const q = "INSERT INTO employees (`first_name`, `last_name`, `employee_id`, `contact_number`, `gender`, `email`, `username`, `password`, `office_shift`, `role`, `department`, `designation`, `basic_salary`, `hourly_rate`, `payslip_type`, `employee_picture`,payment_status) VALUES (?)";
+        let payment_status = "Un Paid"
         const VALUES = [
             req.body.first_name,
             req.body.last_name,
@@ -125,6 +125,7 @@ router.post("/addEmployees", (req, res) => {
             req.body.hourly_rate,
             req.body.payslip_type,
             req.body.employee_picture,
+            payment_status
         ];
 
         con.query(q, [VALUES], (err, result) => {

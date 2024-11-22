@@ -16,6 +16,7 @@ import Leads from '../pages/adminpages/Leads'
 import LeaveRequest from '../pages/adminpages/LeaveRequest'
 import MainPage from '../pages/MainPage'
 import ManageClinets from '../pages/adminpages/ManageClinets'
+import Payroll from '../pages/adminpages/Payroll'
 
 const Routers = () => {
   return (
@@ -41,6 +42,7 @@ const Routers = () => {
             <Route path='leads' element={<Leads/>}/>
             <Route path='leaverequest' element={<LeaveRequest/>}/>
             <Route path='manageClinets' element={<ManageClinets/>}/>
+            <Route path='payroll' element={<Payroll/>}/>
 
             
             </Route>

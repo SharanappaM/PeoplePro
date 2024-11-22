@@ -218,6 +218,16 @@ function Dashboard(props) {
                     </ListItemButton>
                 </ListItem>
             </List>
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="payroll">
+                        <ListItemIcon>
+                            <RecordVoiceOverIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Payroll" />
+                    </ListItemButton>
+                </ListItem>
+            </List>
            
         </Box>
     );

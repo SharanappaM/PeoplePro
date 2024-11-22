@@ -6,6 +6,7 @@ import { designationRouter } from "./Routers/adminRouter/DesignationRoutes.js";
 import { projectRouter } from "./Routers/adminRouter/ProjectRouter.js";
 import { tasksRouter } from "./Routers/adminRouter/TasksRouters.js";
 import { clinetRouters } from "./Routers/adminRouter/manageClientRouter.js";
+import { payrollRouter } from "./Routers/adminRouter/PayrollRouters.js";
 
 
 
@@ -34,6 +35,7 @@ app.use("/auth", designationRouter)
 app.use("/auth", projectRouter)
 app.use("/auth", tasksRouter)
 app.use("/auth", clinetRouters)
+app.use("/auth", payrollRouter)
 
 
 
