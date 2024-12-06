@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS employees (
 con.query(createEmployeetable, (err, result) => {
     if (err) {
         console.log("Error While Creating employees Table", err);
+        console.log("Error While Creating employees Table", err);
+
     }
     else {
         console.log("employees Table Created  or already exists");
