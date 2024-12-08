@@ -74,6 +74,22 @@ router.get("/getEmployeesName", (req, res) => {
     })
 })
 
+router.delete("/deleteAllEmployees", (req, res)=>{
+    const q = "DELETE FROM employees"
+
+    con.query(q, (err, result)=>{
+        if(err){
+            console.error("error while delteing employees", err);
+            return res.status(500).json({status:false, msg:"query error "})
+            
+        }
+        return res.status(200).json({status:true, msg:"Employees Deleted"})
+
+    })
+})
+
+
+
 
 
 

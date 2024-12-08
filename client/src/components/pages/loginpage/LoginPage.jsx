@@ -5,6 +5,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import styled from '@emotion/styled';
 import { useNavigate } from "react-router-dom"
+import axios from 'axios';
 
 const ButtonsLoginAs = styled(Button)({
   textTransform: "capitalize"
@@ -42,7 +43,31 @@ const LoginPage = () => {
 
   }
 
+  const [values, setValues] = useState({
+    email: "",
+    password: ""
+})
+const [error, setError] = useState(null)
+// const navigate = useNavigate()
+axios.defaults.withCredentials = true; // store cookies in 
 
+const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post("http://localhost:8787/auth/adminlogin", values)
+        .then(res => {
+            if (res.data.loginStatus) {
+                navigate("/dashboard")
+                localStorage.setItem("role",res.data.role)
+            } else {
+                setError(res.data.error)
+                console.log(res.data.error)
+            }
+        })
+        .catch(error => console.log(error))
+
+
+
+}
   return (
     <div>
       <Box display="flex" height="100vh" >
@@ -91,7 +116,7 @@ const LoginPage = () => {
           <Typography variant='h6'> Welcome to People Pro</Typography>
           <Typography> Welcome back, Please login into an account</Typography>
           <Box p={1}>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Stack
                 component="form"
                 spacing={2}
@@ -109,11 +134,11 @@ const LoginPage = () => {
 
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <AccountCircleIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                  <TextField id="input-with-sx" label="" placeholder='username' fullWidth variant="standard" name='username' value={user.username} />
+                  <TextField id="input-with-sx" label="" placeholder='username' fullWidth variant="standard" onChange={(e) => setValues({ ...values, email: e.target.value })} />
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', }}>
                   <LockIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                  <TextField id="input-with-sx" type='password' label="" placeholder='password' fullWidth variant="standard" name='password' value={user.password} />
+                  <TextField id="input-with-sx" type='password' label="" placeholder='password' fullWidth variant="standard" onChange={(e) => setValues({ ...values, password: e.target.value })} />
                 </Box>
               </Stack>
               <Button fullWidth type='submit' sx={{ mt: 2 }} color='primary' variant='contained'>

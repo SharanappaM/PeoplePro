@@ -163,6 +163,19 @@ const Employees = () => {
   ];
 
 
+  const handleDeleteAllEmplyoess = ()=>{
+    axios.delete("http://localhost:8787/auth/deleteAllEmployees")
+    .then(res=>{
+      toast.success(res.data.msg)
+        setEmployeesCreated(employeeCreated=== false ? true :false)
+      
+    }).catch(err=>{
+      console.log(err);
+      
+    })
+  }
+
+
   return (
     <>
       <ToastContainer position='bottom-right' />
@@ -198,6 +211,7 @@ const Employees = () => {
           </Box>
 
           <Button variant='outlined' onClick={handleOpenEmployeeModal}> Add Employees </Button>
+          <Button variant='outlined' onClick={handleDeleteAllEmplyoess}> Delete All Employees </Button>
         </Box>
 
         <Box sx={{ mt: 2 }}>

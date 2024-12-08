@@ -12,10 +12,10 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
-import { Link ,NavLink, Outlet} from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
-import { Typography,Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar ,Box,AppBar,Drawer} from '@mui/material';
+import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer } from '@mui/material';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -30,7 +30,13 @@ function Dashboard(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
+    const [role1, setRole1] = React.useState(null)
 
+
+    React.useEffect(() => {
+        const role11 = localStorage.getItem("role")
+        setRole1(role11)
+    }, [])
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
@@ -64,98 +70,101 @@ function Dashboard(props) {
 
 
         <Box>
-            <Typography  fontWeight="bold" ml={9} mt={3} color='primary'>People Pro</Typography>
-           
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={NavLink} to="">
-                        <ListItemIcon>
-                            <HomeIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Home" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            <Typography fontWeight="bold" ml={9} mt={3} color='primary'>People Pro</Typography>
 
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="employees">
-                        <ListItemIcon>
-                            <GroupIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Employees" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            {
+                role1 === "admin" && (
+                    <Box>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={NavLink} to="">
+                                    <ListItemIcon>
+                                        <HomeIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Home" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
 
-            {/* Core HR Submenu */}
-            <List>
-                <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
-                    <ListItemIcon>
-                        <LaptopChromebookIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Core HR" />
-                    {openSubMenu === 'coreHR' ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={openSubMenu === 'coreHR'} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/department">
-                            <ListItemIcon>
-                              
-                            </ListItemIcon>
-                            <ListItemText primary="Department" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/designation">
-                            <ListItemIcon>
-                              
-                            </ListItemIcon>
-                            <ListItemText primary="Designation" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/org-chart">
-                            <ListItemIcon>
-                               
-                            </ListItemIcon>
-                            <ListItemText primary="Organization Chart" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-            </List>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="employees">
+                                    <ListItemIcon>
+                                        <GroupIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Employees" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
 
-            {/* Attendance Submenu */}
-            <List>
-                <ListItemButton onClick={() => handleSubMenuToggle('attendance')}>
-                    <ListItemIcon>
-                        <AddchartIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Attendance" />
-                    {openSubMenu === 'attendance' ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overview">
+                        {/* Core HR Submenu */}
+                        <List>
+                            <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
+                                <ListItemIcon>
+                                    <LaptopChromebookIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Core HR" />
+                                {openSubMenu === 'coreHR' ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openSubMenu === 'coreHR'} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/department">
+                                        <ListItemIcon>
+
+                                        </ListItemIcon>
+                                        <ListItemText primary="Department" />
+                                    </ListItemButton>
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/designation">
+                                        <ListItemIcon>
+
+                                        </ListItemIcon>
+                                        <ListItemText primary="Designation" />
+                                    </ListItemButton>
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/org-chart">
+                                        <ListItemIcon>
+
+                                        </ListItemIcon>
+                                        <ListItemText primary="Organization Chart" />
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
+                        </List>
+
+                        {/* Attendance Submenu */}
+                        <List>
+                            <ListItemButton onClick={() => handleSubMenuToggle('attendance')}>
+                                <ListItemIcon>
+                                    <AddchartIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Attendance" />
+                                {openSubMenu === 'attendance' ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overview">
                             <ListItemIcon>
                               
                             </ListItemIcon>
                             <ListItemText primary="Attendance Overview" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
-                            <ListItemIcon>
-                              
-                            </ListItemIcon>
-                            <ListItemText primary="Manual Attendance" />
-                        </ListItemButton>
-                        <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overtime">
-                            <ListItemIcon>
-                                
-                            </ListItemIcon>
-                            <ListItemText primary="Overtime Request" />
-                        </ListItemButton>
-                    </List>
-                </Collapse>
-            </List>
+                        </ListItemButton> */}
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
+                                        <ListItemIcon>
+
+                                        </ListItemIcon>
+                                        <ListItemText primary="Manual Attendance" />
+                                    </ListItemButton>
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overtime">
+                                        <ListItemIcon>
+
+                                        </ListItemIcon>
+                                        <ListItemText primary="Overtime Request" />
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
+                        </List>
 
 
-            <List>
+                        {/* <List>
                 <ListItem disablePadding>
                     <ListItemButton component={Link} to="finance">
                         <ListItemIcon>
@@ -164,41 +173,41 @@ function Dashboard(props) {
                         <ListItemText primary="Finance" />
                     </ListItemButton>
                 </ListItem>
-            </List>
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="tasks">
-                        <ListItemIcon>
-                            <AssignmentIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Tasks" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="projects">
-                        <ListItemIcon>
-                            <AccountTreeIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Projects" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+            </List> */}
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="tasks">
+                                    <ListItemIcon>
+                                        <AssignmentIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tasks" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="projects">
+                                    <ListItemIcon>
+                                        <AccountTreeIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Projects" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
 
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="manageClinets">
-                        <ListItemIcon>
-                            <RecordVoiceOverIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Manage Clinets" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="manageClinets">
+                                    <ListItemIcon>
+                                        <RecordVoiceOverIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Manage Clinets" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
 
-            
-            <List>
+
+                        {/* <List>
                 <ListItem disablePadding>
                     <ListItemButton component={Link} to="leads">
                         <ListItemIcon>
@@ -207,28 +216,31 @@ function Dashboard(props) {
                         <ListItemText primary="Leads" />
                     </ListItemButton>
                 </ListItem>
-            </List>
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="leaverequest">
-                        <ListItemIcon>
-                            <RecordVoiceOverIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Leave Request" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="payroll">
-                        <ListItemIcon>
-                            <RecordVoiceOverIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Payroll" />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-           
+            </List> */}
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="leaverequest">
+                                    <ListItemIcon>
+                                        <RecordVoiceOverIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Leave Request" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="payroll">
+                                    <ListItemIcon>
+                                        <RecordVoiceOverIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Payroll" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </Box>
+                )
+            }
+
         </Box>
     );
 
@@ -241,7 +253,7 @@ function Dashboard(props) {
             <AppBar
                 position="fixed"
                 sx={{
-                    bgcolor:"#1c232f",
+                    bgcolor: "#1c232f",
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                     ml: { sm: `${drawerWidth}px` },
                 }}
@@ -294,7 +306,7 @@ function Dashboard(props) {
             </Box>
             <Box p={2} bgcolor="#f8f9fa" minHeight="100vh" minWidth="82.4vw">
                 <Toolbar />
-                <Outlet/>
+                <Outlet />
 
             </Box>
         </Box>

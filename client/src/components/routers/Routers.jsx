@@ -31,7 +31,7 @@ const Routers = () => {
             <Route path='core-hr/org-chart' element={<OrganizationChart/>}/>
 
 
-            <Route path='attendance/overview' element={<AttendanceOverView/>}/>
+            {/* <Route path='attendance/overview' element={<AttendanceOverView/>}/> */}
             <Route path='attendance/manual' element={<ManualAttendance/>}/>
             <Route path='attendance/overtime' element={<OvertimeRequest/>}/>
 
