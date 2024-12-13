@@ -8,6 +8,7 @@ import { tasksRouter } from "./Routers/adminRouter/TasksRouters.js";
 import { clinetRouters } from "./Routers/adminRouter/manageClientRouter.js";
 import { payrollRouter } from "./Routers/adminRouter/PayrollRouters.js";
 import { adminLoginRouter } from "./Routers/adminRouter/AdminLoginRouter.js";
+import { employeeAttendanceRouter } from "./Routers/emplyoeeRouter/EmplyoeeAttendance.js";
 
 
 
@@ -38,6 +39,8 @@ app.use("/auth", tasksRouter)
 app.use("/auth", clinetRouters)
 app.use("/auth", payrollRouter)
 app.use("/auth", adminLoginRouter)
+app.use("/auth", employeeAttendanceRouter)
+
 
 
 
