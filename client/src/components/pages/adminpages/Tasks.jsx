@@ -201,6 +201,22 @@ const Tasks = () => {
 
     // Add more columns as needed
   ];
+
+
+
+  const handleDeleteAllTasks = ()=>{
+    axios.delete("http://localhost:8787/auth/deleteAllTasks")
+    .then(res=>{
+      toast.success(res.data.msg)
+        setAddedTask(addedTask=== false ? true :false)
+      
+    }).catch(err=>{
+      console.log(err);
+      
+    })
+  }
+
+
   return (
     <Box>
       <ToastContainer position='bottom-right' />
@@ -291,7 +307,7 @@ const Tasks = () => {
               </Select>
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box>
-
+            <Button variant='outlined' onClick={handleDeleteAllTasks}> Delete All Tasls </Button>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField

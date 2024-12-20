@@ -77,4 +77,48 @@ router.get("/listTasks", (req, res) => {
 })
 
 
+router.get("/listTasks/:team", (req, res) => {
+    // Get team name from the route parameter
+    const team = req.params.team;
+
+    if (!team) {
+        return res.status(400).json({ status: false, msg: "Team name is required" });
+    }
+
+    // Modify the query to filter tasks by team name
+    const q = "SELECT * FROM tasks WHERE team = ?";
+
+    con.query(q, [team], (err, result) => {
+        if (err) {
+            console.log("Error while fetching tasks:", err);
+            return res.status(500).json({ status: false, msg: "Query error" });
+        }
+
+        // If no tasks found for the given team name
+        if (result.length === 0) {
+            return res.status(404).json({ status: false, msg: `No tasks found for team ${teamName}` });
+        }
+
+        return res.status(200).json({ result });
+    });
+});
+
+
+
+router.delete("/deleteAlltasks", (req,res)=>{
+    const q = "DELETE FROM tasks";
+
+    con.query(q,(err, result)=>{
+        if(err){
+            console.error("error while delteing employees", err);
+            return res.status(500).json({status:false, msg:"query error "})
+            
+        }
+        return res.status(200).json({status:true, msg:"Tasks Deleted"})
+    } )
+})
+
+
+
+
 export { router as tasksRouter }

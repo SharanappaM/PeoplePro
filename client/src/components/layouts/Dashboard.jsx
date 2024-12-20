@@ -12,10 +12,10 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
-import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer } from '@mui/material';
+import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer, Button, Tooltip, Avatar, Menu, MenuItem } from '@mui/material';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -31,11 +31,42 @@ function Dashboard(props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const [role1, setRole1] = React.useState(null)
+    const [email, setEmail] = React.useState(null)
+
+    const navigate = useNavigate()
+
+
+
+
+
+
+
+
+
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+
+
+
+
+
+
 
 
     React.useEffect(() => {
         const role11 = localStorage.getItem("role")
+        const email1 = localStorage.getItem("email")
         setRole1(role11)
+        setEmail(email1)
+
     }, [])
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -241,6 +272,74 @@ function Dashboard(props) {
                 )
             }
 
+            {
+                role1 === "employee" && (
+                    <Box>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={NavLink} to="">
+                                    <ListItemIcon>
+                                        <HomeIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Home" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="emplyoeeAttendance">
+                                    <ListItemIcon>
+                                        <GroupIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Attendance" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+
+
+
+
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="employeeTasks">
+                                    <ListItemIcon>
+                                        <AssignmentIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tasks" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="emplyoeeProjects">
+                                    <ListItemIcon>
+                                        <AccountTreeIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Projects" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="leaveRequest">
+                                    <ListItemIcon>
+                                        <RecordVoiceOverIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Leave Request" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+
+
+
+
+
+                    </Box>
+                )
+            }
+
         </Box>
     );
 
@@ -262,14 +361,110 @@ function Dashboard(props) {
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        edge="start"
+                        edge="end"
                         onClick={handleDrawerToggle}
                         sx={{ mr: 2, display: { sm: 'none' } }}
                     >
                         <MenuIcon />
                     </IconButton>
 
+
+
+                    <Button onClick={() => navigate("/")}>Logout</Button>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+
+                        <Tooltip title="Account settings">
+                            <IconButton
+                                onClick={handleClick}
+                                size="small"
+                                sx={{ ml: 2 }}
+                                aria-controls={open ? 'account-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                            >
+                                <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+
+                    <Menu
+                        anchorEl={anchorEl}
+                        id="account-menu"
+                        open={open}
+                        onClose={handleClose}
+                        onClick={handleClose}
+                        slotProps={{
+                            paper: {
+                                elevation: 0,
+                                sx: {
+                                    overflow: 'visible',
+                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                    mt: 1.5,
+                                    '& .MuiAvatar-root': {
+                                        width: 32,
+                                        height: 32,
+                                        ml: -0.5,
+                                        mr: 1,
+                                    },
+                                    '&::before': {
+                                        content: '""',
+                                        display: 'block',
+                                        position: 'absolute',
+                                        top: 0,
+                                        right: 14,
+                                        width: 10,
+                                        height: 10,
+                                        bgcolor: 'background.paper',
+                                        transform: 'translateY(-50%) rotate(45deg)',
+                                        zIndex: 0,
+                                    },
+                                },
+                            },
+                        }}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
+                        {/* <MenuItem onClick={handleClose} >
+                            <Avatar /> Profile
+                        </MenuItem> */}
+                        <ListItemButton component={Link} to="profilePage">
+                            <ListItemIcon>
+                            <Avatar />
+                            </ListItemIcon>
+                            <ListItemText primary="Profile" />
+                        </ListItemButton>
+
+
+                        <MenuItem onClick={handleClose}>
+                            <Avatar /> My account
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                {/* <PersonAdd fontSize="small" /> */}+
+                            </ListItemIcon>
+                            Add another account
+                        </MenuItem>
+
+                       
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                {/* <Settings fontSize="small" /> */}-
+                            </ListItemIcon>
+                            Settings
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                {/* <Logout fontSize="small" /> */} *
+                            </ListItemIcon>
+                            Logout
+                        </MenuItem>
+                    </Menu>
+
                 </Toolbar>
+
+
             </AppBar>
             <Box
                 component="nav"

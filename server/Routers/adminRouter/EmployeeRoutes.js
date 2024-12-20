@@ -61,14 +61,14 @@ router.get("/listEmployees", (req, res) => {
     })
 })
 router.get("/getEmployeesName", (req, res) => {
-    const q = "SELECT firstname FROM employees";
+    const q = "SELECT first_name FROM employees";
     con.query(q, (err, result) => {
         if (err) {
             console.error("Query error:", err);  // Log the error for debugging
             return res.status(500).json({ status: false, msg: "Query error" });
         }
 
-        const employeeNames = result.map(emp => emp.firstname);
+        const employeeNames = result.map(emp => emp.first_name);
 
         return res.status(200).json({ employeeNames });
     })

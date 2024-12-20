@@ -17,6 +17,10 @@ import LeaveRequest from '../pages/adminpages/LeaveRequest'
 import MainPage from '../pages/MainPage'
 import ManageClinets from '../pages/adminpages/ManageClinets'
 import Payroll from '../pages/adminpages/Payroll'
+import EmplyoeeAttendance from '../pages/employeepages/EmplyoeeAttendance'
+import EmplyoeeProjects from '../pages/employeepages/EmplyoeeProjects'
+import EmployeeTasks from '../pages/employeepages/EmployeeTasks'
+import ProfilePage from '../pages/ProfilePage'
 
 const Routers = () => {
   return (
@@ -43,6 +47,15 @@ const Routers = () => {
             <Route path='leaverequest' element={<LeaveRequest/>}/>
             <Route path='manageClinets' element={<ManageClinets/>}/>
             <Route path='payroll' element={<Payroll/>}/>
+
+
+            <Route path='emplyoeeAttendance' element={<EmplyoeeAttendance/>}/>
+            <Route path='emplyoeeProjects' element={<EmplyoeeProjects/>}/>
+            <Route path='employeeTasks' element={<EmployeeTasks/>}/>
+            <Route path='leaveRequest' element={<LeaveRequest/>}/>
+            <Route path='profilePage' element={<ProfilePage/>}/>
+
+            
 
             
             </Route>

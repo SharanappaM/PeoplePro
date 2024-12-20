@@ -17,57 +17,61 @@ const LoginPage = () => {
     password: null
   })
 
+  const [loginTab, setLoginTab] = useState("Admin")
+
   const navigate = useNavigate();
 
 
-  const handelAsAdmin = () => {
-    setUser({
-      username: "admin",
-      password: "admin@123"
-    })
-    navigate("/dashboard")
 
-  }
-  const handelAsEmployee = () => {
-    setUser({
-      username: "sharan",
-      password: "admin@123"
-    })
-
-  }
-  const handelAsClient = () => {
-    setUser({
-      username: "tcs001",
-      password: "admin@123"
-    })
-
-  }
 
   const [values, setValues] = useState({
     email: "",
     password: ""
-})
-const [error, setError] = useState(null)
-// const navigate = useNavigate()
-axios.defaults.withCredentials = true; // store cookies in 
+  })
+  const [error, setError] = useState(null)
+  // const navigate = useNavigate()
+  axios.defaults.withCredentials = true; // store cookies in 
 
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:8787/auth/adminlogin", values)
+
+    if (loginTab === "Admin") {
+      axios.post("http://localhost:8787/auth/adminlogin", values)
         .then(res => {
-            if (res.data.loginStatus) {
-                navigate("/dashboard")
-                localStorage.setItem("role",res.data.role)
-            } else {
-                setError(res.data.error)
-                console.log(res.data.error)
-            }
+          if (res.data.loginStatus) {
+            navigate("/dashboard")
+            localStorage.setItem("role", res.data.role)
+          } else {
+            setError(res.data.error)
+            console.log(res.data.error)
+          }
         })
         .catch(error => console.log(error))
 
 
+    }
+    if (loginTab === "Employee") {
+      axios.post("http://localhost:8787/auth/employeelogin", values)
+        .then(res => {
+          if (res.data.loginStatus) {
+            navigate("/dashboard")
+            localStorage.setItem("role", res.data.role)
+            localStorage.setItem("email", res.data.email)
+          } else {
+            setError(res.data.error)
+            console.log(res.data.error)
+          }
+        })
+        .catch(error => console.log(error))
 
-}
+
+    }
+
+
+
+  }
+
+
   return (
     <div>
       <Box display="flex" height="100vh" >
@@ -116,6 +120,8 @@ const handleSubmit = (e) => {
           <Typography variant='h6'> Welcome to People Pro</Typography>
           <Typography> Welcome back, Please login into an account</Typography>
           <Box p={1}>
+            <Typography fontWeight="bold" variant='h6' m={2}>{loginTab}</Typography>
+
             <form onSubmit={handleSubmit}>
               <Stack
                 component="form"
@@ -156,9 +162,9 @@ const handleSubmit = (e) => {
                 sx={{ ml: 12 }}
               >
 
-                <ButtonsLoginAs onClick={handelAsAdmin} fullWidth>Admin</ButtonsLoginAs>
-                <ButtonsLoginAs onClick={handelAsEmployee} fullWidth>Employee</ButtonsLoginAs>
-                <ButtonsLoginAs onClick={handelAsClient} fullWidth>Client</ButtonsLoginAs>
+                <ButtonsLoginAs onClick={() => setLoginTab("Admin")} fullWidth>Admin</ButtonsLoginAs>
+                <ButtonsLoginAs onClick={() => setLoginTab("Employee")} fullWidth>Employee</ButtonsLoginAs>
+                <ButtonsLoginAs onClick={() => setLoginTab("Client")} fullWidth>Client</ButtonsLoginAs>
               </ButtonGroup>
             </form>
           </Box>

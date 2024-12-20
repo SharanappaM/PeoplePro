@@ -81,6 +81,19 @@ router.get("/getByProjectName", (req, res)=>{
     })
 })
 
+router.delete("/deleteAllProjects", (req,res)=>{
+    const q = "DELETE FROM projects";
+
+    con.query(q,(err, result)=>{
+        if(err){
+            console.error("error while delteing employees", err);
+            return res.status(500).json({status:false, msg:"query error "})
+            
+        }
+        return res.status(200).json({status:true, msg:"Projects  Deleted"})
+    } )
+})
+
 
 
 export {router as projectRouter}

@@ -180,6 +180,19 @@ const Projects = () => {
 
     // Add more columns as needed
   ];
+
+
+  const handleDeleteAllProjects = ()=>{
+    axios.delete("http://localhost:8787/auth/deleteAllProjects")
+    .then(res=>{
+      toast.success(res.data.msg)
+        setAddedProject(addedProject=== false ? true :false)
+      
+    }).catch(err=>{
+      console.log(err);
+      
+    })
+  }
   return (
     <Box>
       <ToastContainer position='bottom-right' />
@@ -281,6 +294,8 @@ const Projects = () => {
                 variant="outlined"
               />
             </Box>
+
+            <Button variant='outlined' onClick={handleDeleteAllProjects}> Delete All Projects </Button>
 
             <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}> Add  </Button>
           </Box>
