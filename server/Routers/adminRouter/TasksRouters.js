@@ -3,21 +3,21 @@ import con from "../../utils/db.js"
 const router = express.Router()
 
 const createTasksTable = `
-CREATE TABLE IF NOT EXISTS tasks(
-    tital VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- AUTO_INCREMENT and set as PRIMARY KEY
+    title VARCHAR(45) NOT NULL,         -- Corrected typo 'tital' to 'title'
     project VARCHAR(45) NOT NULL,
-    start_date  VARCHAR(45) NOT NULL,
-    end_date  VARCHAR(45) NOT NULL,
-    summary  VARCHAR(45) NOT NULL,
-    team  VARCHAR(85) NOT NULL,
+    start_date VARCHAR(45) NOT NULL,
+    end_date VARCHAR(45) NOT NULL,
+    summary VARCHAR(45) NOT NULL,
+    team VARCHAR(85) NOT NULL,
     estimated_hour VARCHAR(85) NOT NULL,
     priority VARCHAR(85) NOT NULL,
     description VARCHAR(105) NULL,
     progress VARCHAR(65) NULL,
-    status VARCHAR (225) NULL 
-
-
-)
+    status VARCHAR(225) NULL
+);
+x
 
 `
 
@@ -32,14 +32,84 @@ con.query(createTasksTable, (err, result) => {
 
 })
 
+router.get("/listTasks/:team", (req, res) => {
+    // Get team name from the route parameter
+    const team = req.params.team;
+
+    if (!team) {
+        return res.status(400).json({ status: false, msg: "Team name is required" });
+    }
+
+    // Modify the query to filter tasks by team name
+    const q = "SELECT * FROM tasks WHERE team = ?";
+
+    con.query(q, [team], (err, result) => {
+        if (err) {
+            console.log("Error while fetching tasks:", err);
+            return res.status(500).json({ status: false, msg: "Query error" });
+        }
+
+        // If no tasks found for the given team name
+        if (result.length === 0) {
+            return res.status(404).json({ status: false, msg: `No tasks found for team ${team}` });
+        }
+
+        return res.status(200).json({ result });
+    });
+});
+
+
+
+
+con.query(createTasksTable, (err, result) => {
+    if (err) {
+        console.log("Error While Creating tasks table", err);
+
+    } else {
+        console.log("Tasks Table Created or alreasy exsist");
+
+    }
+
+})
+
+router.get("/listTasksById/:id", (req, res) => {
+    // Get team name from the route parameter
+    const id = req.params.id;
+
+    if (!id) {
+        return res.status(400).json({ status: false, msg: "id  is required" });
+    }
+
+    // Modify the query to filter tasks by team name
+    const q = "SELECT * FROM tasks WHERE id = ?";
+
+    con.query(q, [id], (err, result) => {
+        if (err) {
+            console.log("Error while fetching tasks:", err);
+            return res.status(500).json({ status: false, msg: "Query error" });
+        }
+
+        // If no tasks found for the given team name
+        if (result.length === 0) {
+            return res.status(404).json({ status: false, msg: `No tasks found for team ${id}` });
+        }
+
+        return res.status(200).json({ result });
+    });
+});
+
+
+
+
+
 
 router.post("/createTasks", (req, res) => {
 
 
 
-    const q = "INSERT INTO tasks (`tital`,`project`,`start_date`,`end_date`,`summary`,`team`,`estimated_hour`,`priority`,`description`,`progress`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+    const q = "INSERT INTO tasks (`title`,`project`,`start_date`,`end_date`,`summary`,`team`,`estimated_hour`,`priority`,`description`,`progress`,`status`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
     const VALUES = [
-        req.body.tital,
+        req.body.title,
         req.body.project,
         req.body.start_date,
         req.body.end_date,
@@ -77,31 +147,6 @@ router.get("/listTasks", (req, res) => {
 })
 
 
-router.get("/listTasks/:team", (req, res) => {
-    // Get team name from the route parameter
-    const team = req.params.team;
-
-    if (!team) {
-        return res.status(400).json({ status: false, msg: "Team name is required" });
-    }
-
-    // Modify the query to filter tasks by team name
-    const q = "SELECT * FROM tasks WHERE team = ?";
-
-    con.query(q, [team], (err, result) => {
-        if (err) {
-            console.log("Error while fetching tasks:", err);
-            return res.status(500).json({ status: false, msg: "Query error" });
-        }
-
-        // If no tasks found for the given team name
-        if (result.length === 0) {
-            return res.status(404).json({ status: false, msg: `No tasks found for team ${teamName}` });
-        }
-
-        return res.status(200).json({ result });
-    });
-});
 
 
 

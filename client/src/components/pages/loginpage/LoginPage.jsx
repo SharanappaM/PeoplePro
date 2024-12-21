@@ -35,8 +35,24 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let deafultValues;
     if (loginTab === "Admin") {
-      axios.post("http://localhost:8787/auth/adminlogin", values)
+      deafultValues = {
+        email: "admin@gmail.com",
+        password: "123456"
+
+      }
+    } 
+    if (loginTab === "Employee") {
+      deafultValues = {
+        email: "sharanappahbd@gmail.com",
+        password: "123456"
+
+      }
+    } 
+
+    if (loginTab === "Admin") {
+      axios.post("http://localhost:8787/auth/adminlogin", deafultValues)
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
@@ -51,12 +67,13 @@ const LoginPage = () => {
 
     }
     if (loginTab === "Employee") {
-      axios.post("http://localhost:8787/auth/employeelogin", values)
+      axios.post("http://localhost:8787/auth/employeelogin", deafultValues)
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
             localStorage.setItem("role", res.data.role)
-            localStorage.setItem("email", res.data.email)
+            const employeeParsedData = JSON.stringify(res.data.employeeData)
+            localStorage.setItem("employeeData", employeeParsedData)
           } else {
             setError(res.data.error)
             console.log(res.data.error)

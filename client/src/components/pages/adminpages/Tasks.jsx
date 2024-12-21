@@ -35,7 +35,8 @@ const Tasks = () => {
   const [employeesNames, setEmployeesNames] = useState([])
   const [projectNames, setProjectsNames] = useState([])
   const [tasksList, setTasksList] = useState([])
-
+  const [tasksList1, setTasksList1] = useState([])
+const [selectedTaskId, setSelectedTaskId] = useState(null)
 
 
 
@@ -79,6 +80,8 @@ const Tasks = () => {
   }
 
 
+
+
   useEffect(() => {
     getEmployeesNameData();
     getProjectList();
@@ -88,7 +91,7 @@ const Tasks = () => {
 
   const formki = useFormik({
     initialValues: {
-      tital: null,
+      title: null,
       project: null,
       start_date: null,
       end_date: null,
@@ -117,42 +120,99 @@ const Tasks = () => {
         })
     }
   })
+  // const formKiForEditProject = useFormik({
+  //   initialValues: {
+  //     // title: projectNameData.map((item)=>{item.title}),
+  //     title: null,
+  //     project: null,
+  //     start_date: null,
+  //     end_date: null,
+  //     summary: null,
+  //     team: null,
+  //     estimated_hour: null,
+  //     priority: null,
+  //     description: null,
+  //   },
+  //   onSubmit: (values) => {
+  //     axios.put(`http://localhost:8787/auth/createtasks/${selectedTaskId}`, values)
+  //       .then(res => {
+  //         console.log(res.data.msg);
+  //         toast.success(res.data.msg);
+  //         setOpenCreateTaskModal(false)
+  //         setAddedTask(addedTask === false ? true : false)
+
+  //       }).catch(err => {
+  //         console.log(err);
+
+  //       })
+  //   }
+  // })
+
   const formKiForEditProject = useFormik({
     initialValues: {
-      // tital: projectNameData.map((item)=>{item.tital}),
-      tital: null,
-      project: null,
-      start_date: null,
-      end_date: null,
-      summary: null,
-      team: null,
-      estimated_hour: null,
-      priority: null,
-      description: null,
+      title: '',
+      project: '',
+      start_date: '',
+      end_date: '',
+      summary: '',
+      team: '',
+      estimated_hour: '',
+      priority: '',
+      description: '',
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createtasks", values)
+      axios.put(`http://localhost:8787/auth/createtasks/${selectedTaskId}`, values)
         .then(res => {
           console.log(res.data.msg);
           toast.success(res.data.msg);
-          setOpenCreateTaskModal(false)
-          setAddedTask(addedTask === false ? true : false)
-
+          setOpenEditTaskModal(false);
         }).catch(err => {
           console.log(err);
-
-        })
+        });
     }
-  })
+  });
 
+
+ // Fetch the task data when the edit modal is opened
+ useEffect(() => {
+  if (selectedTaskId) {
+    // Fetch task details from the backend when a task ID is selected
+    axios.get(`http://localhost:8787/auth/listTasksById/${selectedTaskId}`)
+      .then(res => {
+        const task = res.data.result; // Assuming the API returns the task data
+        setTasksList1(task); // Set the task data to local state
+        // console.log("task",task.title); // Set the task data to local state
+        // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
+        console.log("tasksList1",task); // Set the task data to local state
+        
+
+
+        // Populate Formik form with fetched data
+        formKiForEditProject.setValues({
+          title: task.title,
+          project: task.project,
+          start_date: task.start_date,
+          end_date: task.end_date,
+          summary: task.summary,
+          team: task.team,
+          estimated_hour: task.estimated_hour,
+          priority: task.priority,
+          description: task.description,
+        });
+      }).catch(err => {
+        console.error(err);
+        toast.error('Failed to load task data');
+      });
+  }
+}, [selectedTaskId]); // Re-run this effect whenever selectedTaskId changes
 
 
 
 
   const columns = [
     {
-      name: 'Tital',
-      selector: (row) => row.tital,
+      name: 'title',
+      selector: (row) => row.title,
       sortable: true,
     },
     {
@@ -192,8 +252,13 @@ const Tasks = () => {
     },
     {
       name: 'Action',
+      selector: (row) => row.id,
       // selector: (row) => row.progress,
-      cell: row => <IconButton onClick={() => setOpenEditTaskModal(true)} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
+      cell: row => <IconButton onClick={() => {
+        setOpenEditTaskModal(true)
+        setSelectedTaskId(row.id)
+        
+      }} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
       sortable: true,
     },
 
@@ -353,11 +418,11 @@ const Tasks = () => {
               <Grid item mt={2} lg={4}>
                 <FormLabel> Title<RequiredStar /> </FormLabel>
                 <TextField
-                  placeholder="Enter tital"
+                  placeholder="Enter title"
                   size="small"
                   fullWidth
-                  name="tital"
-                  value={formki.values.tital}
+                  name="title"
+                  value={formki.values.title}
                   onChange={formki.handleChange}
                 />
               </Grid>
@@ -519,7 +584,7 @@ const Tasks = () => {
       >
 
         <Box sx={style}>
-          <form action="" onSubmit={formki.handleSubmit} >
+          <form action="" onSubmit={formKiForEditProject.handleSubmit} >
             <Typography>Edit Task </Typography>
 
 
@@ -527,12 +592,12 @@ const Tasks = () => {
               <Grid item mt={2} lg={4}>
                 <FormLabel> Title<RequiredStar /> </FormLabel>
                 <TextField
-                  placeholder="Enter tital"
+                  placeholder="Enter title"
                   size="small"
                   fullWidth
-                  name="tital"
-                  value={formKiForEditProject.values.tital}
-                  onChange={formki.handleChange}
+                  name="title"
+                  value={formKiForEditProject.values.title}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -543,8 +608,8 @@ const Tasks = () => {
                   size="small"
                   name='client'
                   displayEmpty
-                  value={formki.values.client}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.client}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   <MenuItem value="Sharan">Sharan</MenuItem>
                   <MenuItem value="Raju">Raju</MenuItem>
@@ -558,8 +623,8 @@ const Tasks = () => {
                   size="small"
                   name='priority'
                   displayEmpty
-                  value={formki.values.priority}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.priority}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   <MenuItem value="High">High</MenuItem>
                   <MenuItem value="noraml">Noraml</MenuItem>
@@ -575,8 +640,8 @@ const Tasks = () => {
                   size="small"
                   fullWidth
                   name="estimated_hour"
-                  value={formki.values.estimated_hour}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.estimated_hour}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
             </Grid>

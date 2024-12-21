@@ -10,6 +10,7 @@ import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useLocation } from 'react-router-dom';
 
 
 const style = {
@@ -27,6 +28,7 @@ const style = {
 
 
 const EmployeeTasks = () => {
+  const [loggedEmployeeData, setLoggedEmployeeData] = useState(null)
   const [addedTask, setAddedTask] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,16 +36,32 @@ const EmployeeTasks = () => {
   const [openEditTaskModal, setOpenEditTaskModal] = useState(false)
   const [employeesNames, setEmployeesNames] = useState([])
   const [projectNames, setProjectsNames] = useState([])
+
+  const location = useLocation(); // To track route changes
   const [tasksList, setTasksList] = useState([])
 
 
+
+
+
+  useEffect(() => {
+    const employeeData1 = localStorage.getItem("employeeData");
+    // Check if there's valid employee data in localStorage
+    if (employeeData1) {
+      const parsedEmployeeData = JSON.parse(employeeData1);
+      if (parsedEmployeeData && parsedEmployeeData.first_name) {
+        setLoggedEmployeeData(parsedEmployeeData.first_name);
+       
+      }
+    }
+  }, [location]); // Dependency on location (route changes)
 
 
   const getEmployeesNameData = async () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNames(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+        // console.log(res.data.employeeNames);
 
       }).catch(err => {
         console.log(err);
@@ -64,31 +82,43 @@ const EmployeeTasks = () => {
 
 
   }
-  const getProjectList = async () => {
-    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks`)
-      .then(res => {
-        setTasksList(res.data.result)
-        console.log(res.data.result);
-
-      }).catch(err => {
-        console.log(err);
-
-      })
 
 
-  }
+
+
+
+
+
+  useEffect(() => {
+    if (loggedEmployeeData) {
+      const getTasksList = async () => {
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks/${loggedEmployeeData}`);
+          setTasksList(res.data.result);
+          // console.log(res.data.result); // Debugging log
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      getTasksList();
+    }
+  }, [loggedEmployeeData]); // Dependency on loggedEmployeeData
+
+
 
 
   useEffect(() => {
     getEmployeesNameData();
-    getProjectList();
     getProjectsNames();
-  }, [addedTask])
+  }, [])
 
 
   const formki = useFormik({
     initialValues: {
-      tital: null,
+
+      tital: tasksList.map((item)=>{item.tital}),
+      // tital: null,
       project: null,
       start_date: null,
       end_date: null,
@@ -105,7 +135,7 @@ const EmployeeTasks = () => {
             toast.error("Error while creating task")
           }
 
-          console.log(res.data.msg);
+          // console.log(res.data.msg);
           toast.success(res.data.msg);
 
           setOpenCreateTaskModal(false)
@@ -117,33 +147,7 @@ const EmployeeTasks = () => {
         })
     }
   })
-  const formKiForEditProject = useFormik({
-    initialValues: {
-      // tital: projectNameData.map((item)=>{item.tital}),
-      tital: null,
-      project: null,
-      start_date: null,
-      end_date: null,
-      summary: null,
-      team: null,
-      estimated_hour: null,
-      priority: null,
-      description: null,
-    },
-    onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createtasks", values)
-        .then(res => {
-          console.log(res.data.msg);
-          toast.success(res.data.msg);
-          setOpenCreateTaskModal(false)
-          setAddedTask(addedTask === false ? true : false)
 
-        }).catch(err => {
-          console.log(err);
-
-        })
-    }
-  })
 
 
 
@@ -345,7 +349,7 @@ const EmployeeTasks = () => {
                   size="small"
                   fullWidth
                   name="tital"
-                  value={formKiForEditProject.values.tital}
+                  value={formki.values.tital}
                   onChange={formki.handleChange}
                 />
               </Grid>
