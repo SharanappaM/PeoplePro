@@ -36,7 +36,13 @@ const Tasks = () => {
   const [projectNames, setProjectsNames] = useState([])
   const [tasksList, setTasksList] = useState([])
   const [tasksList1, setTasksList1] = useState([])
-const [selectedTaskId, setSelectedTaskId] = useState(null)
+
+
+  const [onHold, setOnHold] = useState(0)
+  const [notStated, setNotStated] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [caomplated, setCaomplated] = useState(0)
+  const [selectedTaskId, setSelectedTaskId] = useState(null)
 
 
 
@@ -65,26 +71,73 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
 
 
   }
-  const getProjectList = async () => {
+  // const getTasksList = async () => {
+  //   await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks`)
+  //     .then(res => {
+  //       const tasks = res.data.result;
+  //       setTasksList(tasks)
+
+  //         // Debug: Log the status of each task to identify issues
+  //         tasks.forEach(task => {
+  //           console.log(`Task status: ${task.status}`);
+  //         });
+
+  //       const completedTasks = tasks.filter(task => task.status?.toLowerCase() === 'completed').length;
+  //        console.log("completedTasks", completedTasks);
+
+
+  //       setCaomplated(completedTasks);
+
+  //     }).catch(err => {
+  //       console.log(err);
+
+  //     })
+
+
+  // }
+
+
+
+  const getTasksList = async () => {
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks`)
       .then(res => {
-        setTasksList(res.data.result)
-        console.log(res.data.result);
+        const tasks = res.data.result;
+        setTasksList(tasks);
+
+
+        const completedTasks = tasks.filter(task => {
+          const status = task.status?.toLowerCase();
+          return status === 'completed' || status === 'caomplated';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const progressTasks = tasks.filter(task => {
+          const status = task.status?.toLowerCase();
+          return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const notStatedTasks = tasks.filter(notStated => {
+          const status = notStated.status?.toLowerCase();
+          return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const onHoldTasks = tasks.filter(onHold => {
+          const status = onHold.status?.toLowerCase();
+          return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+        }).length;
+
+
+        setCaomplated(completedTasks);
+        setProgress(progressTasks);
+        setOnHold(onHoldTasks);
+        setNotStated(notStatedTasks);
 
       }).catch(err => {
         console.log(err);
-
-      })
-
-
-  }
-
+      });
+  };
 
 
 
   useEffect(() => {
     getEmployeesNameData();
-    getProjectList();
+    getTasksList();
     getProjectsNames();
   }, [addedTask])
 
@@ -159,13 +212,15 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
       estimated_hour: '',
       priority: '',
       description: '',
+      status: '',
     },
     onSubmit: (values) => {
-      axios.put(`http://localhost:8787/auth/createtasks/${selectedTaskId}`, values)
+      axios.put(`http://localhost:8787/auth/updateTask/${selectedTaskId}`, values)
         .then(res => {
           console.log(res.data.msg);
           toast.success(res.data.msg);
           setOpenEditTaskModal(false);
+          setAddedTask(addedTask === false ? true : false)
         }).catch(err => {
           console.log(err);
         });
@@ -173,38 +228,43 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
   });
 
 
- // Fetch the task data when the edit modal is opened
- useEffect(() => {
-  if (selectedTaskId) {
-    // Fetch task details from the backend when a task ID is selected
-    axios.get(`http://localhost:8787/auth/listTasksById/${selectedTaskId}`)
-      .then(res => {
-        const task = res.data.result; // Assuming the API returns the task data
-        setTasksList1(task); // Set the task data to local state
-        // console.log("task",task.title); // Set the task data to local state
-        // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
-        console.log("tasksList1",task); // Set the task data to local state
-        
 
 
-        // Populate Formik form with fetched data
-        formKiForEditProject.setValues({
-          title: task.title,
-          project: task.project,
-          start_date: task.start_date,
-          end_date: task.end_date,
-          summary: task.summary,
-          team: task.team,
-          estimated_hour: task.estimated_hour,
-          priority: task.priority,
-          description: task.description,
+
+  // Fetch the task data when the edit modal is opened
+  useEffect(() => {
+    if (selectedTaskId) {
+      // Fetch task details from the backend when a task ID is selected
+      axios.get(`http://localhost:8787/auth/listTasksById/${selectedTaskId}`)
+        .then(res => {
+          const task = res.data; // Assuming the API returns the task data
+          setTasksList1(task); // Set the task data to local state
+          // console.log("task",task.title); // Set the task data to local state
+          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
+          console.log("tasksList1", task); // Set the task data to local state
+
+
+
+          // Populate Formik form with fetched data
+          formKiForEditProject.setValues({
+            title: task.title,
+            project: task.project,
+            client: task.client,
+            start_date: task.start_date,
+            end_date: task.end_date,
+            summary: task.summary,
+            team: task.team,
+            estimated_hour: task.estimated_hour,
+            priority: task.priority,
+            description: task.description,
+            status: task.status,
+          });
+        }).catch(err => {
+          console.error(err);
+          toast.error('Failed to load task data');
         });
-      }).catch(err => {
-        console.error(err);
-        toast.error('Failed to load task data');
-      });
-  }
-}, [selectedTaskId]); // Re-run this effect whenever selectedTaskId changes
+    }
+  }, [selectedTaskId]); // Re-run this effect whenever selectedTaskId changes
 
 
 
@@ -251,13 +311,18 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
       sortable: true,
     },
     {
+      name: 'Status',
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
       name: 'Action',
       selector: (row) => row.id,
       // selector: (row) => row.progress,
       cell: row => <IconButton onClick={() => {
         setOpenEditTaskModal(true)
         setSelectedTaskId(row.id)
-        
+
       }} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
       sortable: true,
     },
@@ -269,16 +334,16 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
 
 
 
-  const handleDeleteAllTasks = ()=>{
+  const handleDeleteAllTasks = () => {
     axios.delete("http://localhost:8787/auth/deleteAllTasks")
-    .then(res=>{
-      toast.success(res.data.msg)
-        setAddedTask(addedTask=== false ? true :false)
-      
-    }).catch(err=>{
-      console.log(err);
-      
-    })
+      .then(res => {
+        toast.success(res.data.msg)
+        setAddedTask(addedTask === false ? true : false)
+
+      }).catch(err => {
+        console.log(err);
+
+      })
   }
 
 
@@ -296,7 +361,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{caomplated}</Typography>
                   <Typography variant='h6'>Total Caomplated</Typography>
                 </Box>
               </Box>
@@ -311,7 +376,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>2</Typography>
+                  <Typography variant='h6'>{progress}</Typography>
                   <Typography variant='h6'>Total In Progress</Typography>
                 </Box>
               </Box>
@@ -326,7 +391,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{notStated}</Typography>
                   <Typography variant='h6'>Total Not Stated</Typography>
                 </Box>
               </Box>
@@ -341,7 +406,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{onHold}</Typography>
                   <Typography variant='h6'>Total On Hold</Typography>
                 </Box>
               </Box>
@@ -601,7 +666,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                 />
               </Grid>
 
-              <Grid item mt={2} lg={4}>
+              {/* <Grid item mt={2} lg={4}>
                 <FormLabel> Client <RequiredStar /> </FormLabel>
                 <Select
                   fullWidth
@@ -615,7 +680,7 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   <MenuItem value="Raju">Raju</MenuItem>
                   <MenuItem value="Basavaraj">Basavaraj</MenuItem>
                 </Select>
-              </Grid>
+              </Grid> */}
               <Grid item mt={2} lg={4}>
                 <FormLabel> Priority <RequiredStar /> </FormLabel>
                 <Select
@@ -629,6 +694,22 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   <MenuItem value="High">High</MenuItem>
                   <MenuItem value="noraml">Noraml</MenuItem>
                   <MenuItem value="Low">Low</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Status <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='status'
+                  displayEmpty
+                  value={formKiForEditProject.values.status}
+                  onChange={formKiForEditProject.handleChange}
+                >
+                  <MenuItem value="Caomplated">Caomplated</MenuItem>
+                  <MenuItem value="Progress">Progress</MenuItem>
+                  <MenuItem value="Not Stated">Not Stated</MenuItem>
+                  <MenuItem value="On Hold">On Hold</MenuItem>
                 </Select>
               </Grid>
 
@@ -654,8 +735,8 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   size="small"
                   fullWidth
                   name="start_date"
-                  value={formki.values.start_date}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.start_date}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -666,8 +747,8 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   size="small"
                   fullWidth
                   name="end_date"
-                  value={formki.values.end_date}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.end_date}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -680,8 +761,8 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   size="small"
                   fullWidth
                   name="summary"
-                  value={formki.values.summary}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.summary}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
             </Grid>
@@ -698,8 +779,8 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   size="small"
                   name='team'
                   displayEmpty
-                  value={formki.values.team}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.team}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   {employeesNames.map((items, index) => (
                     <MenuItem key={index} value={items}>{items}</MenuItem>
@@ -717,8 +798,8 @@ const [selectedTaskId, setSelectedTaskId] = useState(null)
                   size="small"
                   fullWidth
                   name="description"
-                  value={formki.values.description}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.description}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 

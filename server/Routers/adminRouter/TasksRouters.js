@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     progress VARCHAR(65) NULL,
     status VARCHAR(225) NULL
 );
-x
+
 
 `
 
@@ -72,12 +72,40 @@ con.query(createTasksTable, (err, result) => {
 
 })
 
+// router.get("/listTasksById/:id", (req, res) => {
+//     // Get team name from the route parameter
+//     const id = req.params.id;
+
+//     if (!id) {
+//         return res.status(400).json({ status: false, msg: "id  is required" });
+//     }
+
+//     // Modify the query to filter tasks by team name
+//     const q = "SELECT * FROM tasks WHERE id = ?";
+
+//     con.query(q, [id], (err, result) => {
+//         if (err) {
+//             console.log("Error while fetching tasks:", err);
+//             return res.status(500).json({ status: false, msg: "Query error" });
+//         }
+
+//         // If no tasks found for the given team name
+//         if (result.length === 0) {
+//             return res.status(404).json({ status: false, msg: `No tasks found for team ${id}` });
+//         }
+
+//         return res.status(200).json({ result });
+//     });
+// });
+
+
+
 router.get("/listTasksById/:id", (req, res) => {
     // Get team name from the route parameter
     const id = req.params.id;
 
     if (!id) {
-        return res.status(400).json({ status: false, msg: "id  is required" });
+        return res.status(400).json({ status: false, msg: "id is required" });
     }
 
     // Modify the query to filter tasks by team name
@@ -94,10 +122,48 @@ router.get("/listTasksById/:id", (req, res) => {
             return res.status(404).json({ status: false, msg: `No tasks found for team ${id}` });
         }
 
-        return res.status(200).json({ result });
+        // Return the task directly
+        return res.status(200).json(result[0]); // This returns the first task object, not in an array.
     });
 });
 
+
+
+router.put("/updateTask/:id", (req, res) => {
+    const id = req.params.id;
+    const { title, project, start_date, end_date, summary, team, estimated_hour, priority, description, progress, status } = req.body;
+
+    // Ensure that the task ID and fields to update are provided
+    if (!id) {
+        return res.status(400).json({ status: false, msg: "id is required" });
+    }
+
+    if (!title || !project || !start_date || !end_date || !summary || !team || !estimated_hour || !priority || !description) {
+        return res.status(400).json({ status: false, msg: "All fields are required" });
+    }
+
+    // SQL query to update the task
+    const q = `
+        UPDATE tasks
+        SET title = ?, project = ?, start_date = ?, end_date = ?, summary = ?, team = ?, estimated_hour = ?, priority = ?, description = ?, progress = ?, status = ?
+        WHERE id = ?
+    `;
+
+    con.query(q, [title, project, start_date, end_date, summary, team, estimated_hour, priority, description, progress, status, id], (err, result) => {
+        if (err) {
+            console.log("Error while updating task:", err);
+            return res.status(500).json({ status: false, msg: "Query error" });
+        }
+
+        // If no rows were affected, the task was not found
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ status: false, msg: `No task found with id ${id}` });
+        }
+
+        // Return a success response
+        return res.status(200).json({ status: true, msg: "Task updated successfully" });
+    });
+});
 
 
 

@@ -155,8 +155,8 @@ const EmployeeTasks = () => {
 
   const columns = [
     {
-      name: 'Tital',
-      selector: (row) => row.tital,
+      name: 'Title',
+      selector: (row) => row.title,
       sortable: true,
     },
     {
@@ -349,7 +349,7 @@ const EmployeeTasks = () => {
                   size="small"
                   fullWidth
                   name="tital"
-                  value={formki.values.tital}
+                  value={formki.values.title}
                   onChange={formki.handleChange}
                 />
               </Grid>
