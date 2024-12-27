@@ -12,7 +12,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer, Button, Tooltip, Avatar, Menu, MenuItem } from '@mui/material';
@@ -37,10 +37,7 @@ function Dashboard(props) {
 
 
 
-
-
-
-
+   
 
 
 
@@ -90,25 +87,22 @@ function Dashboard(props) {
         setOpenSubMenu((prevState) => (prevState === menu ? null : menu));
     };
 
-    const activeLinkStyle = {
-        backgroundColor: '#f0f0f0', // or any color you prefer
-        color: '#1976d2', // active color (blue for example)
-    };
+  
 
     const drawer = (
 
 
 
 
-        <Box>
-            <Typography fontWeight="bold" ml={9} mt={3} color='primary'>People Pro</Typography>
+        <Box minHeight="100vh" bgcolor="primary.main">
+            <Typography fontWeight="bold" ml={9} mt={3} color='#333'>People Pro</Typography>
 
             {
                 role1 === "admin" && (
-                    <Box>
+                    <Box >
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={NavLink} to="">
+                                <ListItemButton component={NavLink} to="" >
                                     <ListItemIcon>
                                         <HomeIcon />
                                     </ListItemIcon>
@@ -119,7 +113,7 @@ function Dashboard(props) {
 
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="employees">
+                                <ListItemButton component={Link} to="employees" >
                                     <ListItemIcon>
                                         <GroupIcon />
                                     </ListItemIcon>
@@ -130,7 +124,7 @@ function Dashboard(props) {
 
                         {/* Core HR Submenu */}
                         <List>
-                            <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
+                        <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
                                 <ListItemIcon>
                                     <LaptopChromebookIcon />
                                 </ListItemIcon>
@@ -352,7 +346,7 @@ function Dashboard(props) {
             <AppBar
                 position="fixed"
                 sx={{
-                    bgcolor: "#1c232f",
+                    bgcolor: "secondary.main",
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                     ml: { sm: `${drawerWidth}px` },
                 }}
@@ -372,7 +366,7 @@ function Dashboard(props) {
 
                     <Button onClick={() => navigate("/")}>Logout</Button>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
 
                         <Tooltip title="Account settings">
                             <IconButton

@@ -72,32 +72,6 @@ con.query(createTasksTable, (err, result) => {
 
 })
 
-// router.get("/listTasksById/:id", (req, res) => {
-//     // Get team name from the route parameter
-//     const id = req.params.id;
-
-//     if (!id) {
-//         return res.status(400).json({ status: false, msg: "id  is required" });
-//     }
-
-//     // Modify the query to filter tasks by team name
-//     const q = "SELECT * FROM tasks WHERE id = ?";
-
-//     con.query(q, [id], (err, result) => {
-//         if (err) {
-//             console.log("Error while fetching tasks:", err);
-//             return res.status(500).json({ status: false, msg: "Query error" });
-//         }
-
-//         // If no tasks found for the given team name
-//         if (result.length === 0) {
-//             return res.status(404).json({ status: false, msg: `No tasks found for team ${id}` });
-//         }
-
-//         return res.status(200).json({ result });
-//     });
-// });
-
 
 
 router.get("/listTasksById/:id", (req, res) => {

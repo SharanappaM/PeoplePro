@@ -34,8 +34,12 @@ const Projects = () => {
   const [openEditProjectModal, setOpenEditProjectModal] = useState(false)
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [projectList, setProjectList] = useState([])
-
-
+  const [selectedProjectId, setSelectedProjectId] = useState(null)
+  const [onHold, setOnHold] = useState(0)
+  const [notStated, setNotStated] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [caomplated, setCaomplated] = useState(0)
+  const [selectedTaskId, setSelectedTaskId] = useState(null)
 
   const getEmployeesNameData = async () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
@@ -53,8 +57,32 @@ const Projects = () => {
   const getProjectList = async () => {
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects`)
       .then(res => {
-        setProjectList(res.data.result)
-        console.log(res.data.result);
+        const tasks = res.data.result;
+        setProjectList(tasks)
+
+        
+        const completedTasks = tasks.filter(task => {
+          const status = task.status?.toLowerCase();
+          return status === 'completed' || status === 'completed';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const progressTasks = tasks.filter(task => {
+          const status = task.status?.toLowerCase();
+          return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const notStatedTasks = tasks.filter(notStated => {
+          const status = notStated.status?.toLowerCase();
+          return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+        }).length;
+        const onHoldTasks = tasks.filter(onHold => {
+          const status = onHold.status?.toLowerCase();
+          return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+        }).length;
+
+
+        setCaomplated(completedTasks);
+        setProgress(progressTasks);
+        setOnHold(onHoldTasks);
+        setNotStated(notStatedTasks);
 
       }).catch(err => {
         console.log(err);
@@ -73,7 +101,7 @@ const Projects = () => {
 
   const formki = useFormik({
     initialValues: {
-      tital: null,
+      title: null,
       client: null,
       start_date: null,
       end_date: null,
@@ -99,30 +127,30 @@ const Projects = () => {
   })
   const formKiForEditProject = useFormik({
     initialValues: {
-      tital: employeesNameData.map((item)=>{item.tital}),
-      client: null,
-      start_date: null,
-      end_date: null,
-      summary: null,
-      team: null,
-      estimated_hour: null,
-      priority: null,
-      description: null,
+      title: '',
+      client:'',
+      start_date: '',
+      end_date: '',
+      summary: '',
+      team: '',
+      estimated_hour: '',
+      priority: '',
+      description: '',
+      status: '',
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createProject", values)
+      axios.put(`http://localhost:8787/auth/updateProject/${selectedProjectId}`, values)
         .then(res => {
           console.log(res.data.msg);
           toast.success(res.data.msg);
-          setOpenCreateProjectModal(false)
+          setOpenEditProjectModal(false);
           setAddedProject(addedProject === false ? true : false)
-
         }).catch(err => {
           console.log(err);
-
-        })
+        });
     }
-  })
+  });
+
 
 
 
@@ -130,8 +158,8 @@ const Projects = () => {
 
   const columns = [
     {
-      name: 'Tital',
-      selector: (row) => row.tital,
+      name: 'title',
+      selector: (row) => row.title,
       sortable: true,
     },
     {
@@ -170,9 +198,18 @@ const Projects = () => {
       sortable: true,
     },
     {
+      name: 'Status',
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
       name: 'Action',
       // selector: (row) => row.progress,
-      cell: row => <IconButton onClick={()=>setOpenEditProjectModal(true)} sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
+      cell: row => <IconButton onClick={() => {
+        setOpenEditProjectModal(true)
+        setSelectedProjectId(row.id)
+      }
+      } sx={{ p: 0, m: 0 }}><EditNoteIcon row={row} /></IconButton>,
       sortable: true,
     },
 
@@ -182,22 +219,62 @@ const Projects = () => {
   ];
 
 
-  const handleDeleteAllProjects = ()=>{
+  const handleDeleteAllProjects = () => {
     axios.delete("http://localhost:8787/auth/deleteAllProjects")
-    .then(res=>{
-      toast.success(res.data.msg)
-        setAddedProject(addedProject=== false ? true :false)
-      
-    }).catch(err=>{
-      console.log(err);
-      
-    })
+      .then(res => {
+        toast.success(res.data.msg)
+        setAddedProject(addedProject === false ? true : false)
+
+      }).catch(err => {
+        console.log(err);
+
+      })
   }
+
+
+
+
+
+  // Fetch the task data when the edit modal is opened
+  useEffect(() => {
+    if (selectedProjectId) {
+      // Fetch task details from the backend when a task ID is selected
+      axios.get(`http://localhost:8787/auth/listProjectsById/${selectedProjectId}`)
+        .then(res => {
+          const task = res.data; // Assuming the API returns the task data
+
+          // console.log("task",task.title); // Set the task data to local state
+          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
+          console.log("priject", task); // Set the task data to local state
+
+
+
+          // Populate Formik form with fetched data
+          formKiForEditProject.setValues({
+            title: task.title,
+            client: task.client,
+            start_date: task.start_date,
+            end_date: task.end_date,
+            summary: task.summary,
+            team: task.team,
+            estimated_hour: task.estimated_hour,
+            priority: task.priority,
+            description: task.description,
+            status: task.status,
+          });
+        }).catch(err => {
+          console.error(err);
+          toast.error('Failed to load task data');
+        });
+    }
+  }, [selectedProjectId]); // Re-run this effect whenever selectedTaskId changes
+
+
   return (
     <Box>
       <ToastContainer position='bottom-right' />
       <Box>
-        <Grid container spacing={4}>
+      <Grid container spacing={4}>
           <Grid item >
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -207,7 +284,7 @@ const Projects = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{caomplated}</Typography>
                   <Typography variant='h6'>Total Caomplated</Typography>
                 </Box>
               </Box>
@@ -222,7 +299,7 @@ const Projects = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>2</Typography>
+                  <Typography variant='h6'>{progress}</Typography>
                   <Typography variant='h6'>Total In Progress</Typography>
                 </Box>
               </Box>
@@ -237,7 +314,7 @@ const Projects = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{notStated}</Typography>
                   <Typography variant='h6'>Total Not Stated</Typography>
                 </Box>
               </Box>
@@ -252,7 +329,7 @@ const Projects = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>5</Typography>
+                  <Typography variant='h6'>{onHold}</Typography>
                   <Typography variant='h6'>Total On Hold</Typography>
                 </Box>
               </Box>
@@ -330,11 +407,11 @@ const Projects = () => {
               <Grid item mt={2} lg={4}>
                 <FormLabel> Title<RequiredStar /> </FormLabel>
                 <TextField
-                  placeholder="Enter tital"
+                  placeholder="Enter title"
                   size="small"
                   fullWidth
-                  name="tital"
-                  value={formki.values.tital}
+                  name="title"
+                  value={formki.values.title}
                   onChange={formki.handleChange}
                 />
               </Grid>
@@ -369,6 +446,8 @@ const Projects = () => {
                   <MenuItem value="Low">Low</MenuItem>
                 </Select>
               </Grid>
+
+             
 
 
               <Grid item mt={2} lg={4}>
@@ -490,20 +569,20 @@ const Projects = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
-          <form action="" onSubmit={formki.handleSubmit} >
+        <Box sx={style}>  
+          <form action="" onSubmit={formKiForEditProject.handleSubmit} >
 
 
             <Grid container spacing={2}  >
               <Grid item mt={2} lg={4}>
                 <FormLabel> Title<RequiredStar /> </FormLabel>
                 <TextField
-                  placeholder="Enter tital"
+                  placeholder="Enter title"
                   size="small"
                   fullWidth
-                  name="tital"
-                  value={formKiForEditProject.values.tital}
-                  onChange={formki.handleChange}
+                  name="title"
+                  value={formKiForEditProject.values.title}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -514,8 +593,8 @@ const Projects = () => {
                   size="small"
                   name='client'
                   displayEmpty
-                  value={formki.values.client}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.client}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   <MenuItem value="Sharan">Sharan</MenuItem>
                   <MenuItem value="Raju">Raju</MenuItem>
@@ -529,12 +608,29 @@ const Projects = () => {
                   size="small"
                   name='priority'
                   displayEmpty
-                  value={formki.values.priority}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.priority}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   <MenuItem value="High">High</MenuItem>
                   <MenuItem value="noraml">Noraml</MenuItem>
                   <MenuItem value="Low">Low</MenuItem>
+                </Select>
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Status <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='status'
+                  displayEmpty
+                  value={formKiForEditProject.values.status}
+                  onChange={formKiForEditProject.handleChange}
+                >
+                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="Progress">Progress</MenuItem>
+                  <MenuItem value="Not Stated">Not Stated</MenuItem>
+                  <MenuItem value="On Hold">On Hold</MenuItem>
                 </Select>
               </Grid>
 
@@ -546,8 +642,8 @@ const Projects = () => {
                   size="small"
                   fullWidth
                   name="estimated_hour"
-                  value={formki.values.estimated_hour}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.estimated_hour}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
             </Grid>
@@ -560,8 +656,8 @@ const Projects = () => {
                   size="small"
                   fullWidth
                   name="start_date"
-                  value={formki.values.start_date}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.start_date}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -572,8 +668,8 @@ const Projects = () => {
                   size="small"
                   fullWidth
                   name="end_date"
-                  value={formki.values.end_date}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.end_date}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
@@ -586,8 +682,8 @@ const Projects = () => {
                   size="small"
                   fullWidth
                   name="summary"
-                  value={formki.values.summary}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.summary}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
             </Grid>
@@ -604,8 +700,8 @@ const Projects = () => {
                   size="small"
                   name='team'
                   displayEmpty
-                  value={formki.values.team}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.team}
+                  onChange={formKiForEditProject.handleChange}
                 >
                   {employeesNameData.map((items, index) => (
                     <MenuItem key={index} value={items}>{items}</MenuItem>
@@ -623,8 +719,8 @@ const Projects = () => {
                   size="small"
                   fullWidth
                   name="description"
-                  value={formki.values.description}
-                  onChange={formki.handleChange}
+                  value={formKiForEditProject.values.description}
+                  onChange={formKiForEditProject.handleChange}
                 />
               </Grid>
 
