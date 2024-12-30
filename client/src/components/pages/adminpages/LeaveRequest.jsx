@@ -2,9 +2,7 @@ import React from 'react'
 
 const LeaveRequest = () => {
   return (
-    <div>
-      LeaveRequest
-    </div>
+    <div>LeaveRequest</div>
   )
 }
 

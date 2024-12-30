@@ -37,7 +37,7 @@ function Dashboard(props) {
 
 
 
-   
+
 
 
 
@@ -87,7 +87,7 @@ function Dashboard(props) {
         setOpenSubMenu((prevState) => (prevState === menu ? null : menu));
     };
 
-  
+
 
     const drawer = (
 
@@ -124,7 +124,7 @@ function Dashboard(props) {
 
                         {/* Core HR Submenu */}
                         <List>
-                        <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
+                            <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
                                 <ListItemIcon>
                                     <LaptopChromebookIcon />
                                 </ListItemIcon>
@@ -155,7 +155,7 @@ function Dashboard(props) {
                             </Collapse>
                         </List>
 
-                        {/* Attendance Submenu */}
+                        {/* Attendance Submenu
                         <List>
                             <ListItemButton onClick={() => handleSubMenuToggle('attendance')}>
                                 <ListItemIcon>
@@ -166,12 +166,7 @@ function Dashboard(props) {
                             </ListItemButton>
                             <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
-                                    {/* <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overview">
-                            <ListItemIcon>
-                              
-                            </ListItemIcon>
-                            <ListItemText primary="Attendance Overview" />
-                        </ListItemButton> */}
+                                    
                                     <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
                                         <ListItemIcon>
 
@@ -186,19 +181,19 @@ function Dashboard(props) {
                                     </ListItemButton>
                                 </List>
                             </Collapse>
+                        </List> */}
+
+
+                        <List>
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="attendance/manual">
+                                    <ListItemIcon>
+                                        <CardTravelIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Attendance" />
+                                </ListItemButton>
+                            </ListItem>
                         </List>
-
-
-                        {/* <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="finance">
-                        <ListItemIcon>
-                            <CardTravelIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Finance" />
-                    </ListItemButton>
-                </ListItem>
-            </List> */}
                         <List>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="tasks">
@@ -424,7 +419,7 @@ function Dashboard(props) {
                         </MenuItem> */}
                         <ListItemButton component={Link} to="profilePage">
                             <ListItemIcon>
-                            <Avatar />
+                                <Avatar />
                             </ListItemIcon>
                             <ListItemText primary="Profile" />
                         </ListItemButton>
@@ -441,7 +436,7 @@ function Dashboard(props) {
                             Add another account
                         </MenuItem>
 
-                       
+
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
                                 {/* <Settings fontSize="small" /> */}-

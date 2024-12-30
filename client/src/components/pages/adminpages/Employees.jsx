@@ -7,6 +7,8 @@ import axios, { } from "axios"
 import { customStyles } from '../ReactDataTableStyle';
 import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEmployeesData } from '../../redux/features/employee/employeeSlice';
 
 
 const style = {
@@ -26,6 +28,12 @@ const style = {
 
 
 const Employees = () => {
+
+
+  const dispatch = useDispatch();
+  const { employees, loading, error } = useSelector((state) => state.employee);
+
+
   const [employeesData, setEmployeesData] = useState([]);
   const [employeeCreated, setEmployeesCreated] = useState(false);
   const [departmentName, setDepartmentName] = useState([]);
@@ -116,10 +124,26 @@ const Employees = () => {
 
   }
   useEffect(() => {
-    getEmployeeData();
+    // getEmployeeData();
     getByDepartmetName();
     getByDesignationName()
   }, [employeeCreated])
+
+
+
+  useEffect(() => {
+    // dispatch(fetchEmployeesData());
+
+    if (employees.length === 0) {
+      dispatch(fetchEmployeesData());
+    }
+
+
+  }, [dispatch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
 
   const columns = [
     {
@@ -218,7 +242,7 @@ const Employees = () => {
           <DataTable
             columns={columns}
             // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-            data={employeesData}
+            data={employees.result}
             pagination
             paginationPerPage={entries}
             customStyles={customStyles}

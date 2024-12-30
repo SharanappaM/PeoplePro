@@ -1,35 +1,87 @@
-import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Card, Divider, MenuItem, Select, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import axios, { } from "axios"
+import { customStyles } from '../../ReactDataTableStyle';
+
+
+
+
+
+
 
 const OrganizationChart = () => {
-  const [data, setData] = useState([]);
+  const [employeesData, setEmployeesData] = useState([]);
+  const [employeeCreated, setEmployeesCreated] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
 
+
+  const getEmployeeData = () => {
+    axios.get("http://localhost:8787/auth/listEmployees")
+      .then(res => {
+        setEmployeesData(res.data.result)
+        console.log(res.data.result);
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+  useEffect(() => {
+    getEmployeeData();
+  }, [employeeCreated])
+
   const columns = [
     {
-      name: 'Department Head',
-      selector: (row) => row.department,
+      name: 'First Name',
+      selector: (row) => row.first_name,
       sortable: true,
     },
     {
-      name: 'Designation Name',
+      name: 'Last Name',
+      selector: (row) => row.last_name,
+      sortable: true,
+    },
+    {
+      name: 'Contact Number',
+      selector: (row) => row.contact_number,
+      sortable: true,
+    },
+    {
+      name: 'Gender',
+      selector: (row) => row.gender,
+      sortable: true,
+    },
+    {
+      name: 'Designation',
       selector: (row) => row.designation,
       sortable: true,
     },
     {
-      name: 'Description',
-      selector: (row) => row.description,
+      name: 'Role',
+      selector: (row) => row.role,
       sortable: true,
     },
+
+    {
+      name: 'Status',
+      selector: (row) => "Active",
+      sortable: true,
+    },
+
     // Add more columns as needed
   ];
 
 
+
+
   return (
     <>
-      <Card sx={{  padding: 2 }}>
+
+      <Card sx={{ width: "75vw", padding: 2 }}>
         <Typography variant="h6" mb={2}>Organization Chart</Typography>
         <Divider />
 
@@ -59,19 +111,27 @@ const OrganizationChart = () => {
               variant="outlined"
             />
           </Box>
+
+
         </Box>
 
         <Box sx={{ mt: 2 }}>
           <DataTable
             columns={columns}
-            data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+            // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+            data={employeesData}
             pagination
             paginationPerPage={entries}
+            customStyles={customStyles}
           />
         </Box>
       </Card>
+
+
+
     </>
   )
 }
 
 export default OrganizationChart
+
