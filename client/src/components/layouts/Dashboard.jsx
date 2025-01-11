@@ -20,8 +20,10 @@ import CardTravelIcon from '@mui/icons-material/CardTravel';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 const drawerWidth = 270;
-
+import logo from "../../assets/Logo.png"
 
 
 
@@ -94,13 +96,14 @@ function Dashboard(props) {
 
 
 
-        <Box minHeight="100vh" bgcolor="primary.main">
-            <Typography fontWeight="bold" ml={9} mt={3} color='#333'>People Pro</Typography>
+        <Box height="100vh" bgcolor="primary.main">
+            {/* <Typography fontWeight="bold" ml={9} mt={3} color='#333'>TalentHub</Typography> */}
+            <img width={200} style={{marginLeft:30}} src={logo} alt="" />
 
             {
                 role1 === "admin" && (
                     <Box >
-                        <List>
+                    
                             <ListItem disablePadding>
                                 <ListItemButton component={NavLink} to="" >
                                     <ListItemIcon>
@@ -109,9 +112,7 @@ function Dashboard(props) {
                                     <ListItemText primary="Home" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
-
-                        <List>
+                     
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="employees" >
                                     <ListItemIcon>
@@ -120,10 +121,10 @@ function Dashboard(props) {
                                     <ListItemText primary="Employees" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
+                       
 
                         {/* Core HR Submenu */}
-                        <List>
+                        
                             <ListItemButton onClick={() => handleSubMenuToggle('coreHR')}>
                                 <ListItemIcon>
                                     <LaptopChromebookIcon />
@@ -153,38 +154,10 @@ function Dashboard(props) {
                                     </ListItemButton>
                                 </List>
                             </Collapse>
-                        </List>
+                    
 
-                        {/* Attendance Submenu
-                        <List>
-                            <ListItemButton onClick={() => handleSubMenuToggle('attendance')}>
-                                <ListItemIcon>
-                                    <AddchartIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Attendance" />
-                                {openSubMenu === 'attendance' ? <ExpandLess /> : <ExpandMore />}
-                            </ListItemButton>
-                            <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
-                                <List component="div" disablePadding>
-                                    
-                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
-                                        <ListItemIcon>
+                       
 
-                                        </ListItemIcon>
-                                        <ListItemText primary="Manual Attendance" />
-                                    </ListItemButton>
-                                    <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overtime">
-                                        <ListItemIcon>
-
-                                        </ListItemIcon>
-                                        <ListItemText primary="Overtime Request" />
-                                    </ListItemButton>
-                                </List>
-                            </Collapse>
-                        </List> */}
-
-
-                        <List>
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="attendance/manual">
                                     <ListItemIcon>
@@ -193,8 +166,7 @@ function Dashboard(props) {
                                     <ListItemText primary="Attendance" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
-                        <List>
+                       
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="tasks">
                                     <ListItemIcon>
@@ -203,8 +175,8 @@ function Dashboard(props) {
                                     <ListItemText primary="Tasks" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
-                        <List>
+                        
+                     
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="projects">
                                     <ListItemIcon>
@@ -213,9 +185,9 @@ function Dashboard(props) {
                                     <ListItemText primary="Projects" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
+                       
 
-                        <List>
+                     
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="manageClinets">
                                     <ListItemIcon>
@@ -224,39 +196,28 @@ function Dashboard(props) {
                                     <ListItemText primary="Manage Clinets" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
-
-
-                        {/* <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={Link} to="leads">
-                        <ListItemIcon>
-                            <RecordVoiceOverIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Leads" />
-                    </ListItemButton>
-                </ListItem>
-            </List> */}
-                        <List>
-                            <ListItem disablePadding>
-                                <ListItemButton component={Link} to="leaverequest">
-                                    <ListItemIcon>
-                                        <RecordVoiceOverIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Leave Request" />
-                                </ListItemButton>
-                            </ListItem>
-                        </List>
-                        <List>
+                      
                             <ListItem disablePadding>
                                 <ListItemButton component={Link} to="payroll">
                                     <ListItemIcon>
-                                        <RecordVoiceOverIcon />
+                                        <AccountBalanceWalletIcon />
                                     </ListItemIcon>
                                     <ListItemText primary="Payroll" />
                                 </ListItemButton>
                             </ListItem>
-                        </List>
+                     
+
+
+                     
+                            <ListItem disablePadding>
+                                <ListItemButton component={Link} to="leaverequest">
+                                    <ListItemIcon>
+                                        <MedicalServicesIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Leave Request" />
+                                </ListItemButton>
+                            </ListItem>
+                    
                     </Box>
                 )
             }
@@ -507,3 +468,58 @@ Dashboard.propTypes = {
 
 export default Dashboard;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Attendance Submenu
+// <List>
+//     <ListItemButton onClick={() => handleSubMenuToggle('attendance')}>
+//         <ListItemIcon>
+//             <AddchartIcon />
+//         </ListItemIcon>
+//         <ListItemText primary="Attendance" />
+//         {openSubMenu === 'attendance' ? <ExpandLess /> : <ExpandMore />}
+//     </ListItemButton>
+//     <Collapse in={openSubMenu === 'attendance'} timeout="auto" unmountOnExit>
+//         <List component="div" disablePadding>
+            
+//             <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/manual">
+//                 <ListItemIcon>
+
+//                 </ListItemIcon>
+//                 <ListItemText primary="Manual Attendance" />
+//             </ListItemButton>
+//             <ListItemButton sx={{ pl: 4 }} component={Link} to="attendance/overtime">
+//                 <ListItemIcon>
+
+//                 </ListItemIcon>
+//                 <ListItemText primary="Overtime Request" />
+//             </ListItemButton>
+//         </List>
+//     </Collapse>
+// </List>
+
+
+
+// <List>
+//                 <ListItem disablePadding>
+//                     <ListItemButton component={Link} to="leads">
+//                         <ListItemIcon>
+//                             <RecordVoiceOverIcon/>
+//                         </ListItemIcon>
+//                         <ListItemText primary="Leads" />
+//                     </ListItemButton>
+//                 </ListItem>
+//             </List>

@@ -7,6 +7,8 @@ import axios, { } from "axios"
 import { customStyles } from '../ReactDataTableStyle';
 import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchClientData } from '../../redux/features/employee/clientSlice';
 
 
 const style = {
@@ -26,6 +28,13 @@ const style = {
 
 
 const ManageClinets = () => {
+
+    const dispatch = useDispatch();
+
+    const {clientList , loading , error} = useSelector((state)=>state.clints)
+
+    
+    
     const [clientData, setClientData] = useState([]);
     const [entries, setEntries] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
@@ -91,8 +100,14 @@ const ManageClinets = () => {
 
     }
     useEffect(() => {
-        getEmployeeData();
-    }, [clientCreated])
+        // getEmployeeData();
+        if(clientList.length===0){
+            dispatch(fetchClientData())
+        }
+       
+       
+        
+    }, [dispatch,clientCreated])
 
     const columns = [
         {
@@ -178,7 +193,7 @@ const ManageClinets = () => {
                     <DataTable
                         columns={columns}
                         // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-                        data={clientData}
+                        data={clientList.result}
                         pagination
                         paginationPerPage={entries}
                         customStyles={customStyles}

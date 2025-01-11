@@ -6,6 +6,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import styled from '@emotion/styled';
 import { useNavigate } from "react-router-dom"
 import axios from 'axios';
+import logo from "../../../assets/PeoplePro.png"
 
 const ButtonsLoginAs = styled(Button)({
   textTransform: "capitalize"
@@ -133,7 +134,8 @@ const LoginPage = () => {
 
           }}
         >
-          <Typography variant='h5' fontWeight="bold" color='secondary'> People Pro</Typography>
+          {/* <Typography variant='h5' fontWeight="bold" color='secondary'> People Pro</Typography> */}
+          <img width={200} src={logo} alt="" />
           <Typography variant='h6'> Welcome to People Pro</Typography>
           <Typography> Welcome back, Please login into an account</Typography>
           <Box p={1}>

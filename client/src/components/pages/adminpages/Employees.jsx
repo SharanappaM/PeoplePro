@@ -133,12 +133,9 @@ const Employees = () => {
 
   useEffect(() => {
     // dispatch(fetchEmployeesData());
-
     if (employees.length === 0) {
       dispatch(fetchEmployeesData());
     }
-
-
   }, [dispatch]);
 
   if (loading) return <p>Loading...</p>;

@@ -10,6 +10,9 @@ import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEmployeesData } from '../../redux/features/employee/employeeSlice';
+import { featchProjectData } from '../../redux/features/employee/projectSlice';
 
 
 const style = {
@@ -27,19 +30,81 @@ const style = {
 
 
 const Projects = () => {
+
+  const dispatch = useDispatch();
+
+  const {projects , loading , error} = useSelector((state)=>state.project)
+
+
   const [addedProject, setAddedProject] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const [openEditProjectModal, setOpenEditProjectModal] = useState(false)
   const [employeesNameData, setEmployeesNameData] = useState([])
-  const [projectList, setProjectList] = useState([])
+
   const [selectedProjectId, setSelectedProjectId] = useState(null)
+
+  
   const [onHold, setOnHold] = useState(0)
   const [notStated, setNotStated] = useState(0)
   const [progress, setProgress] = useState(0)
   const [caomplated, setCaomplated] = useState(0)
-  const [selectedTaskId, setSelectedTaskId] = useState(null)
+
+
+
+  // console.log(projects , "projects");
+
+  const projectDashboardCountData = ()=>{
+    const tasks = projects.result;
+    const completedTasks = tasks?.filter(task => {
+      const status = task.status?.toLowerCase();
+      return status === 'completed' || status === 'completed';  // Match both "Completed" and "Caomplated"
+    }).length;
+    const progressTasks = tasks?.filter(task => {
+      const status = task.status?.toLowerCase();
+      return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+    }).length;
+    const notStatedTasks = tasks?.filter(notStated => {
+      const status = notStated.status?.toLowerCase();
+      return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+    }).length;
+    const onHoldTasks = tasks?.filter(onHold => {
+      const status = onHold.status?.toLowerCase();
+      return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+    }).length;
+
+
+    setCaomplated(completedTasks);
+    setProgress(progressTasks);
+    setOnHold(onHoldTasks);
+    setNotStated(notStatedTasks);
+
+
+    console.log(completedTasks,"completedTasks");
+    
+  }
+  
+
+  useEffect(()=>{
+    getEmployeesNameData();
+    // projectDashboardCountData();
+   
+      if (projects.length === 0) {
+          dispatch(featchProjectData());
+         
+        }
+  },[addedProject, dispatch])
+
+
+
+
+  useEffect(() => {
+    // Recalculate counts whenever projects are updated
+    if (projects && projects.result) {
+      projectDashboardCountData();
+    }
+  }, [projects]);
 
   const getEmployeesNameData = async () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
@@ -58,7 +123,7 @@ const Projects = () => {
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects`)
       .then(res => {
         const tasks = res.data.result;
-        setProjectList(tasks)
+        // setProjectList(tasks)
 
         
         const completedTasks = tasks.filter(task => {
@@ -93,10 +158,8 @@ const Projects = () => {
   }
 
 
-  useEffect(() => {
-    getEmployeesNameData();
-    getProjectList();
-  }, [addedProject])
+
+
 
 
   const formki = useFormik({
@@ -381,7 +444,7 @@ const Projects = () => {
             <DataTable
               columns={columns}
               // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={projectList}
+              data={projects.result}
               pagination
               paginationPerPage={entries}
               customStyles={customStyles}

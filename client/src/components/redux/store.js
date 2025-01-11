@@ -11,9 +11,14 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import employeeReducer from './features/employee/employeeSlice';
-
+import projectReducer from "./features/employee/projectSlice"
+import departmentReducer from "./features/employee/departmentSlice"
+import clintsReducer from "./features/employee/clientSlice"
 export const store = configureStore({
   reducer: {
     employee: employeeReducer, // Ensure this matches the slice name
+    project : projectReducer,
+    department : departmentReducer,
+    clints: clintsReducer,
   },
 });

@@ -7,14 +7,20 @@ import { customStyles } from '../../ReactDataTableStyle';
 import { useFormik } from "formik"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDepartmentData } from '../../../redux/features/employee/departmentSlice';
 
 const Department = () => {
+  const dishpacth = useDispatch();
   const [epartmentData, setDepartmentData] = useState([]);
   const [entries, setEntries] = useState(7);
   const [searchTerm, setSearchTerm] = useState('');
   const [employeesNameData, setEmployeesNameData] = useState([])
-  const [addedDepartment , setAddedDepartment] = useState(false)
+  const [addedDepartment, setAddedDepartment] = useState(false)
+  const { departmentList, loading, error } = useSelector((state) => state.department)
 
+
+  console.log(departmentList, "departmentList");
 
   const getDepartmentData = async () => {
     await axios.get("http://localhost:8787/auth/listDepartments")
@@ -42,12 +48,12 @@ const Department = () => {
 
 
   }
-  const handelDeleteAlltDepartments =  () => {
-    
-     axios.delete("http://localhost:8787/auth/deleteAlltDepartments")
+  const handelDeleteAlltDepartments = () => {
+
+    axios.delete("http://localhost:8787/auth/deleteAlltDepartments")
       .then(res => {
         toast.success(res.data.msg)
-        setAddedDepartment(addedDepartment=== false ? true :false)
+        setAddedDepartment(addedDepartment === false ? true : false)
       }).catch(err => {
         console.log(err);
 
@@ -70,7 +76,7 @@ const Department = () => {
         .then((response) => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
-          setAddedDepartment(addedDepartment=== false ? true :false)
+          setAddedDepartment(addedDepartment === false ? true : false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
@@ -83,10 +89,15 @@ const Department = () => {
 
 
   useEffect(() => {
-    getDepartmentData();
+    // getDepartmentData();
     getEmployeesNameData();
   }, [addedDepartment])
 
+  useEffect(() => {
+    if (departmentList.length === 0) {
+      dishpacth(fetchDepartmentData())
+    }
+  }, [dishpacth, addedDepartment])
   const columns = [
     {
       name: 'Department Head',
@@ -114,7 +125,7 @@ const Department = () => {
 
       <ToastContainer position='bottom-right' />
       <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-        <Card sx={{ p: 4, width: "35%", height:"50%" }}>
+        <Card sx={{ p: 4, width: "35%", height: "50%" }}>
           <Typography variant="h6" mb={2}>Add New Department</Typography>
           <Divider />
           <form action="" onSubmit={formik.handleSubmit}>
@@ -183,7 +194,7 @@ const Department = () => {
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box> */}
 
-            
+
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
@@ -204,7 +215,7 @@ const Department = () => {
             <DataTable
               columns={columns}
               // data={epartmentData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={epartmentData}
+              data={departmentList.result}
               pagination
               paginationPerPage={entries}
               customStyles={customStyles}
