@@ -1,11 +1,15 @@
 import { Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 const ProfilePage = () => {
     const [role1, setRole1] = useState(null)
     const [loggedEmployeeData, setLoggedEmployeeData] = useState(null)
     const location = useLocation(); // To track route changes
+    const { loading, data, error } = useSelector((state) => state.post);
+
+    console.log(data, "data");
 
     useEffect(() => {
         const role11 = localStorage.getItem("role")
@@ -25,8 +29,9 @@ const ProfilePage = () => {
     return (
         <div>
 
-            <Typography>Role : {role1}</Typography>
-            <Typography>Name : {loggedEmployeeData}</Typography>
+            <Typography>Username : {data.employeeData.username}</Typography>
+            <Typography>Name: {data.employeeData.first_name}</Typography>
+            <Typography>Role: {data.role}</Typography>
         </div>
     )
 }

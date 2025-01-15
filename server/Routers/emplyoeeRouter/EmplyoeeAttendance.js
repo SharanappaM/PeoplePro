@@ -40,7 +40,28 @@ router.post("/addemplyoeeattendance", (req, res) => {
         req.body.date,
         req.body.in_time,
         req.body.out_time,
-        // req.body.total_hours,
+        // req.body.total_hours,    
+
+    ]
+
+    con.query(q, VALUES, (err, result) => {
+        if (err) {
+            console.log("Error while create emplyoee_attendance ", err);
+            return res.status(500).json({ status: false, msg: "Query error" })
+        }
+
+        return res.json({ status: true, msg: "Attendance Added" });
+    })
+})
+router.post("/addemployeeattendance/:name", (req, res) => {
+    const q = "INSERT INTO emplyoee_attendance (`emplyoee_name`,`date`,`in_time`,`out_time`) VALUES (?,?,?,?)"
+
+    const VALUES = [
+        req.body.emplyoee_name,
+        req.body.date,
+        req.body.in_time,
+        req.body.out_time,
+        // req.body.total_hours,    
 
     ]
 
