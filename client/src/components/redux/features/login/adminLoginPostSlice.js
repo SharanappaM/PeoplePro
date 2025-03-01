@@ -2,15 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-export const sendLoginPostRequest = createAsyncThunk(
-    "post/sendLoginPostRequest",
+export const sendLoginPostRequestForAdmin = createAsyncThunk(
+    "post/sendLoginPostRequestForAdmin",
     async (requestData, {rejectWithValue})=>{
         try{
-            const response = await axios.post("http://localhost:8787/auth/employeelogin", requestData);
+            const response = await axios.post("http://localhost:8787/auth/adminlogin", requestData);
             console.log(response.data, "loginadar");
-         
+          
            
             return response.data;
+            
             
             
 
@@ -21,8 +22,8 @@ export const sendLoginPostRequest = createAsyncThunk(
 )
 
 
-const loginPostSlice = createSlice({
-    name:"post",
+const adminLoginPostSlice = createSlice({
+    name:"postForAdmin",
     initialState:{
         loading : false,
         data: null,
@@ -37,15 +38,15 @@ const loginPostSlice = createSlice({
       },
       extraReducers: (builder) => {
         builder
-          .addCase(sendLoginPostRequest.pending, (state) => {
+          .addCase(sendLoginPostRequestForAdmin.pending, (state) => {
             state.loading = true;
             state.error = null;
           })
-          .addCase(sendLoginPostRequest.fulfilled, (state, action) => {
+          .addCase(sendLoginPostRequestForAdmin.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
           })
-          .addCase(sendLoginPostRequest.rejected, (state, action) => {
+          .addCase(sendLoginPostRequestForAdmin.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
           });
@@ -53,5 +54,5 @@ const loginPostSlice = createSlice({
 })
 
 
-export const { resetPostState } = loginPostSlice.actions;
-export default loginPostSlice.reducer;
+export const { resetPostState } = adminLoginPostSlice.actions;
+export default adminLoginPostSlice.reducer;

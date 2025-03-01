@@ -25,43 +25,43 @@ import ProfilePage from '../pages/ProfilePage'
 const Routers = () => {
   return (
     <div>
-        <Routes>
-            <Route path='/' element={<LoginPage/>}/>
-            <Route path='/dashboard' element={<Dashboard/>}>
-            <Route path='' element={<MainPage/>}/>
-            <Route path='employees' element={<Employees/>}/>
-            <Route path='core-hr/department' element={<Department/>}/>
-            <Route path='core-hr/designation' element={<Designation/>}/>
-            <Route path='core-hr/org-chart' element={<OrganizationChart/>}/>
+      <Routes>
+        <Route path='/' element={<LoginPage />} />
+        <Route path='/dashboard' element={<Dashboard />}>
+          <Route path='' element={<MainPage />} />
+          <Route path='employees' element={<Employees />} />
+          <Route path='core-hr/department' element={<Department />} />
+          <Route path='core-hr/designation' element={<Designation />} />
+          <Route path='core-hr/org-chart' element={<OrganizationChart />} />
 
 
-            {/* <Route path='attendance/overview' element={<AttendanceOverView/>}/> */}
-            <Route path='attendance/manual' element={<ManualAttendance/>}/>
-            <Route path='attendance/overtime' element={<OvertimeRequest/>}/>
+          {/* <Route path='attendance/overview' element={<AttendanceOverView/>}/> */}
+          <Route path='attendance/manual' element={<ManualAttendance />} />
+          <Route path='attendance/overtime' element={<OvertimeRequest />} />
 
 
-            <Route path='finance' element={<Finance/>}/>
-            <Route path='tasks' element={<Tasks/>}/>
-            <Route path='projects' element={<Projects/>}/>
-            <Route path='leads' element={<Leads/>}/>
-            <Route path='leaverequest' element={<LeaveRequest/>}/>
-            <Route path='manageClinets' element={<ManageClinets/>}/>
-            <Route path='payroll' element={<Payroll/>}/>
+          <Route path='finance' element={<Finance />} />
+          <Route path='tasks' element={<Tasks />} />
+          <Route path='projects' element={<Projects />} />
+          <Route path='leads' element={<Leads />} />
+          <Route path='leaverequest' element={<LeaveRequest />} />
+          <Route path='manageClinets' element={<ManageClinets />} />
+          <Route path='payroll' element={<Payroll />} />
 
 
-            <Route path='emplyoeeAttendance' element={<EmplyoeeAttendance/>}/>
-            <Route path='emplyoeeProjects' element={<EmplyoeeProjects/>}/>
-            <Route path='employeeTasks' element={<EmployeeTasks/>}/>
-            <Route path='leaveRequest' element={<LeaveRequest/>}/>
-            <Route path='profilePage' element={<ProfilePage/>}/>
+          <Route path='emplyoeeAttendance' element={<EmplyoeeAttendance />} />
+          <Route path='emplyoeeProjects' element={<EmplyoeeProjects />} />
+          <Route path='employeeTasks' element={<EmployeeTasks />} />
+          <Route path='leaveRequest' element={<LeaveRequest />} />
+          <Route path='profilePage' element={<ProfilePage />} />
 
-            
 
-            
-            </Route>
-            
-        </Routes>
-      
+
+
+        </Route>
+
+      </Routes>
+
     </div>
   )
 }

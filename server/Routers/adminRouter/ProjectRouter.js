@@ -181,4 +181,36 @@ router.delete("/deleteAllProjects", (req, res) => {
 
 
 
+
+router.get("/listProjects/:team", (req, res) => {
+    // Get team name from the route parameter
+    const team = req.params.team;
+
+    if (!team) {
+        return res.status(400).json({ status: false, msg: "Team name is required" });
+    }
+
+    // Modify the query to filter projects by team name
+    const q = "SELECT * FROM projects WHERE team = ?";
+
+    con.query(q, [team], (err, result) => {
+        if (err) {
+            console.log("Error while fetching projects:", err);
+            return res.status(500).json({ status: false, msg: "Query error" });
+        }
+
+        // If no tasks found for the given team name
+        if (result.length === 0) {
+            return res.status(404).json({ status: false, msg: `No projects found for team ${team}` });
+        }
+
+        return res.status(200).json({ result });
+    });
+});
+
+
+
+
+
+
 export { router as projectRouter }

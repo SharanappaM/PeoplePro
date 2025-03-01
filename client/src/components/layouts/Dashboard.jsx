@@ -50,6 +50,7 @@ function Dashboard(props) {
     };
     const handleClose = () => {
         setAnchorEl(null);
+       
     };
 
 
@@ -320,7 +321,12 @@ function Dashboard(props) {
 
 
 
-                    <Button onClick={() => navigate("/")}>Logout</Button>
+                    <Button onClick={() => {
+                        navigate("/")
+                        localStorage.removeItem("adminData")
+                        localStorage.removeItem("employeeData")
+                        localStorage.removeItem("role")
+                    }}>Logout</Button>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
 
