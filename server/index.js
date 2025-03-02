@@ -10,6 +10,7 @@ import { payrollRouter } from "./Routers/adminRouter/PayrollRouters.js";
 import { adminLoginRouter } from "./Routers/adminRouter/AdminLoginRouter.js";
 import { employeeAttendanceRouter } from "./Routers/emplyoeeRouter/EmplyoeeAttendance.js";
 import { emplyoeeLoginRouter } from "./Routers/emplyoeeRouter/EmplyoeeLoginRouter.js";
+import { leaveRequestsRouter } from "./Routers/adminRouter/LeaveRequestRouter.js";
 
 
 
@@ -41,8 +42,9 @@ app.use("/auth", clinetRouters)
 app.use("/auth", payrollRouter)
 app.use("/auth", adminLoginRouter)
 app.use("/auth", employeeAttendanceRouter)
-app.use("/auth", emplyoeeLoginRouter)
 
+app.use("/auth", emplyoeeLoginRouter)
+app.use("/auth", leaveRequestsRouter)
 
 
 

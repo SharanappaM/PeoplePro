@@ -10,7 +10,9 @@ import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 
 import EditNoteIcon from '@mui/icons-material/EditNote';
-
+import DonutSmallIcon from '@mui/icons-material/DonutSmall';
+import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 
 const style = {
   position: 'absolute',
@@ -41,7 +43,7 @@ const Tasks = () => {
   const [onHold, setOnHold] = useState(0)
   const [notStated, setNotStated] = useState(0)
   const [progress, setProgress] = useState(0)
-  const [caomplated, setCaomplated] = useState(0)
+  const [Completed, setCompleted] = useState(0)
   const [selectedTaskId, setSelectedTaskId] = useState(null)
 
 
@@ -86,7 +88,7 @@ const Tasks = () => {
   //        console.log("completedTasks", completedTasks);
 
 
-  //       setCaomplated(completedTasks);
+  //       setCompleted(completedTasks);
 
   //     }).catch(err => {
   //       console.log(err);
@@ -107,23 +109,23 @@ const Tasks = () => {
 
         const completedTasks = tasks.filter(task => {
           const status = task.status?.toLowerCase();
-          return status === 'completed' || status === 'caomplated';  // Match both "Completed" and "Caomplated"
+          return status === 'completed' || status === 'Completed';  // Match both "Completed" and "Completed"
         }).length;
         const progressTasks = tasks.filter(task => {
           const status = task.status?.toLowerCase();
-          return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+          return status === 'progress' || status === 'progress';  // Match both "Completed" and "Completed"
         }).length;
         const notStatedTasks = tasks.filter(notStated => {
           const status = notStated.status?.toLowerCase();
-          return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+          return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Completed"
         }).length;
         const onHoldTasks = tasks.filter(onHold => {
           const status = onHold.status?.toLowerCase();
-          return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+          return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Completed"
         }).length;
 
 
-        setCaomplated(completedTasks);
+        setCompleted(completedTasks);
         setProgress(progressTasks);
         setOnHold(onHoldTasks);
         setNotStated(notStatedTasks);
@@ -361,8 +363,8 @@ const Tasks = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>{caomplated}</Typography>
-                  <Typography variant='h6'>Total Caomplated</Typography>
+                  <Typography variant='h6'>{Completed}</Typography>
+                  <Typography variant='h6'>Total Completed</Typography>
                 </Box>
               </Box>
             </Card>
@@ -371,7 +373,7 @@ const Tasks = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="lightgoldenrodyellow">
-                  <FactCheckIcon sx={{
+                  <DonutSmallIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>
@@ -386,7 +388,7 @@ const Tasks = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="lightblue">
-                  <FactCheckIcon sx={{
+                  <NoteAltOutlinedIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>
@@ -401,7 +403,7 @@ const Tasks = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="orangered">
-                  <FactCheckIcon sx={{
+                  <PendingActionsRoundedIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>
@@ -706,7 +708,7 @@ const Tasks = () => {
                   value={formKiForEditProject.values.status}
                   onChange={formKiForEditProject.handleChange}
                 >
-                  <MenuItem value="Caomplated">Caomplated</MenuItem>
+                  <MenuItem value="Completed">Completed</MenuItem>
                   <MenuItem value="Progress">Progress</MenuItem>
                   <MenuItem value="Not Stated">Not Stated</MenuItem>
                   <MenuItem value="On Hold">On Hold</MenuItem>

@@ -274,7 +274,7 @@ function Dashboard(props) {
 
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="leaveRequest">
+                                <ListItemButton component={Link} to="employeeLeaveRequest">
                                     <ListItemIcon>
                                         <RecordVoiceOverIcon />
                                     </ListItemIcon>

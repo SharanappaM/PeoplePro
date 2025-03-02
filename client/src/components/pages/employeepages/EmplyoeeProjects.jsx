@@ -15,6 +15,10 @@ import { fetchEmployeesData } from '../../redux/features/employee/employeeSlice'
 import { featchProjectData } from '../../redux/features/employee/projectSlice';
 
 
+import DonutSmallIcon from '@mui/icons-material/DonutSmall';
+import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -49,7 +53,7 @@ const EmplyoeeProjects = () => {
   const [onHold, setOnHold] = useState(0)
   const [notStated, setNotStated] = useState(0)
   const [progress, setProgress] = useState(0)
-  const [caomplated, setCaomplated] = useState(0)
+  const [Completed, setCompleted] = useState(0)
 
   const [loggedEmployeeData, setLoggedEmployeeData] = useState(null)
 
@@ -74,23 +78,23 @@ const EmplyoeeProjects = () => {
     const tasks = projectList.result;
     const completedTasks = tasks?.filter(task => {
       const status = task.status?.toLowerCase();
-      return status === 'completed' || status === 'completed';  // Match both "Completed" and "Caomplated"
+      return status === 'completed' || status === 'completed';  // Match both "Completed" and "Completed"
     }).length;
     const progressTasks = tasks?.filter(task => {
       const status = task.status?.toLowerCase();
-      return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+      return status === 'progress' || status === 'progress';  // Match both "Completed" and "Completed"
     }).length;
     const notStatedTasks = tasks?.filter(notStated => {
       const status = notStated.status?.toLowerCase();
-      return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+      return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Completed"
     }).length;
     const onHoldTasks = tasks?.filter(onHold => {
       const status = onHold.status?.toLowerCase();
-      return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+      return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Completed"
     }).length;
 
 
-    setCaomplated(completedTasks);
+    setCompleted(completedTasks);
     setProgress(progressTasks);
     setOnHold(onHoldTasks);
     setNotStated(notStatedTasks);
@@ -143,23 +147,23 @@ const EmplyoeeProjects = () => {
 
             const completedTasks = tasks.filter(task => {
               const status = task.status?.toLowerCase();
-              return status === 'completed' || status === 'completed';  // Match both "Completed" and "Caomplated"
+              return status === 'completed' || status === 'completed';  // Match both "Completed" and "Completed"
             }).length;
             const progressTasks = tasks.filter(task => {
               const status = task.status?.toLowerCase();
-              return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+              return status === 'progress' || status === 'progress';  // Match both "Completed" and "Completed"
             }).length;
             const notStatedTasks = tasks.filter(notStated => {
               const status = notStated.status?.toLowerCase();
-              return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+              return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Completed"
             }).length;
             const onHoldTasks = tasks.filter(onHold => {
               const status = onHold.status?.toLowerCase();
-              return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+              return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Completed"
             }).length;
 
 
-            setCaomplated(completedTasks);
+            setCompleted(completedTasks);
             setProgress(progressTasks);
             setOnHold(onHoldTasks);
             setNotStated(notStatedTasks);
@@ -332,8 +336,8 @@ const EmplyoeeProjects = () => {
                   }} />
                 </Box>
                 <Box p={2}>
-                  <Typography variant='h6'>{caomplated}</Typography>
-                  <Typography variant='h6'>Total Caomplated</Typography>
+                  <Typography variant='h6'>{Completed}</Typography>
+                  <Typography variant='h6'>Total Completed</Typography>
                 </Box>
               </Box>
             </Card>
@@ -342,7 +346,7 @@ const EmplyoeeProjects = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="lightgoldenrodyellow">
-                  <FactCheckIcon sx={{
+                  <DonutSmallIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>
@@ -357,7 +361,7 @@ const EmplyoeeProjects = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="lightblue">
-                  <FactCheckIcon sx={{
+                  <NoteAltOutlinedIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>
@@ -372,7 +376,7 @@ const EmplyoeeProjects = () => {
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box p={2} bgcolor="orangered">
-                  <FactCheckIcon sx={{
+                  <PendingActionsRoundedIcon sx={{
                     fontSize: "60px"
                   }} />
                 </Box>

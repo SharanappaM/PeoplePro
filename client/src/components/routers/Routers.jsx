@@ -21,10 +21,11 @@ import EmplyoeeAttendance from '../pages/employeepages/EmplyoeeAttendance'
 import EmplyoeeProjects from '../pages/employeepages/EmplyoeeProjects'
 import EmployeeTasks from '../pages/employeepages/EmployeeTasks'
 import ProfilePage from '../pages/ProfilePage'
+import EmpLeaveRequest from '../pages/employeepages/EmpLeaveRequest'
 
 const Routers = () => {
   return (
-    <div>
+    <div style={{overflowX:"hidden"}}>
       <Routes>
         <Route path='/' element={<LoginPage />} />
         <Route path='/dashboard' element={<Dashboard />}>
@@ -54,6 +55,7 @@ const Routers = () => {
           <Route path='employeeTasks' element={<EmployeeTasks />} />
           <Route path='leaveRequest' element={<LeaveRequest />} />
           <Route path='profilePage' element={<ProfilePage />} />
+          <Route path='employeeLeaveRequest' element={<EmpLeaveRequest />} />
 
 
 

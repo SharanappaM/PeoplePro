@@ -56,19 +56,19 @@ const MainPage = () => {
     const tasks = projects.result;
     const completedTasks = tasks?.filter(task => {
       const status = task.status?.toLowerCase();
-      return status === 'completed' || status === 'completed';  // Match both "Completed" and "Caomplated"
+      return status === 'completed' || status === 'completed';  // Match both "Completed" and "Completed"
     }).length;
     const progressTasks = tasks?.filter(task => {
       const status = task.status?.toLowerCase();
-      return status === 'progress' || status === 'progress';  // Match both "Completed" and "Caomplated"
+      return status === 'progress' || status === 'progress';  // Match both "Completed" and "Completed"
     }).length;
     const notStatedTasks = tasks?.filter(notStated => {
       const status = notStated.status?.toLowerCase();
-      return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Caomplated"
+      return status === 'not stated' || status === 'not stated';  // Match both "Completed" and "Completed"
     }).length;
     const onHoldTasks = tasks?.filter(onHold => {
       const status = onHold.status?.toLowerCase();
-      return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Caomplated"
+      return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Completed"
     }).length;
 
 

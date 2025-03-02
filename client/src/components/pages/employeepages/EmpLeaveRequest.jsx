@@ -29,23 +29,21 @@ const style = {
 
 
 
-const LeaveRequest = () => {
+const EmpLeaveRequest = () => {
 
   const [employeesName, setEmployeesName] = useState(false)
-  const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const { loading, data, error } = useSelector((state) => state.post);
   console.log(data, " daat from atted");
   const [loggedEmpData, setLoggedEmpData] = useState(null)
   console.log(loggedEmpData?.first_name, "loggedEmpData");
   const [leaveList, setLeaveList] = useState([])
-  const [employeesNameData, setEmployeesNameData] = useState([])
 
 
   const getLeaveList = () => {
-    axios.get(`http://localhost:8787/auth/listLeaveRequests`)
+    axios.get(`http://localhost:8787/auth/listLeaveRequests/${loggedEmpData}`)
       .then(res => {
         console.log(res.data);
-        setLeaveList(res.data.result);
+        setLeaveList(res.data);
 
       }).catch(err => {
         console.log(err);
@@ -60,7 +58,7 @@ const LeaveRequest = () => {
       selector: (row) => row.employee_name,
       sortable: true,
     },
-
+  
 
     {
       name: 'From',
@@ -111,7 +109,7 @@ const LeaveRequest = () => {
       console.log('Form submitted with values:', values);
       const formadat = {
         ...values,
-        // employee_name: loggedEmpData,
+        employee_name: loggedEmpData,
         leave_status: "Pending",
 
       }
@@ -121,7 +119,6 @@ const LeaveRequest = () => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
           setEmployeesName(employeesName === false ? true : false)
-          setOpenCreateProjectModal(false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
@@ -130,19 +127,7 @@ const LeaveRequest = () => {
   });
 
 
-  const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
-      .then(res => {
-        setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
 
-      }).catch(err => {
-        console.log(err);
-
-      })
-
-
-  }
 
 
   useEffect(() => {
@@ -165,78 +150,19 @@ const LeaveRequest = () => {
 
 
   useEffect(() => {
-    getLeaveList();
-    getEmployeesNameData();
-  }, [])
+    if(loggedEmpData){
+      getLeaveList();
+    }
+ 
+  }, [loggedEmpData])
 
 
   return (
     <>
 
       <ToastContainer position='bottom-right' />
-
-      <Box m={2}>
-
-        <Card sx={{ width: "75vw", padding: 2 }}>
-          <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
-          <Divider />
-
-
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                // value={entries}
-
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                // value={searchTerm}
-
-                variant="outlined"
-              />
-            </Box>
-
-            <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}>Apply Leave </Button>
-          </Box>
-
-
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={leaveList}
-              pagination
-              // paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
-
-      </Box>
-
-
-
-      <Modal
-        open={openCreateProjectModal}
-        onClose={() => setOpenCreateProjectModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-
-        <Card sx={style}>
+      <Box sx={{ display: "flex", justifyContent: "space-around",}}>
+        <Card sx={{ p: 4, width: "45%", height: "50%" }}>
           <Typography variant="h6" mb={2}>Apply Leave </Typography>
           <Divider />
 
@@ -247,22 +173,16 @@ const LeaveRequest = () => {
             <Grid container spacing={2}  >
               <Grid item mt={2} lg={6}>
                 <FormLabel>Employee Name or Id<RequiredStar /> </FormLabel>
-                <Select
-                  labelId="department-select-label"
-                  id="department-select"
-                  fullWidth
+                <TextField
+
                   size="small"
-                  name='employee_name'
-                  onChange={formik.handleChange}
-                  value={formik.values.employee_name}
-
-                >
-
-                  {employeesNameData.map((items, index) => (
-                    <MenuItem key={index} value={items}>{items}</MenuItem>
-                  ))}
-
-                </Select>
+                  fullWidth
+                  // name="employee_name"
+                  disabled
+                  type='text'
+                  value={loggedEmpData}
+                // onChange={formik.handleChange}
+                />
               </Grid>
 
 
@@ -362,7 +282,109 @@ const LeaveRequest = () => {
 
 
         </Card>
-      </Modal>
+
+        <Card sx={{ width: "50%", padding: 2 }}>
+          <Typography variant="h6" mb={2}>Leave View</Typography>
+          <Divider />
+
+
+
+          <Stack direction="row" spacing={2} mt={2}>
+            <Card sx={{}}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="violet">
+                  <HomeWorkIcon sx={{
+                    fontSize: "60px"
+                  }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant='h6' sx={{ width: "150px" }}>Casual Leave</Typography>
+                  <Typography >2-Balance</Typography>
+                </Box>
+              </Box>
+            </Card>
+
+            <Card sx={{}}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="darkcyan">
+                  <StreamIcon sx={{
+                    fontSize: "60px"
+                  }} />
+                </Box>
+                <Box p={2}>
+
+                  <Typography variant='h6'>Compensatory Off</Typography>
+                  <Typography >2-Balance</Typography>
+                </Box>
+              </Box>
+            </Card>
+
+          </Stack>
+
+          <br />
+          <Stack direction="row" spacing={2}>
+
+            <Card sx={{}}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="error.main">
+                  <LocalHospitalIcon sx={{
+                    fontSize: "60px",
+                    color: "white"
+                  }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant='h6' sx={{ width: "150px" }}>Sick Leave</Typography>
+                  <Typography >2-Balance</Typography>
+                </Box>
+              </Box>
+            </Card>
+
+
+            <Card sx={{}}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="success.main">
+                  <MoneyOffIcon sx={{
+                    fontSize: "60px",
+                    color: "white"
+                  }} />
+                </Box>
+
+                <Box p={2}>
+                  <Typography variant='h6' >Leave Without Pay</Typography>
+                  <Typography >2-Balance</Typography>
+                </Box>
+              </Box>
+            </Card>
+
+
+
+          </Stack>
+
+
+        </Card>
+      </Box>
+
+
+      <Box m={2}>
+
+        <Card sx={{ width: "75vw", padding: 2 }}>
+          <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
+          <Divider />
+
+      
+          <Box sx={{ mt: 2 }}>
+            <DataTable
+              columns={columns}
+              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+              data={leaveList}
+              pagination
+              // paginationPerPage={entries}
+              customStyles={customStyles}
+            />
+          </Box>
+        </Card>
+
+      </Box>
 
 
 
@@ -370,7 +392,5 @@ const LeaveRequest = () => {
   );
 };
 
-export default LeaveRequest;
-
-
+export default EmpLeaveRequest;
 
