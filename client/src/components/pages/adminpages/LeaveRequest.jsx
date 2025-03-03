@@ -1,20 +1,13 @@
-import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel, Modal, Grid, Stack } from '@mui/material';
+import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typography, InputLabel, Modal, Grid, Stack, IconButton } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-// import { customStyles } from '../../ReactDataTableStyle';
 import { useFormik } from "formik"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import RequiredStar from '../../../RequiredStar';
 import { customStyles } from '../ReactDataTableStyle';
 import RequiredStar from '../../RequiredStar';
 import { useSelector } from 'react-redux';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import StreamIcon from '@mui/icons-material/Stream';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -31,7 +24,6 @@ const style = {
 
 const LeaveRequest = () => {
 
-  const [employeesName, setEmployeesName] = useState(false)
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const { loading, data, error } = useSelector((state) => state.post);
   console.log(data, " daat from atted");
@@ -39,7 +31,8 @@ const LeaveRequest = () => {
   console.log(loggedEmpData?.first_name, "loggedEmpData");
   const [leaveList, setLeaveList] = useState([])
   const [employeesNameData, setEmployeesNameData] = useState([])
-
+  const [leaveStatuses, setLeaveStatuses] = useState({});
+  const [reloadTheTableWhenChanged, setreLoadTheTableWhenChanged] = useState(false)
 
   const getLeaveList = () => {
     axios.get(`http://localhost:8787/auth/listLeaveRequests`)
@@ -53,7 +46,28 @@ const LeaveRequest = () => {
       })
   }
 
+  const handleApproveLeave = async (leaveId, status) => {
+    try {
+      const response = await axios.put(`http://localhost:8787/auth/updateLeaveStatus/${leaveId}`, {
+        leave_status: status // "Approved" or "Rejected"
+      });
 
+      if (response.data.status) {
+        // alert(`Leave ${status} Successfully`);
+        toast.success(`Leave ${status} Successfully`)
+        setreLoadTheTableWhenChanged(reloadTheTableWhenChanged === false ? true : false)
+
+        // Update the leave status in state to disable buttons
+        setLeaveStatuses((prevStatuses) => ({
+          ...prevStatuses,
+          [leaveId]: status,
+        }));
+      }
+    } catch (error) {
+      console.error(`Error ${status.toLowerCase()} leave:`, error);
+      alert(`Failed to ${status.toLowerCase()} leave`);
+    }
+  };
   const columns = [
     {
       name: 'Name',
@@ -66,11 +80,13 @@ const LeaveRequest = () => {
       name: 'From',
       selector: (row) => row.from_date,
       sortable: true,
+      width: "100px"
     },
     {
       name: 'To',
       selector: (row) => row.to_date,
       sortable: true,
+      width: "100px"
     },
     {
       name: 'Reason For Leave',
@@ -85,6 +101,35 @@ const LeaveRequest = () => {
     {
       name: 'Leave Status',
       selector: (row) => row.leave_status,
+      sortable: true,
+      width: "130px"
+    },
+    {
+      cell: (row) => {
+        const currentStatus = leaveStatuses[row.leave_id] || row.leave_status; // Use updated state if available
+
+        return (
+          <div>
+            <Button
+              variant="outlined"
+              disabled={currentStatus === "Approved" || currentStatus === "Rejected"}
+              onClick={() => handleApproveLeave(row.leave_id, "Approved")}
+            >
+              Approve
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ marginLeft: "6px" }}
+              disabled={currentStatus === "Approved" || currentStatus === "Rejected"}
+              onClick={() => handleApproveLeave(row.leave_id, "Rejected")}
+            >
+              Reject
+            </Button>
+          </div>
+        );
+      },
       sortable: true,
     },
 
@@ -120,8 +165,9 @@ const LeaveRequest = () => {
         .then((response) => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
-          setEmployeesName(employeesName === false ? true : false)
           setOpenCreateProjectModal(false)
+
+          setreLoadTheTableWhenChanged(reloadTheTableWhenChanged === false ? true : false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
@@ -158,7 +204,7 @@ const LeaveRequest = () => {
 
 
 
-  }, [employeesName])
+  }, [])
 
 
 
@@ -167,7 +213,7 @@ const LeaveRequest = () => {
   useEffect(() => {
     getLeaveList();
     getEmployeesNameData();
-  }, [])
+  }, [reloadTheTableWhenChanged])
 
 
   return (
@@ -177,13 +223,19 @@ const LeaveRequest = () => {
 
       <Box m={2}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{ width: { xs: '90vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
           <Divider />
 
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{
+              display: {
+                xs: "none",
+                lg: "block"
+              }
+            }}>
+               <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Show</Typography>
               <Select
                 // value={entries}
@@ -197,8 +249,14 @@ const LeaveRequest = () => {
               </Select>
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            </Box>
+            <Box sx={{
+              display: {
+                xs: "none",
+                lg: "block"
+              }
+            }}>
+                 <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField
                 size="small"
@@ -208,6 +266,10 @@ const LeaveRequest = () => {
                 variant="outlined"
               />
             </Box>
+            </Box>
+           
+
+         
 
             <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}>Apply Leave </Button>
           </Box>

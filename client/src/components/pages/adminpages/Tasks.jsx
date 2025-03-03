@@ -420,36 +420,53 @@ const Tasks = () => {
       </Box>
       <Box mt={4}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>List All Task</Typography>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
+            <Box sx={{
+              display:{
+                xs:"none",
+                lg:"block"
+              }
+            }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Show</Typography>
+                <Select
+                  value={entries}
 
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
+                  size="small"
+                  sx={{ ml: 1 }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+                </Select>
+                <Typography sx={{ ml: 1 }}>entries</Typography>
+              </Box>
+            </Box>
+
+            <Box
+            sx={{
+              display:{
+                xs:"none",
+                lg:"block"
+              }
+            }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Search</Typography>
+                <TextField
+                  size="small"
+                  sx={{ ml: 1 }}
+                  value={searchTerm}
+
+                  variant="outlined"
+                />
+              </Box>
             </Box>
             <Button variant='outlined' onClick={handleDeleteAllTasks}> Delete All Tasls </Button>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                value={searchTerm}
-
-                variant="outlined"
-              />
-            </Box>
 
             <Button variant='outlined' onClick={() => setOpenCreateTaskModal(true)}> Add  </Button>
           </Box>

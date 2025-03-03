@@ -81,7 +81,7 @@ const OrganizationChart = () => {
   return (
     <>
 
-      <Card sx={{ width: "75vw", padding: 2 }}>
+      <Card sx={{  width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
         <Typography variant="h6" mb={2}>Organization Chart</Typography>
         <Divider />
 

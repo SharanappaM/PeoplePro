@@ -184,51 +184,53 @@ const Employees = () => {
   ];
 
 
-  const handleDeleteAllEmplyoess = ()=>{
+  const handleDeleteAllEmplyoess = () => {
     axios.delete("http://localhost:8787/auth/deleteAllEmployees")
-    .then(res=>{
-      toast.success(res.data.msg)
-        setEmployeesCreated(employeeCreated=== false ? true :false)
-      
-    }).catch(err=>{
-      console.log(err);
-      
-    })
+      .then(res => {
+        toast.success(res.data.msg)
+        setEmployeesCreated(employeeCreated === false ? true : false)
+
+      }).catch(err => {
+        console.log(err);
+
+      })
   }
 
 
   return (
     <>
       <ToastContainer position='bottom-right' />
-      <Card sx={{ width: "75vw", padding: 2 }}>
+      <Card sx={{
+        width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }
+        , padding: 2
+      }}>
         <Typography variant="h6" mb={2}>List All Employees</Typography>
         <Divider />
 
         <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography>Show</Typography>
-            <Select
-              value={entries}
+          <Box sx={{
+            display: {
+              xs: "none",
+              xl: "block",
+              lg: "block",
+            }
+          }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>Show</Typography>
+              <Select
+                value={entries}
 
-              size="small"
-              sx={{ ml: 1 }}
-            >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-              <MenuItem value={100}>100</MenuItem>
-            </Select>
-            <Typography sx={{ ml: 1 }}>entries</Typography>
-          </Box>
+                size="small"
+                sx={{ ml: 1 }}
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={100}>100</MenuItem>
+              </Select>
+              <Typography sx={{ ml: 1 }}>entries</Typography>
+            </Box>
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography>Search</Typography>
-            <TextField
-              size="small"
-              sx={{ ml: 1 }}
-              value={searchTerm}
 
-              variant="outlined"
-            />
           </Box>
 
           <Button variant='outlined' onClick={handleOpenEmployeeModal}> Add Employees </Button>
@@ -254,7 +256,28 @@ const Employees = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+       
+        <Box sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: 'translate(-50%, -50%)',
+          width: {
+            lg: "auto",
+            xs: "95vw"
+          },
+          height: {
+            lg: "auto",
+            xs: "80vh"
+          },
+          bgcolor: "background.paper",
+          boxShadow: "2px solid #000",
+          p: 3,
+          overflow:{
+            xs:"scroll",
+            lg:"none"
+          }
+        }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add New Employee
           </Typography>

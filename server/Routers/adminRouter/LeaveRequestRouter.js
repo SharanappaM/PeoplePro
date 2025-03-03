@@ -6,6 +6,7 @@ const router = express.Router();
 
 const createLeaveRequestTable = `
 CREATE TABLE IF NOT EXISTS leaveRequests(
+leave_id INT AUTO_INCREMENT PRIMARY KEY, -- Auto-incrementing integer
 employee_name VARCHAR(45) NOT NULL, 
 team_email_id VARCHAR(45) NOT NULL, 
 from_date VARCHAR(45) NOT NULL, 
@@ -88,6 +89,26 @@ router.get("/listLeaveRequests/:employee_name", (req, res) => {
         return res.status(200).json(result); // This returns the first task object, not in an array.
     });
 });
+
+
+router.put("/updateLeaveStatus/:leave_id", (req, res) => {
+    const q = "UPDATE leaveRequests SET leave_status = ? WHERE leave_id = ?";
+    const VALUES = [req.body.leave_status, req.params.leave_id];
+
+    con.query(q, VALUES, (err, result) => {
+        if (err) {
+            console.log("Error While Updating Leave Status", err);
+            return res.status(500).json({ status: false, msg: "Query Error" });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ status: false, msg: "Leave Request Not Found" });
+        }
+
+        return res.status(200).json({ status: true, msg: "Leave Status Updated Successfully" });
+    });
+});
+
 
 
 

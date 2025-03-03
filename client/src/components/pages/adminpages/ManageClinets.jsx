@@ -31,10 +31,10 @@ const ManageClinets = () => {
 
     const dispatch = useDispatch();
 
-    const {clientList , loading , error} = useSelector((state)=>state.clints)
+    const { clientList, loading, error } = useSelector((state) => state.clints)
 
-    
-    
+
+
     const [clientData, setClientData] = useState([]);
     const [entries, setEntries] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
@@ -101,13 +101,13 @@ const ManageClinets = () => {
     }
     useEffect(() => {
         // getEmployeeData();
-        if(clientList.length===0){
+        if (clientList.length === 0) {
             dispatch(fetchClientData())
         }
-       
-       
-        
-    }, [dispatch,clientCreated])
+
+
+
+    }, [dispatch, clientCreated])
 
     const columns = [
         {
@@ -155,36 +155,52 @@ const ManageClinets = () => {
     return (
         <>
             <ToastContainer position='bottom-right' />
-            <Card sx={{ width: "75vw", padding: 2 }}>
+            <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
                 <Typography variant="h6" mb={2}>List All Clients</Typography>
                 <Divider />
 
                 <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography>Show</Typography>
-                        <Select
-                            value={entries}
+                    <Box sx={{
+                        display: {
+                            xs: "none",
+                            lg: "block"
+                        }
+                    }}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Typography>Show</Typography>
+                            <Select
+                                value={entries}
 
-                            size="small"
-                            sx={{ ml: 1 }}
-                        >
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={50}>50</MenuItem>
-                            <MenuItem value={100}>100</MenuItem>
-                        </Select>
-                        <Typography sx={{ ml: 1 }}>entries</Typography>
+                                size="small"
+                                sx={{ ml: 1 }}
+                            >
+                                <MenuItem value={10}>10</MenuItem>
+                                <MenuItem value={50}>50</MenuItem>
+                                <MenuItem value={100}>100</MenuItem>
+                            </Select>
+                            <Typography sx={{ ml: 1 }}>entries</Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{
+                        display: {
+                            xs: "none",
+                            lg: "block"
+                        }
+                    }}>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Typography>Search</Typography>
+                            <TextField
+                                size="small"
+                                sx={{ ml: 1 }}
+                                value={searchTerm}
+
+                                variant="outlined"
+                            />
+                        </Box>
                     </Box>
 
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography>Search</Typography>
-                        <TextField
-                            size="small"
-                            sx={{ ml: 1 }}
-                            value={searchTerm}
 
-                            variant="outlined"
-                        />
-                    </Box>
+
 
                     <Button variant='outlined' onClick={handleOpenClientModal}> Add Client </Button>
                 </Box>

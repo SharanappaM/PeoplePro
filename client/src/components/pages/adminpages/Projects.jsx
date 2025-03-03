@@ -36,7 +36,7 @@ const Projects = () => {
 
   const dispatch = useDispatch();
 
-  const {projects , loading , error} = useSelector((state)=>state.project)
+  const { projects, loading, error } = useSelector((state) => state.project)
 
 
   const [addedProject, setAddedProject] = useState(false);
@@ -48,7 +48,7 @@ const Projects = () => {
 
   const [selectedProjectId, setSelectedProjectId] = useState(null)
 
-  
+
   const [onHold, setOnHold] = useState(0)
   const [notStated, setNotStated] = useState(0)
   const [progress, setProgress] = useState(0)
@@ -58,7 +58,7 @@ const Projects = () => {
 
   // console.log(projects , "projects");
 
-  const projectDashboardCountData = ()=>{
+  const projectDashboardCountData = () => {
     const tasks = projects.result;
     const completedTasks = tasks?.filter(task => {
       const status = task.status?.toLowerCase();
@@ -84,20 +84,20 @@ const Projects = () => {
     setNotStated(notStatedTasks);
 
 
-    console.log(completedTasks,"completedTasks");
-    
-  }
-  
+    console.log(completedTasks, "completedTasks");
 
-  useEffect(()=>{
+  }
+
+
+  useEffect(() => {
     getEmployeesNameData();
     // projectDashboardCountData();
-   
-      if (projects.length === 0) {
-          dispatch(featchProjectData());
-         
-        }
-  },[addedProject, dispatch])
+
+    if (projects.length === 0) {
+      dispatch(featchProjectData());
+
+    }
+  }, [addedProject, dispatch])
 
 
 
@@ -128,7 +128,7 @@ const Projects = () => {
         const tasks = res.data.result;
         // setProjectList(tasks)
 
-        
+
         const completedTasks = tasks.filter(task => {
           const status = task.status?.toLowerCase();
           return status === 'completed' || status === 'completed';  // Match both "Completed" and "Completed"
@@ -194,7 +194,7 @@ const Projects = () => {
   const formKiForEditProject = useFormik({
     initialValues: {
       title: '',
-      client:'',
+      client: '',
       start_date: '',
       end_date: '',
       summary: '',
@@ -340,7 +340,7 @@ const Projects = () => {
     <Box>
       <ToastContainer position='bottom-right' />
       <Box>
-      <Grid container spacing={4}>
+        <Grid container spacing={4}>
           <Grid item >
             <Card sx={{}}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -407,36 +407,52 @@ const Projects = () => {
       </Box>
       <Box mt={4}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{  width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>List All Projects</Typography>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
 
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
+            <Box sx={{
+              display: {
+                xs: "none",
+                lg: "block"
+              }
+            }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Show</Typography>
+                <Select
+                  value={entries}
+
+                  size="small"
+                  sx={{ ml: 1 }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+                </Select>
+                <Typography sx={{ ml: 1 }}>entries</Typography>
+              </Box>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                value={searchTerm}
+            <Box sx={{
+              display: {
+                xs: "none",
+                lg: "block"
+              }
+            }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Search</Typography>
+                <TextField
+                  size="small"
+                  sx={{ ml: 1 }}
+                  value={searchTerm}
 
-                variant="outlined"
-              />
+                  variant="outlined"
+                />
+              </Box>
             </Box>
+
 
             <Button variant='outlined' onClick={handleDeleteAllProjects}> Delete All Projects </Button>
 
@@ -513,7 +529,7 @@ const Projects = () => {
                 </Select>
               </Grid>
 
-             
+
 
 
               <Grid item mt={2} lg={4}>
@@ -635,7 +651,7 @@ const Projects = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>  
+        <Box sx={style}>
           <form action="" onSubmit={formKiForEditProject.handleSubmit} >
 
 
