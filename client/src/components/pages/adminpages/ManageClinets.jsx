@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientData } from '../../redux/features/employee/clientSlice';
+import { ModalStyle } from '../ModalStyle';
 
 
 const style = {
@@ -224,7 +225,7 @@ const ManageClinets = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
+                <Box sx={ModalStyle}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Add New Client
                     </Typography>

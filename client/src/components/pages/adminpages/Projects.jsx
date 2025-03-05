@@ -18,6 +18,7 @@ import { featchProjectData } from '../../redux/features/employee/projectSlice';
 import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import { ModalStyle } from '../ModalStyle';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -481,7 +482,7 @@ const Projects = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formki.handleSubmit} >
 
 
@@ -651,7 +652,7 @@ const Projects = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formKiForEditProject.handleSubmit} >
 
 

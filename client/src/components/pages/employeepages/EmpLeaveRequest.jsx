@@ -58,7 +58,7 @@ const EmpLeaveRequest = () => {
       selector: (row) => row.employee_name,
       sortable: true,
     },
-  
+
 
     {
       name: 'From',
@@ -150,10 +150,10 @@ const EmpLeaveRequest = () => {
 
 
   useEffect(() => {
-    if(loggedEmpData){
+    if (loggedEmpData) {
       getLeaveList();
     }
- 
+
   }, [loggedEmpData])
 
 
@@ -161,8 +161,98 @@ const EmpLeaveRequest = () => {
     <>
 
       <ToastContainer position='bottom-right' />
-      <Box sx={{ display: "flex", justifyContent: "space-around",}}>
-        <Card sx={{ p: 4, width: "45%", height: "50%" }}>
+      <Box sx={{
+        display: "flex", justifyContent: "space-around", flexDirection: {
+          xs: "column",
+          md: "row",
+          sm: "column",
+          lg: "row"
+        },
+      }}>
+
+
+
+        <Card
+          sx={{
+            mb: { xs: 5, lg: 0 },
+            width: { xs: "100%", sm: "90%", md: "45%", lg: "50%" },
+            p: 2,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Leave View
+          </Typography>
+          <Divider />
+
+          <Stack direction="row" spacing={2} mt={2} flexWrap="wrap" justifyContent="center">
+            {/* Casual Leave */}
+            <Box sx={{ flex: 1, minWidth: { xs: "100%", sm: "48%" }, p: 1 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="violet" display="flex" alignItems="center" justifyContent="center">
+                  <HomeWorkIcon sx={{ fontSize: "60px", color: "white" }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant="h6">Casual Leave</Typography>
+                  <Typography>2-Balance</Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Compensatory Off */}
+            <Box sx={{ flex: 1, minWidth: { xs: "100%", sm: "48%" }, p: 1 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="darkcyan" display="flex" alignItems="center" justifyContent="center">
+                  <StreamIcon sx={{ fontSize: "60px", color: "white" }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant="h6">Compensatory Off</Typography>
+                  <Typography>2-Balance</Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Stack>
+
+          <br />
+
+          <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+            {/* Sick Leave */}
+            <Box sx={{ flex: 1, minWidth: { xs: "100%", sm: "48%" }, p: 1 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="error.main" display="flex" alignItems="center" justifyContent="center">
+                  <LocalHospitalIcon sx={{ fontSize: "60px", color: "white" }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant="h6">Sick Leave</Typography>
+                  <Typography>2-Balance</Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Leave Without Pay */}
+            <Box sx={{ flex: 1, minWidth: { xs: "100%", sm: "48%" }, p: 1 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box p={2} bgcolor="success.main" display="flex" alignItems="center" justifyContent="center">
+                  <MoneyOffIcon sx={{ fontSize: "60px", color: "white" }} />
+                </Box>
+                <Box p={2}>
+                  <Typography variant="h6">Leave Without Pay</Typography>
+                  <Typography>2-Balance</Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Stack>
+        </Card>
+
+
+
+        <Card sx={{
+          p: 4, width: {
+            lg: "45%",
+            xs: "100%",
+            sm: "90%",
+            md: "45%"
+          }, height: "50%"
+        }}>
           <Typography variant="h6" mb={2}>Apply Leave </Typography>
           <Divider />
 
@@ -283,95 +373,17 @@ const EmpLeaveRequest = () => {
 
         </Card>
 
-        <Card sx={{ width: "50%", padding: 2 }}>
-          <Typography variant="h6" mb={2}>Leave View</Typography>
-          <Divider />
 
-
-
-          <Stack direction="row" spacing={2} mt={2}>
-            <Card sx={{}}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box p={2} bgcolor="violet">
-                  <HomeWorkIcon sx={{
-                    fontSize: "60px"
-                  }} />
-                </Box>
-                <Box p={2}>
-                  <Typography variant='h6' sx={{ width: "150px" }}>Casual Leave</Typography>
-                  <Typography >2-Balance</Typography>
-                </Box>
-              </Box>
-            </Card>
-
-            <Card sx={{}}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box p={2} bgcolor="darkcyan">
-                  <StreamIcon sx={{
-                    fontSize: "60px"
-                  }} />
-                </Box>
-                <Box p={2}>
-
-                  <Typography variant='h6'>Compensatory Off</Typography>
-                  <Typography >2-Balance</Typography>
-                </Box>
-              </Box>
-            </Card>
-
-          </Stack>
-
-          <br />
-          <Stack direction="row" spacing={2}>
-
-            <Card sx={{}}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box p={2} bgcolor="error.main">
-                  <LocalHospitalIcon sx={{
-                    fontSize: "60px",
-                    color: "white"
-                  }} />
-                </Box>
-                <Box p={2}>
-                  <Typography variant='h6' sx={{ width: "150px" }}>Sick Leave</Typography>
-                  <Typography >2-Balance</Typography>
-                </Box>
-              </Box>
-            </Card>
-
-
-            <Card sx={{}}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box p={2} bgcolor="success.main">
-                  <MoneyOffIcon sx={{
-                    fontSize: "60px",
-                    color: "white"
-                  }} />
-                </Box>
-
-                <Box p={2}>
-                  <Typography variant='h6' >Leave Without Pay</Typography>
-                  <Typography >2-Balance</Typography>
-                </Box>
-              </Box>
-            </Card>
-
-
-
-          </Stack>
-
-
-        </Card>
       </Box>
 
 
-      <Box m={2}>
+      <Box mt={2}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '78vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
           <Divider />
 
-      
+
           <Box sx={{ mt: 2 }}>
             <DataTable
               columns={columns}

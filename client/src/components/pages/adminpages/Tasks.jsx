@@ -13,6 +13,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import { ModalStyle } from '../ModalStyle';
 
 const style = {
   position: 'absolute',
@@ -493,7 +494,7 @@ const Tasks = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle} >
           <form action="" onSubmit={formki.handleSubmit} >
             <Typography>Add New Task</Typography>
 
@@ -667,7 +668,7 @@ const Tasks = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formKiForEditProject.handleSubmit} >
             <Typography>Edit Task </Typography>
 

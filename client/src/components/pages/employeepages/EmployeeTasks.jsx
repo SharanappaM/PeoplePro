@@ -16,6 +16,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import { ModalStyle } from '../ModalStyle';
 
 
 
@@ -432,12 +433,21 @@ const EmployeeTasks = () => {
       </Box>
       <Box mt={4}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{  width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>List All Task</Typography>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+           
+            <Box  sx={{
+              display:{
+                xs:"none",
+                lg:"block",
+                sm:"none",
+                md:"block"
+              }
+            }}>
+               <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Show</Typography>
               <Select
                 value={entries}
@@ -451,7 +461,17 @@ const EmployeeTasks = () => {
               </Select>
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+
+            </Box>
+            <Box  sx={{
+              display:{
+                xs:"none",
+                lg:"block",
+                sm:"none",
+                md:"block"
+              }
+            }}>
+ <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField
                 size="small"
@@ -461,6 +481,8 @@ const EmployeeTasks = () => {
                 variant="outlined"
               />
             </Box>
+            </Box>
+           
 
             <Button variant='outlined' onClick={() => setOpenCreateTaskModal(true)}> Add  </Button>
           </Box>
@@ -487,7 +509,7 @@ const EmployeeTasks = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formki.handleSubmit} >
             <Typography>Add New Task</Typography>
 
@@ -661,7 +683,7 @@ const EmployeeTasks = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formKiForEditProject.handleSubmit} >
             <Typography>Edit Task </Typography>
 

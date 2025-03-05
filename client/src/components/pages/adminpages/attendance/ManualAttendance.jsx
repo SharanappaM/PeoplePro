@@ -155,8 +155,21 @@ const ManualAttendance = () => {
     <>
 
       <ToastContainer position='bottom-right' />
-      <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-        <Card sx={{ p: 4, width: "35%", height: "50%" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-around",flexDirection:{
+        xs:"column",
+        md:"row",
+        sm:"column",
+        lg:"row"
+      }, mt: 2 }}>
+        <Card sx={{ p: 4, mb:{
+          xs:5,
+          lg:0
+        },width: {
+          lg:"35%",
+          xs:"100%",
+          sm:"90%",
+          md:"45%"
+        }, height: "50%" }}>
           <Typography variant="h6" mb={2}>Filter Attendance</Typography>
           <Divider />
           <form action="" onSubmit={formik.handleSubmit}>
@@ -204,7 +217,12 @@ const ManualAttendance = () => {
 
         </Card>
 
-        <Card sx={{ width: "60%", padding: 2 }}>
+        <Card sx={{ width: {
+         lg:"60%",
+         xs:"100%",
+         sm:"80%",
+         md:"70%"
+        }, padding: 2 }}>
           <Typography variant="h6" mb={2}>View Attendance</Typography>
           <Divider />
 
@@ -213,7 +231,15 @@ const ManualAttendance = () => {
 
 
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+           <Box  sx={{
+              display:{
+                xs:"none",
+                lg:"block",
+                sm:"none",
+                md:"block"
+              }
+            }}>
+           <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField
                 size="small"
@@ -224,6 +250,7 @@ const ManualAttendance = () => {
                 variant="outlined"
               />
             </Box>
+           </Box>
 
             <Button onClick={() => setOpenAttendenceModal(true)} variant='outlined'>Add Attendance</Button>
 
@@ -250,7 +277,27 @@ const ManualAttendance = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: 'translate(-50%, -50%)',
+          width: {
+            lg: "auto",
+            xs: "95vw"
+          },
+          height: {
+            lg: "auto",
+            xs: "80vh"
+          },
+          bgcolor: "background.paper",
+          boxShadow: "2px solid #000",
+          p: 3,
+          overflow:{
+            xs:"scroll",
+            lg:"none"
+          }
+        }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add Attendance Information
           </Typography>

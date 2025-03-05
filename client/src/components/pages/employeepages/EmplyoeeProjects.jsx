@@ -18,6 +18,7 @@ import { featchProjectData } from '../../redux/features/employee/projectSlice';
 import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import { ModalStyle } from '../ModalStyle';
 
 const style = {
   position: 'absolute',
@@ -54,7 +55,7 @@ const EmplyoeeProjects = () => {
   const [notStated, setNotStated] = useState(0)
   const [progress, setProgress] = useState(0)
   const [Completed, setCompleted] = useState(0)
-
+ const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const [loggedEmployeeData, setLoggedEmployeeData] = useState(null)
 
 
@@ -184,7 +185,32 @@ const EmplyoeeProjects = () => {
 
 
 
+  const formki = useFormik({
+    initialValues: {
+      title: null,
+      client: null,
+      start_date: null,
+      end_date: null,
+      summary: null,
+      team: null,
+      estimated_hour: null,
+      priority: null,
+      description: null,
+    },
+    onSubmit: (values) => {
+      axios.post("http://localhost:8787/auth/createProject", values)
+        .then(res => {
+          console.log(res.data.msg);
+          toast.success(res.data.msg);
+          setOpenCreateProjectModal(false)
+          setAddedProject(addedProject === false ? true : false)
 
+        }).catch(err => {
+          console.log(err);
+
+        })
+    }
+  })
 
 
   const formKiForEditProject = useFormik({
@@ -393,12 +419,18 @@ const EmplyoeeProjects = () => {
       </Box>
       <Box mt={4}>
 
-        <Card sx={{ width: "75vw", padding: 2 }}>
+        <Card sx={{  width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>List All Projects</Typography>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{
+              display: {
+                xs: "none",
+                lg: "block"
+              }
+            }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Show</Typography>
               <Select
                 value={entries}
@@ -412,6 +444,7 @@ const EmplyoeeProjects = () => {
               </Select>
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box>
+          </Box>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
@@ -424,7 +457,7 @@ const EmplyoeeProjects = () => {
               />
             </Box>
 
-
+ <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}> Add  </Button>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -455,7 +488,7 @@ const EmplyoeeProjects = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box sx={ModalStyle}>
           <form action="" onSubmit={formKiForEditProject.handleSubmit} >
 
 
@@ -627,7 +660,170 @@ const EmplyoeeProjects = () => {
 
         </Box>
       </Modal>
+      <Modal
+        open={openCreateProjectModal}
+        onClose={() => setOpenCreateProjectModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
 
+        <Box sx={ModalStyle}>
+          <form action="" onSubmit={formki.handleSubmit} >
+
+
+            <Grid container spacing={2}  >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Title<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter title"
+                  size="small"
+                  fullWidth
+                  name="title"
+                  value={formki.values.title}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Client <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='client'
+                  displayEmpty
+                  value={formki.values.client}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="Sharan">Sharan</MenuItem>
+                  <MenuItem value="Raju">Raju</MenuItem>
+                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Priority <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='priority'
+                  displayEmpty
+                  value={formki.values.priority}
+                  onChange={formki.handleChange}
+                >
+                  <MenuItem value="High">High</MenuItem>
+                  <MenuItem value="noraml">Noraml</MenuItem>
+                  <MenuItem value="Low">Low</MenuItem>
+                </Select>
+              </Grid>
+
+
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Estimated Hour<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter estimated hour"
+                  size="small"
+                  fullWidth
+                  name="estimated_hour"
+                  value={formki.values.estimated_hour}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} >
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Start Date<RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="start_date"
+                  value={formki.values.start_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> End Date <RequiredStar /> </FormLabel>
+                <TextField
+                  type='date'
+                  size="small"
+                  fullWidth
+                  name="end_date"
+                  value={formki.values.end_date}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Summary<RequiredStar /> </FormLabel>
+                <TextField
+                  placeholder="Enter summary"
+                  type='text'
+                  size="small"
+                  fullWidth
+                  name="summary"
+                  value={formki.values.summary}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+            </Grid>
+
+
+
+            <Grid container spacing={2}  >
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Team <RequiredStar /> </FormLabel>
+                <Select
+                  fullWidth
+                  size="small"
+                  name='team'
+                  displayEmpty
+                  value={formki.values.team}
+                  onChange={formki.handleChange}
+                >
+                  {employeesNameData.map((items, index) => (
+                    <MenuItem key={index} value={items}>{items}</MenuItem>
+                  ))}
+
+
+                </Select>
+              </Grid>
+
+
+              <Grid item mt={2} lg={4}>
+                <FormLabel> Description </FormLabel>
+                <TextField
+                  placeholder="Enter title"
+                  size="small"
+                  fullWidth
+                  name="description"
+                  value={formki.values.description}
+                  onChange={formki.handleChange}
+                />
+              </Grid>
+
+
+
+
+            </Grid>
+
+            <Box mt={2}>
+              <Button variant='contained'>Reset</Button>
+              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+            </Box>
+
+
+
+
+          </form>
+
+        </Box>
+      </Modal>
     </Box>
   )
 }

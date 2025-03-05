@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { customStyles } from '../ReactDataTableStyle';
 import RequiredStar from '../../RequiredStar';
 import { useSelector } from 'react-redux';
+import { ModalStyle } from '../ModalStyle';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -223,7 +224,7 @@ const LeaveRequest = () => {
 
       <Box m={2}>
 
-        <Card sx={{ width: { xs: '90vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
+        <Card sx={{ width: { xs: '85vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
           <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
           <Divider />
 
@@ -298,7 +299,7 @@ const LeaveRequest = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Card sx={style}>
+        <Card sx={ModalStyle}>
           <Typography variant="h6" mb={2}>Apply Leave </Typography>
           <Divider />
 

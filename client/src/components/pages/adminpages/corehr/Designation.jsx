@@ -97,9 +97,22 @@ const Designation = () => {
   return (
     <>
      <ToastContainer position='bottom-right' />
-      <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
+      <Box sx={{ display: "flex",flexDirection:{
+        xs:"column",
+        md:"row",
+        sm:"column",
+        lg:"row"
+      }, justifyContent: "space-around", mt: 2 }}>
         {/* Left Section: Form for Adding New Designation */}
-        <Card sx={{ p: 4, width: "35%", height:"50%"   }}>
+        <Card sx={{ p: 4, mb:{
+          xs:5,
+          lg:0
+        },width: {
+          lg:"35%",
+          xs:"100%",
+          sm:"90%",
+          md:"45%"
+        }, height:"50%"   }}>
           <Typography variant="h6" mb={2}>Add New Designation</Typography>
           <Divider />
 
@@ -156,11 +169,25 @@ const Designation = () => {
           </form>
         </Card>
 
-        <Card sx={{ width: "60%", padding: 2 }}>
+        <Card sx={{ width: {
+          lg:"60%",
+          xs:"100%",
+          sm:"80%",
+          md:"70%"
+
+        },  padding: 2 }}>
           <Typography variant="h6" mb={2}>Designation List</Typography>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{
+              display:{
+                xs:"none",
+                lg:"block",
+                sm:"none",
+                md:"block"
+              }
+            }}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Show</Typography>
               <Select
@@ -175,8 +202,18 @@ const Designation = () => {
               </Select>
               <Typography sx={{ ml: 1 }}>entries</Typography>
             </Box>
+            </Box>
+         
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+           <Box  sx={{
+              display:{
+                xs:"none",
+                lg:"block",
+                sm:"none",
+                md:"block"
+              }
+            }}>
+           <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField
                 size="small"
@@ -186,9 +223,10 @@ const Designation = () => {
                 variant="outlined"
               />
             </Box>
+           </Box>
 
 
-            <Button onClick={handelDeleteAlltDesignations}>Delete All Designations</Button>
+            <Button variant='outlined' onClick={handelDeleteAlltDesignations}>Delete All Designations</Button>
 
           </Box>
 

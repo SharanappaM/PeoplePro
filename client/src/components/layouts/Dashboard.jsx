@@ -24,6 +24,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 const drawerWidth = 270;
 import logo from "../../assets/Logo.png"
+import { Logout } from '@mui/icons-material';
 
 
 
@@ -308,7 +309,11 @@ function Dashboard(props) {
                     ml: { sm: `${drawerWidth}px` },
                 }}
             >
-                <Toolbar>
+                <Toolbar sx={{
+                    display:"flex",
+                    alignSelf:"end"
+                }}>
+                
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -318,15 +323,24 @@ function Dashboard(props) {
                     >
                         <MenuIcon />
                     </IconButton>
+                 
 
 
+                    <Tooltip title="Logout">
+                     <IconButton >
+<Logout sx={{
+    color:"white"
 
-                    <Button onClick={() => {
-                        navigate("/")
-                        localStorage.removeItem("adminData")
-                        localStorage.removeItem("employeeData")
-                        localStorage.removeItem("role")
-                    }}>Logout</Button>
+}} onClick={() => {
+    navigate("/")
+    localStorage.removeItem("adminData")
+    localStorage.removeItem("employeeData")
+    localStorage.removeItem("role")
+}}>Logout</Logout>
+</IconButton>
+                     </Tooltip>
+
+                 
 
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
 
@@ -381,9 +395,7 @@ function Dashboard(props) {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        {/* <MenuItem onClick={handleClose} >
-                            <Avatar /> Profile
-                        </MenuItem> */}
+                  
                         <ListItemButton component={Link} to="profilePage">
                             <ListItemIcon>
                                 <Avatar />

@@ -124,8 +124,21 @@ const Department = () => {
     <>
 
       <ToastContainer position='bottom-right' />
-      <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
-        <Card sx={{ p: 4, width: "35%", height: "50%" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-around",flexDirection:{
+        xs:"column",
+        md:"row",
+        sm:"column",
+        lg:"row"
+      }, mt: 2 }}>
+        <Card sx={{ p: 4, mb:{
+          xs:5,
+          lg:0
+        },width: {
+          lg:"35%",
+          xs:"100%",
+          sm:"90%",
+          md:"45%"
+        }, height: "50%" }}>
           <Typography variant="h6" mb={2}>Add New Department</Typography>
           <Divider />
           <form action="" onSubmit={formik.handleSubmit}>
@@ -174,7 +187,13 @@ const Department = () => {
 
         </Card>
 
-        <Card sx={{ width: "60%", padding: 2 }}>
+        <Card sx={{ width: {
+          lg:"60%",
+          xs:"100%",
+          sm:"80%",
+          md:"70%"
+
+        }, padding: 2 }}>
           <Typography variant="h6" mb={2}>List All Departments</Typography>
           <Divider />
 

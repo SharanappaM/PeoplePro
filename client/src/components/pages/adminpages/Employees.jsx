@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployeesData } from '../../redux/features/employee/employeeSlice';
+import { ModalStyle } from '../ModalStyle';
 
 
 const style = {
@@ -257,27 +258,7 @@ const Employees = () => {
         aria-describedby="modal-modal-description"
       >
        
-        <Box sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: 'translate(-50%, -50%)',
-          width: {
-            lg: "auto",
-            xs: "95vw"
-          },
-          height: {
-            lg: "auto",
-            xs: "80vh"
-          },
-          bgcolor: "background.paper",
-          boxShadow: "2px solid #000",
-          p: 3,
-          overflow:{
-            xs:"scroll",
-            lg:"none"
-          }
-        }}>
+        <Box sx={ModalStyle} >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add New Employee
           </Typography>
