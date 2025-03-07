@@ -127,7 +127,13 @@ const LoginPage = () => {
         {/* Login Form Container */}
         <Box
           sx={{
-            width: "35%",
+            width: {
+              lg:"35%",
+              xs:"100%",
+              sm:"80%",
+              md:"60%"
+
+            },
             padding: 3,
             display: 'flex', // Make the box a flex container
             flexDirection: 'column', // Aligns children vertically
@@ -138,7 +144,7 @@ const LoginPage = () => {
         >
           {/* <Typography variant='h5' fontWeight="bold" color='secondary'> People Pro</Typography> */}
           <img width={200} src={logo} alt="" />
-          <Typography variant='h6'> Welcome to People Pro</Typography>
+          {/* <Typography variant='h6'> Welcome to People Pro</Typography> */}
           <Typography> Welcome back, Please login into an account</Typography>
           <Box p={1}>
             <Typography fontWeight="bold" variant='h6' m={2}>{loginTab}</Typography>
@@ -180,7 +186,10 @@ const LoginPage = () => {
                 disableElevation
                 variant="outlined"
                 aria-label="Disabled button group"
-                sx={{ ml: 12 }}
+                sx={{ 
+                  display:"flex",
+                  alignSelf:"center",
+                 }}
               >
 
                 <ButtonsLoginAs onClick={() => setLoginTab("Admin")} fullWidth>Admin</ButtonsLoginAs>

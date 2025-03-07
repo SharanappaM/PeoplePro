@@ -211,26 +211,7 @@ const EmplyoeeAttendance = () => {
                   onChange={formikFOrattendece.handleChange}
                 />
               </Grid>
-              {/* <Grid item mt={2} lg={6}>
-                <FormLabel>Employee</FormLabel>
-                <Select
-                  labelId="department-select-label"
-                  id="department-select"
-                  fullWidth
-                  size="small"
-                  name='emplyoee_name'
-                  value={formikFOrattendece.values.emplyoee_name}
-                  onChange={formikFOrattendece.handleChange}
-
-                >
-
-                  {employeesNameData.map((items, index) => (
-                    <MenuItem key={index} value={items}>{items}</MenuItem>
-                  ))}
-
-                </Select>
-              </Grid> */}
-
+        
 
             </Grid>
             <Grid container spacing={2}  >
