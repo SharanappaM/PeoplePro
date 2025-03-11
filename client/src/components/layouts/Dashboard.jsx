@@ -10,12 +10,13 @@ import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import AddchartIcon from '@mui/icons-material/Addchart';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
-import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer, Button, Tooltip, Avatar, Menu, MenuItem } from '@mui/material';
+import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer, Button, Tooltip, Avatar, Menu, MenuItem, styled } from '@mui/material';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -90,7 +91,19 @@ function Dashboard(props) {
     };
 
 
+    const StyledListItemButton = styled(ListItemButton)(({ theme, active }) => ({
+        borderRadius: active ? "12px" : "0px",
+        backgroundColor: active ? theme.palette.secondary.main : "transparent",
+        color: active ? "white" : theme.palette.text.primary,
+        transition: "all 0.3s ease-in-out",
+        "&:hover": {
+            backgroundColor: active ? theme.palette.secondary.dark : theme.palette.action.hover,
+        },
+    }));
 
+    const StyledListItemIcon = styled(ListItemIcon)(({ theme, active }) => ({
+        color: active ? "white" : theme.palette.text.primary,
+    }));
 
 
     const drawer = (
@@ -98,7 +111,7 @@ function Dashboard(props) {
 
 
 
-        <Box height="100vh" bgcolor="primary.main">
+        <Box height="100vh" bgcolor="primary.main" p={1}>
             {/* <Typography fontWeight="bold" ml={9} mt={3} color='#333'>TalentHub</Typography> */}
             <img width={200} style={{ marginLeft: 30 }} src={logo} alt="" />
 
@@ -107,21 +120,33 @@ function Dashboard(props) {
                     <Box >
 
                         <ListItem disablePadding>
-                            <ListItemButton component={NavLink} to="" >
-                                <ListItemIcon>
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("home")}
+                                active={activeMenu === "home" ? 1 : 0}
+                                component={Link}
+                                to=""
+                            >
+                                <StyledListItemIcon active={activeMenu === "home" ? 1 : 0}>
                                     <HomeIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Home" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="employees" >
-                                <ListItemIcon>
+
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("employees")}
+                                active={activeMenu === "employees" ? 1 : 0}
+                                component={Link}
+                                to="employees"
+                            >
+                                <StyledListItemIcon active={activeMenu === "employees" ? 1 : 0}>
                                     <GroupIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Employees" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
 
@@ -136,24 +161,44 @@ function Dashboard(props) {
                         </ListItemButton>
                         <Collapse in={openSubMenu === 'coreHR'} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
-                                <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/department">
-                                    <ListItemIcon>
 
-                                    </ListItemIcon>
+
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("core-hr/department")}
+                                    active={activeMenu === "core-hr/department" ? 1 : 0}
+                                    component={Link}
+                                    to="core-hr/department"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "core-hr/department" ? 1 : 0}>
+
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Department" />
-                                </ListItemButton>
-                                <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/designation">
-                                    <ListItemIcon>
+                                </StyledListItemButton>
 
-                                    </ListItemIcon>
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("core-hr/designation")}
+                                    active={activeMenu === "core-hr/designation" ? 1 : 0}
+                                    component={Link}
+                                    to="core-hr/designation"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "core-hr/designation" ? 1 : 0}>
+
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Designation" />
-                                </ListItemButton>
-                                <ListItemButton sx={{ pl: 4 }} component={Link} to="core-hr/org-chart">
-                                    <ListItemIcon>
+                                </StyledListItemButton>
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("core-hr/org-chart")}
+                                    active={activeMenu === "core-hr/org-chart" ? 1 : 0}
+                                    component={Link}
+                                    to="core-hr/org-chart"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "core-hr/org-chart" ? 1 : 0}>
 
-                                    </ListItemIcon>
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Organization Chart" />
-                                </ListItemButton>
+                                </StyledListItemButton>
+
+
                             </List>
                         </Collapse>
 
@@ -161,63 +206,103 @@ function Dashboard(props) {
 
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="attendance/manual" >
-                                <ListItemIcon>
-                                    <CardTravelIcon />
-                                </ListItemIcon>
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("attendance/manual")}
+                                active={activeMenu === "attendance/manual" ? 1 : 0}
+                                component={Link}
+                                to="attendance/manual"
+                            >
+                                <StyledListItemIcon active={activeMenu === "attendance/manual" ? 1 : 0}>
+                                    <EventAvailableIcon />
+                                </StyledListItemIcon>
                                 <ListItemText primary="Attendance" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="tasks">
-                                <ListItemIcon>
+
+
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("tasks")}
+                                active={activeMenu === "tasks" ? 1 : 0}
+                                component={Link}
+                                to="tasks"
+                            >
+                                <StyledListItemIcon active={activeMenu === "tasks" ? 1 : 0}>
                                     <AssignmentIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Tasks" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="projects">
-                                <ListItemIcon>
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("projects")}
+                                active={activeMenu === "projects" ? 1 : 0}
+                                component={Link}
+                                to="projects"
+                            >
+                                <StyledListItemIcon active={activeMenu === "projects" ? 1 : 0}>
                                     <AccountTreeIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Projects" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
 
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="manageClinets">
-                                <ListItemIcon>
+
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("manageClinets")}
+                                active={activeMenu === "manageClinets" ? 1 : 0}
+                                component={Link}
+                                to="manageClinets"
+                            >
+                                <StyledListItemIcon active={activeMenu === "manageClinets" ? 1 : 0}>
                                     <RecordVoiceOverIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Manage Clinets" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="payroll">
-                                <ListItemIcon>
+
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("payroll")}
+                                active={activeMenu === "payroll" ? 1 : 0}
+                                component={Link}
+                                to="payroll"
+                            >
+                                <StyledListItemIcon active={activeMenu === "payroll" ? 1 : 0}>
                                     <AccountBalanceWalletIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Payroll" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
 
 
 
                         <ListItem disablePadding>
-                            <ListItemButton component={Link} to="leaverequest">
-                                <ListItemIcon>
+
+                            <StyledListItemButton
+                                onClick={() => handleMenuClick("leaverequest")}
+                                active={activeMenu === "leaverequest" ? 1 : 0}
+                                component={Link}
+                                to="leaverequest"
+                            >
+                                <StyledListItemIcon active={activeMenu === "leaverequest" ? 1 : 0}>
                                     <MedicalServicesIcon />
-                                </ListItemIcon>
+                                </StyledListItemIcon>
                                 <ListItemText primary="Leave Request" />
-                            </ListItemButton>
+                            </StyledListItemButton>
                         </ListItem>
 
                     </Box>
@@ -229,29 +314,36 @@ function Dashboard(props) {
                     <Box>
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={NavLink} to="">
-                                    <ListItemIcon>
+                              
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("home")}
+                                    active={activeMenu === "home" ? 1 : 0}
+                                    component={Link}
+                                    to=""
+                                >
+                                    <StyledListItemIcon active={activeMenu === "home" ? 1 : 0}>
                                         <HomeIcon />
-                                    </ListItemIcon>
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Home" />
-                                </ListItemButton>
+                                </StyledListItemButton>
                             </ListItem>
                         </List>
 
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton 
-                                 onClick={() => handleMenuClick("emplyoeeAttendance")}
-                                 sx={{
-                                     bgcolor: activeMenu === "emplyoeeAttendance" ? "error.main" : "", // Change 'primary.main' to the color you want for the active menu
-                                 }}
-                                    
-                                    component={Link} to="emplyoeeAttendance"  >
-                                    <ListItemIcon>
-                                        <GroupIcon />
-                                    </ListItemIcon>
+
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("emplyoeeAttendance")}
+                                    active={activeMenu === "emplyoeeAttendance" ? 1 : 0}
+                                    component={Link}
+                                    to="emplyoeeAttendance"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "emplyoeeAttendance" ? 1 : 0}>
+                                        <BsCalendar2Plus />
+                                      
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Attendance" />
-                                </ListItemButton>
+                                </StyledListItemButton>
                             </ListItem>
                         </List>
 
@@ -260,39 +352,51 @@ function Dashboard(props) {
 
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton
-                                 onClick={() => handleMenuClick("employeeTasks")}
-                                 sx={{
-                                     bgcolor: activeMenu === "employeeTasks" ? "error.main" : "", // Change 'primary.main' to the color you want for the active menu
-                                 }}
-                                    
-                                component={Link} to="employeeTasks">
-                                    <ListItemIcon>
+
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("employeeTasks")}
+                                    active={activeMenu === "employeeTasks" ? 1 : 0}
+                                    component={Link}
+                                    to="employeeTasks"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "employeeTasks" ? 1 : 0}>
                                         <AssignmentIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Tasks" />
-                                </ListItemButton>
+                                    </StyledListItemIcon>
+                                    <ListItemText primary="Task" />
+                                </StyledListItemButton>
                             </ListItem>
                         </List>
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="emplyoeeProjects">
-                                    <ListItemIcon>
+
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("emplyoeeProjects")}
+                                    active={activeMenu === "emplyoeeProjects" ? 1 : 0}
+                                    component={Link}
+                                    to="emplyoeeProjects"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "emplyoeeProjects" ? 1 : 0}>
                                         <AccountTreeIcon />
-                                    </ListItemIcon>
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Projects" />
-                                </ListItemButton>
+                                </StyledListItemButton>
                             </ListItem>
                         </List>
 
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton component={Link} to="employeeLeaveRequest">
-                                    <ListItemIcon>
-                                        <RecordVoiceOverIcon />
-                                    </ListItemIcon>
+
+                                <StyledListItemButton
+                                    onClick={() => handleMenuClick("employeeLeaveRequest")}
+                                    active={activeMenu === "employeeLeaveRequest" ? 1 : 0}
+                                    component={Link}
+                                    to="employeeLeaveRequest"
+                                >
+                                    <StyledListItemIcon active={activeMenu === "employeeLeaveRequest" ? 1 : 0}>
+                                        <MedicalServicesIcon />
+                                    </StyledListItemIcon>
                                     <ListItemText primary="Leave Request" />
-                                </ListItemButton>
+                                </StyledListItemButton>
                             </ListItem>
                         </List>
 
