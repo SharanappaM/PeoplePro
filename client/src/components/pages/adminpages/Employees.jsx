@@ -74,6 +74,9 @@ const Employees = () => {
           if (res.data.status === true) {
             setOpenEmployeeModal(false)
           }
+          if(res.data.error){
+            toast.error(res.data.error)
+          }
 
 
         }).catch(err => {
@@ -177,7 +180,9 @@ const Employees = () => {
 
     {
       name: 'Status',
-      selector: (row) => "Active",
+      selector: (row) => (
+        <p style={{color:"green", fontWeight:"bold"}}>Active</p>
+    ),
       sortable: true,
     },
 
@@ -186,7 +191,10 @@ const Employees = () => {
 
 
   const handleDeleteAllEmplyoess = () => {
-    axios.delete("http://localhost:8787/auth/deleteAllEmployees")
+    const ifUserConfirmed  = window.confirm("Are you sure you want to delete all employees?")
+    if(ifUserConfirmed){
+
+      axios.delete("http://localhost:8787/auth/deleteAllEmployees")
       .then(res => {
         toast.success(res.data.msg)
         setEmployeesCreated(employeeCreated === false ? true : false)
@@ -195,6 +203,9 @@ const Employees = () => {
         console.log(err);
 
       })
+
+    }
+
   }
 
 

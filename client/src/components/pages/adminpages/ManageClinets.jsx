@@ -145,7 +145,9 @@ const ManageClinets = () => {
 
         {
             name: 'Status',
-            selector: (row) => "Active",
+            selector: (row) => (
+                <p style={{color:"green", fontWeight:"bold"}}>Active</p>
+            ),
             sortable: true,
         },
 

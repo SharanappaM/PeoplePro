@@ -12,7 +12,7 @@ import { fetchDepartmentData } from '../../../redux/features/employee/department
 
 const Department = () => {
   const dishpacth = useDispatch();
-  const [epartmentData, setDepartmentData] = useState([]);
+
   const [entries, setEntries] = useState(7);
   const [searchTerm, setSearchTerm] = useState('');
   const [employeesNameData, setEmployeesNameData] = useState([])
@@ -20,21 +20,7 @@ const Department = () => {
   const { departmentList, loading, error } = useSelector((state) => state.department)
 
 
-  console.log(departmentList, "departmentList");
 
-  const getDepartmentData = async () => {
-    await axios.get("http://localhost:8787/auth/listDepartments")
-      .then(res => {
-        setDepartmentData(res.data.result)
-        console.log(res.data.result);
-
-      }).catch(err => {
-        console.log(err);
-
-      })
-
-
-  }
   const getEmployeesNameData = async () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
@@ -49,8 +35,9 @@ const Department = () => {
 
   }
   const handelDeleteAlltDepartments = () => {
-
-    axios.delete("http://localhost:8787/auth/deleteAlltDepartments")
+    const ifUserConfirmed  = window.confirm("Are you sure you want to delete all departments?")
+    if(ifUserConfirmed){
+      axios.delete("http://localhost:8787/auth/deleteAlltDepartments")
       .then(res => {
         toast.success(res.data.msg)
         setAddedDepartment(addedDepartment === false ? true : false)
@@ -59,6 +46,10 @@ const Department = () => {
 
       })
 
+
+    }
+
+   
 
   }
 
@@ -89,7 +80,6 @@ const Department = () => {
 
 
   useEffect(() => {
-    // getDepartmentData();
     getEmployeesNameData();
   }, [addedDepartment])
 
@@ -167,6 +157,7 @@ const Department = () => {
                 value={formik.values.department_head}
 
               >
+             
 
                 {employeesNameData.map((items, index) => (
                   <MenuItem key={index} value={items}>{items}</MenuItem>
@@ -198,23 +189,7 @@ const Department = () => {
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            {/* <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
-
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
-            </Box> */}
-
-
-
+          
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography>Search</Typography>
               <TextField
@@ -227,7 +202,7 @@ const Department = () => {
               />
             </Box>
 
-            <Button onClick={handelDeleteAlltDepartments}>Delete All Departments</Button>
+            <Button variant='outlined' onClick={handelDeleteAlltDepartments}>Delete All Departments</Button>
           </Box>
 
           <Box sx={{ mt: 2 }}>

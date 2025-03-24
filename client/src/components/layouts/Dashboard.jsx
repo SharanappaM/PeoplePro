@@ -25,7 +25,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 const drawerWidth = 270;
 import logo from "../../assets/Logo.png"
-import { Logout } from '@mui/icons-material';
+import { CalendarMonthOutlined, Logout } from '@mui/icons-material';
 import "./../../App.css"
 import "./../../index.css"
 
@@ -51,6 +51,7 @@ function Dashboard(props) {
 
     };
 
+    
 
     React.useEffect(() => {
         const role11 = localStorage.getItem("role")
@@ -339,7 +340,7 @@ function Dashboard(props) {
                                     to="emplyoeeAttendance"
                                 >
                                     <StyledListItemIcon active={activeMenu === "emplyoeeAttendance" ? 1 : 0}>
-                                        <BsCalendar2Plus />
+                                        <CalendarMonthOutlined />
                                       
                                     </StyledListItemIcon>
                                     <ListItemText primary="Attendance" />

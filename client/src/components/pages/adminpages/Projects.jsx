@@ -287,6 +287,8 @@ const Projects = () => {
 
 
   const handleDeleteAllProjects = () => {
+    const ifUserConfirmed  = window.confirm("Are you sure you want to delete all projects?")
+    if(ifUserConfirmed){
     axios.delete("http://localhost:8787/auth/deleteAllProjects")
       .then(res => {
         toast.success(res.data.msg)
@@ -296,6 +298,7 @@ const Projects = () => {
         console.log(err);
 
       })
+    }
   }
 
 

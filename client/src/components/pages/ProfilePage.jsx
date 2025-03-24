@@ -21,24 +21,6 @@ const ProfilePage = () => {
     console.log(loggedAdminData, "loggedAdminData");
 
 
-    const employeeData = {
-        employee_id: 1001,
-        first_name: "Sharan",
-        last_name: "Hbd",
-        contact_number: "974250",
-        gender: "Male",
-        email: "sharanappahbd@gmail.com",
-        username: "Sharanappa_M",
-        office_shift: "Morning Shift",
-        role: "Normal Role",
-        department: "IT",
-        designation: "SDE",
-        basic_salary: "62000",
-        hourly_rate: "3265",
-        payslip_type: "Per Month",
-        employee_picture: "https://via.placeholder.com/150", // Replace with actual image URL
-        payment_status: "Paid",
-    };
 
     useEffect(() => {
         const role11 = localStorage.getItem("role")
@@ -47,22 +29,6 @@ const ProfilePage = () => {
         setRole1(role11)
         setLoggedEmployeeData(employeeData)
         setLoggedAdminData(adminData)
-        // setEmail(email1)
-
-        // if (role11 === "employee") {
-        // const employeeData1 = localStorage.getItem("employeeData");
-        // // Check if there's valid employee data in localStorage
-        // if (employeeData1) {
-        //     const parsedEmployeeData = JSON.parse(employeeData1);
-        //     if (parsedEmployeeData && parsedEmployeeData.first_name) {
-        //         setLoggedEmployeeData(parsedEmployeeData.first_name);
-
-        //     }
-        // }
-
-        // }
-
-
 
 
 
@@ -151,11 +117,39 @@ const ProfilePage = () => {
                         </Card>
                     </div>
                 ) : (
-                    <div>
-                        <Typography>Username : {adminParsedData?.username}</Typography>
-                        {/* <Typography>Name: {adminParsedData.first_name}</Typography> */}
-                        <Typography>Role: {role1}</Typography>
-                    </div>
+                    // <div>
+                    //     <Typography>Username : {adminParsedData?.username}</Typography>
+                    //     <Typography>Role: {role1}</Typography>
+                    // </div>
+
+                    <Card
+                            sx={{
+                                maxWidth: 380,
+                                borderRadius: 3,
+                                boxShadow: 5,
+                                background: "linear-gradient(135deg, #2196F3 30%, #21CBF3 90%)",
+                                color: "#fff",
+                                overflow: "hidden",
+                                textAlign: "center",
+                                
+                            }}
+                        >
+                            {/* Avatar and Name */}
+                            <Box sx={{ p: 3, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                <Avatar
+                                    src={parsedEmployeeData?.employee_picture}
+                                    sx={{ width: 100, height: 100, mb: 1, border: "3px solid white" }}
+                                />
+                                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                                    Username : {adminParsedData?.username} 
+                                </Typography>
+                                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                                   Role : {role1}
+                                </Typography>
+                            </Box>
+
+                        
+                        </Card>
                 )
             }
 

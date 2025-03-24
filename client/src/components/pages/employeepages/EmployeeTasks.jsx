@@ -320,11 +320,7 @@ const EmployeeTasks = () => {
       selector: (row) => row.priority,
       sortable: true,
     },
-    {
-      name: 'Progress',
-      selector: (row) => row.progress,
-      sortable: true,
-    },
+   
     {
       name: 'Status',
       selector: (row) => row.status,

@@ -55,6 +55,8 @@ const Designation = () => {
 
 
   const handelDeleteAlltDesignations=()=>{
+    const ifUserConfirmed  = window.confirm("Are you sure you want to delete all designations?")
+    if(ifUserConfirmed){
     axios.delete("http://localhost:8787/auth/deleteAllDesignations")
     .then(res=>{
       console.log(res.data.msg);
@@ -64,6 +66,7 @@ const Designation = () => {
       console.log(err);
       
     })
+  }
 
   }
 

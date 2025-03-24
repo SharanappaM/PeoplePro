@@ -74,30 +74,6 @@ const Tasks = () => {
 
 
   }
-  // const getTasksList = async () => {
-  //   await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks`)
-  //     .then(res => {
-  //       const tasks = res.data.result;
-  //       setTasksList(tasks)
-
-  //         // Debug: Log the status of each task to identify issues
-  //         tasks.forEach(task => {
-  //           console.log(`Task status: ${task.status}`);
-  //         });
-
-  //       const completedTasks = tasks.filter(task => task.status?.toLowerCase() === 'completed').length;
-  //        console.log("completedTasks", completedTasks);
-
-
-  //       setCompleted(completedTasks);
-
-  //     }).catch(err => {
-  //       console.log(err);
-
-  //     })
-
-
-  // }
 
 
 
@@ -176,33 +152,7 @@ const Tasks = () => {
         })
     }
   })
-  // const formKiForEditProject = useFormik({
-  //   initialValues: {
-  //     // title: projectNameData.map((item)=>{item.title}),
-  //     title: null,
-  //     project: null,
-  //     start_date: null,
-  //     end_date: null,
-  //     summary: null,
-  //     team: null,
-  //     estimated_hour: null,
-  //     priority: null,
-  //     description: null,
-  //   },
-  //   onSubmit: (values) => {
-  //     axios.put(`http://localhost:8787/auth/createtasks/${selectedTaskId}`, values)
-  //       .then(res => {
-  //         console.log(res.data.msg);
-  //         toast.success(res.data.msg);
-  //         setOpenCreateTaskModal(false)
-  //         setAddedTask(addedTask === false ? true : false)
 
-  //       }).catch(err => {
-  //         console.log(err);
-
-  //       })
-  //   }
-  // })
 
   const formKiForEditProject = useFormik({
     initialValues: {
@@ -242,8 +192,7 @@ const Tasks = () => {
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
           setTasksList1(task); // Set the task data to local state
-          // console.log("task",task.title); // Set the task data to local state
-          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
+          
           console.log("tasksList1", task); // Set the task data to local state
 
 
@@ -308,11 +257,7 @@ const Tasks = () => {
       selector: (row) => row.priority,
       sortable: true,
     },
-    {
-      name: 'Progress',
-      selector: (row) => row.progress,
-      sortable: true,
-    },
+  
     {
       name: 'Status',
       selector: (row) => row.status,
@@ -338,6 +283,8 @@ const Tasks = () => {
 
 
   const handleDeleteAllTasks = () => {
+    const ifUserConfirmed  = window.confirm("Are you sure you want to delete all tasks?")
+    if(ifUserConfirmed){
     axios.delete("http://localhost:8787/auth/deleteAllTasks")
       .then(res => {
         toast.success(res.data.msg)
@@ -347,6 +294,7 @@ const Tasks = () => {
         console.log(err);
 
       })
+    }
   }
 
 
@@ -467,7 +415,7 @@ const Tasks = () => {
                 />
               </Box>
             </Box>
-            <Button variant='outlined' onClick={handleDeleteAllTasks}> Delete All Tasls </Button>
+            <Button variant='outlined' onClick={handleDeleteAllTasks}> Delete All Tasks </Button>
 
             <Button variant='outlined' onClick={() => setOpenCreateTaskModal(true)}> Add  </Button>
           </Box>

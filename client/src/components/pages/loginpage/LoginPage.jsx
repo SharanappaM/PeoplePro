@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { useNavigate } from "react-router-dom"
 import axios from 'axios';
 import logo from "../../../assets/PeoplePro.png"
+import { toast, ToastContainer } from 'react-toastify';
 
 const ButtonsLoginAs = styled(Button)({
   textTransform: "capitalize"
@@ -44,13 +45,13 @@ const LoginPage = () => {
 
       }
     } 
-    if (loginTab === "Employee") {
-      deafultValues = {
-        email: "sharanappahbd@gmail.com",
-        password: "123456"
+    // if (loginTab === "Employee") {
+    //   deafultValues = {
+    //     email: "hbdsharanappa52@gmail.com",
+    //     password: "123456"
 
-      }
-    } 
+    //   }
+    // } 
 
     if (loginTab === "Admin") {
       axios.post("http://localhost:8787/auth/adminlogin", deafultValues)
@@ -63,6 +64,7 @@ const LoginPage = () => {
           } else {
             setError(res.data.error)
             console.log(res.data.error)
+            toast.error(res.data.error)
           }
         })
         .catch(error => console.log(error))
@@ -70,7 +72,7 @@ const LoginPage = () => {
 
     }
     if (loginTab === "Employee") {
-      axios.post("http://localhost:8787/auth/employeelogin", deafultValues)
+      axios.post("http://localhost:8787/auth/employeelogin", values)
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
@@ -80,6 +82,7 @@ const LoginPage = () => {
           } else {
             setError(res.data.error)
             console.log(res.data.error)
+            toast.error(res.data.error)
           }
         })
         .catch(error => console.log(error))
@@ -94,6 +97,7 @@ const LoginPage = () => {
 
   return (
     <div>
+        <ToastContainer position='bottom-right' />
       <Box display="flex" height="100vh" >
         {/* position="relative" */}
 
@@ -194,7 +198,7 @@ const LoginPage = () => {
 
                 <ButtonsLoginAs onClick={() => setLoginTab("Admin")} fullWidth>Admin</ButtonsLoginAs>
                 <ButtonsLoginAs onClick={() => setLoginTab("Employee")} fullWidth>Employee</ButtonsLoginAs>
-                <ButtonsLoginAs onClick={() => setLoginTab("Client")} fullWidth>Client</ButtonsLoginAs>
+                {/* <ButtonsLoginAs onClick={() => setLoginTab("Client")} fullWidth>Client</ButtonsLoginAs> */}
               </ButtonGroup>
             </form>
           </Box>
