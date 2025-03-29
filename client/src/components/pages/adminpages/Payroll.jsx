@@ -43,7 +43,7 @@ const Payroll = () => {
         }
         axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/auth/updatePaymentStatus/${employeeId}`, formData)
             .then(res => {
-                console.log(res.data);
+                 
                 toast.success(res.data.msg)
                 setPaymentSuccess(paymentSuccess === false ? true : false)
                 setMakePaymentModal(false)
@@ -119,7 +119,7 @@ const Payroll = () => {
         axios.get("http://localhost:8787/auth/listEmployees")
             .then(res => {
                 setEmployeesData(res.data.result)
-                console.log(res.data.result);
+        
 
             }).catch(err => {
                 console.log(err);

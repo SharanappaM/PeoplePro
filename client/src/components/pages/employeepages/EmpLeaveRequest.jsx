@@ -2,11 +2,9 @@ import { Box, Button, Card, Divider, FormLabel, MenuItem, Select, TextField, Typ
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-// import { customStyles } from '../../ReactDataTableStyle';
 import { useFormik } from "formik"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import RequiredStar from '../../../RequiredStar';
 import { customStyles } from '../ReactDataTableStyle';
 import RequiredStar from '../../RequiredStar';
 import { useSelector } from 'react-redux';
@@ -33,16 +31,16 @@ const EmpLeaveRequest = () => {
 
   const [employeesName, setEmployeesName] = useState(false)
   const { loading, data, error } = useSelector((state) => state.post);
-  console.log(data, " daat from atted");
+
   const [loggedEmpData, setLoggedEmpData] = useState(null)
-  console.log(loggedEmpData?.first_name, "loggedEmpData");
+
   const [leaveList, setLeaveList] = useState([])
 
 
   const getLeaveList = () => {
     axios.get(`http://localhost:8787/auth/listLeaveRequests/${loggedEmpData}`)
       .then(res => {
-        console.log(res.data);
+         
         setLeaveList(res.data);
 
       }).catch(err => {
@@ -105,8 +103,6 @@ const EmpLeaveRequest = () => {
 
 
     onSubmit: (values) => {
-      // Handle form submission
-      console.log('Form submitted with values:', values);
       const formadat = {
         ...values,
         employee_name: loggedEmpData,
@@ -116,7 +112,7 @@ const EmpLeaveRequest = () => {
       axios
         .post(`http://localhost:8787/auth/createLeave`, formadat)
         .then((response) => {
-          // console.log('Employee added successfully', response);
+           
           toast.success(response.data.msg)
           setEmployeesName(employeesName === false ? true : false)
         })

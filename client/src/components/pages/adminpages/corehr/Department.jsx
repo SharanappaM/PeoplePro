@@ -25,7 +25,7 @@ const Department = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+         
 
       }).catch(err => {
         console.log(err);
@@ -60,12 +60,11 @@ const Department = () => {
     },
 
     onSubmit: (values) => {
-      // Handle form submission
-      console.log('Form submitted with values:', values);
+ 
       axios
         .post('http://localhost:8787/auth/department', values)
         .then((response) => {
-          // console.log('Employee added successfully', response);
+           
           toast.success(response.data.msg)
           setAddedDepartment(addedDepartment === false ? true : false)
         })

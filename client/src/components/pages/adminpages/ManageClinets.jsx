@@ -64,7 +64,7 @@ const ManageClinets = () => {
                     if (res.data.msg === "Query Error") {
                         toast.error("Same Erro Ouccred")
                     }
-                    console.log(res.data.msg);
+               
                     toast.success(res.data.msg)
                     setClientCreated(clientCreated === false ? true : false)
 
@@ -82,24 +82,6 @@ const ManageClinets = () => {
 
 
 
-
-
-
-
-
-    const getEmployeeData = () => {
-        axios.get("http://localhost:8787/auth/listClients")
-            .then(res => {
-                setClientData(res.data.result)
-                console.log(res.data.result);
-
-            }).catch(err => {
-                console.log(err);
-
-            })
-
-
-    }
     useEffect(() => {
         // getEmployeeData();
         if (clientList.length === 0) {

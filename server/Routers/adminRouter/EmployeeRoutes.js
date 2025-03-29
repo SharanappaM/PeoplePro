@@ -1,6 +1,6 @@
 import express from "express"
 import con from "../../utils/db.js"
-
+import bcrypt, { hash } from "bcrypt"
 const router = express.Router();
 
 const createEmployeetable = `
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS employees (
   gender VARCHAR(45) NOT NULL,
   email VARCHAR(45) NOT NULL UNIQUE,
   username VARCHAR(45) NOT NULL UNIQUE,
-  password VARCHAR(45) NOT NULL,
+  password VARCHAR(105) NOT NULL,
   office_shift VARCHAR(45) NOT NULL,
   role VARCHAR(45) NOT NULL,
   department VARCHAR(45) NOT NULL,
@@ -118,41 +118,50 @@ const generateEmployeeId = (callback) => {
     });
 };
 
+
+
 router.post("/addEmployees", (req, res) => {
     generateEmployeeId((err, employee_id) => {
         if (err) {
             return res.json({ status: false, error: "Error generating employee_id" });
         }
 
-        const q = "INSERT INTO employees (`first_name`, `last_name`, `employee_id`, `contact_number`, `gender`, `email`, `username`, `password`, `office_shift`, `role`, `department`, `designation`, `basic_salary`, `hourly_rate`, `payslip_type`, `employee_picture`,payment_status) VALUES (?)";
-        let payment_status = "Un Paid"
-        const VALUES = [
-            req.body.first_name,
-            req.body.last_name,
-            employee_id,  // Use the generated employee_id here
-            req.body.contact_number,
-            req.body.gender,
-            req.body.email,
-            req.body.username,
-            req.body.password,
-            req.body.office_shift,
-            req.body.role,
-            req.body.department,
-            req.body.designation,
-            req.body.basic_salary,
-            req.body.hourly_rate,
-            req.body.payslip_type,
-            req.body.employee_picture,
-            payment_status
-        ];
-
-        con.query(q, [VALUES], (err, result) => {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) {
-                console.error('Query error:', err);
-                return res.json({ status: false, error: "Query Error" });
+                return res.json({ status: false, error: "Error hashing password" });
             }
 
-            return res.json({ status: true, msg: "Employee Created", employee_id });
+            const q = "INSERT INTO employees (`first_name`, `last_name`, `employee_id`, `contact_number`, `gender`, `email`, `username`, `password`, `office_shift`, `role`, `department`, `designation`, `basic_salary`, `hourly_rate`, `payslip_type`, `employee_picture`, `payment_status`) VALUES (?)";
+            
+            let payment_status = "Un Paid";
+            const VALUES = [
+                req.body.first_name,
+                req.body.last_name,
+                employee_id,
+                req.body.contact_number,
+                req.body.gender,
+                req.body.email,
+                req.body.username,
+                hash, // Hashed password
+                req.body.office_shift,
+                req.body.role,
+                req.body.department,
+                req.body.designation,
+                req.body.basic_salary,
+                req.body.hourly_rate,
+                req.body.payslip_type,
+                req.body.employee_picture,
+                payment_status
+            ];
+
+            con.query(q, [VALUES], (err, result) => {
+                if (err) {
+                    console.error('Query error:', err);
+                    return res.json({ status: false, error: "Query Error" });
+                }
+
+                return res.json({ status: true, msg: "Employee Created", employee_id });
+            });
         });
     });
 });

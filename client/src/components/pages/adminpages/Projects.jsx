@@ -57,7 +57,7 @@ const Projects = () => {
 
 
 
-  // console.log(projects , "projects");
+
 
   const projectDashboardCountData = () => {
     const tasks = projects.result;
@@ -85,7 +85,7 @@ const Projects = () => {
     setNotStated(notStatedTasks);
 
 
-    console.log(completedTasks, "completedTasks");
+
 
   }
 
@@ -114,7 +114,7 @@ const Projects = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+      
 
       }).catch(err => {
         console.log(err);
@@ -181,7 +181,7 @@ const Projects = () => {
     onSubmit: (values) => {
       axios.post("http://localhost:8787/auth/createProject", values)
         .then(res => {
-          console.log(res.data.msg);
+      
           toast.success(res.data.msg);
           setOpenCreateProjectModal(false)
           setAddedProject(addedProject === false ? true : false)
@@ -208,7 +208,7 @@ const Projects = () => {
     onSubmit: (values) => {
       axios.put(`http://localhost:8787/auth/updateProject/${selectedProjectId}`, values)
         .then(res => {
-          console.log(res.data.msg);
+       
           toast.success(res.data.msg);
           setOpenEditProjectModal(false);
           setAddedProject(addedProject === false ? true : false)
@@ -259,11 +259,7 @@ const Projects = () => {
       selector: (row) => row.priority,
       sortable: true,
     },
-    {
-      name: 'Progress',
-      selector: (row) => row.progress,
-      sortable: true,
-    },
+
     {
       name: 'Status',
       selector: (row) => row.status,
@@ -312,10 +308,6 @@ const Projects = () => {
       axios.get(`http://localhost:8787/auth/listProjectsById/${selectedProjectId}`)
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
-
-          // console.log("task",task.title); // Set the task data to local state
-          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
-          console.log("priject", task); // Set the task data to local state
 
 
 

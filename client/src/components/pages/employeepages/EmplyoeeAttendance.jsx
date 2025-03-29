@@ -33,9 +33,8 @@ const EmplyoeeAttendance = () => {
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [employeesName, setEmployeesName] = useState(false)
   const { loading, data, error } = useSelector((state) => state.post);
-  console.log(data ," daat from atted");
   const [loggedEmpData ,setLoggedEmpData] = useState(null)
-  console.log(loggedEmpData?.first_name, "loggedEmpData");
+
   
   
 
@@ -50,7 +49,7 @@ const EmplyoeeAttendance = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+         
 
       }).catch(err => {
         console.log(err);
@@ -65,7 +64,7 @@ const EmplyoeeAttendance = () => {
     await axios.get(`http://localhost:8787/auth/attendanceList/${loggedEmpData}`)
       .then(res => {
         setAttendanceList(res.data.result)
-        console.log(res.data.result);
+         
 
       }).catch(err => {
         console.log(err);
@@ -87,7 +86,7 @@ const EmplyoeeAttendance = () => {
 
     onSubmit: (values) => {
       // Handle form submission
-      console.log('Form submitted with values:', values);
+
       const formadat = {
         ...values,
         emplyoee_name: loggedEmpData
@@ -95,7 +94,7 @@ const EmplyoeeAttendance = () => {
       axios
         .post(`http://localhost:8787/auth/addemployeeattendance/${loggedEmpData}`, formadat)
         .then((response) => {
-          // console.log('Employee added successfully', response);
+           
           toast.success(response.data.msg)
           setEmployeesName(employeesName === false ? true : false)
         })
@@ -118,21 +117,14 @@ const EmplyoeeAttendance = () => {
     if (empData) {
       const parsedData = JSON.parse(empData);
       setLoggedEmpData(parsedData.first_name);
-      console.log(parsedData.first_name, "parsedData.first_name");
+
     }
 
 
    
   }, [employeesName])
 
-  // useEffect(() => {
-  //   const empData = localStorage.getItem("employeeData");
-  //   if (empData) {
-  //     const parsedData = JSON.parse(empData);
-  //     setLoggedEmpData(parsedData.first_name);
-  //     console.log(parsedData.first_name, "parsedData.first_name");
-  //   }
-  // }, []);
+
   
   useEffect(() => {
     if (loggedEmpData) {

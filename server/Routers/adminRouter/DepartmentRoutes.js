@@ -3,6 +3,25 @@ import con from "../../utils/db.js"
 
 const router = express.Router();
 
+
+const createDepartmentTable = `
+CREATE TABLE IF NOT EXISTS department (
+  department_id INT AUTO_INCREMENT PRIMARY KEY,
+  department_name VARCHAR(100) NOT NULL,
+  department_head VARCHAR(100) NOT NULL,
+  created_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`;
+
+con.query(createDepartmentTable, (err, result) => {
+  if (err) {
+    console.error("Error creating the 'department' table:", err);
+  } else {
+    console.log("'department' table is ready or already exists.");
+  }
+});
+
+
 router.post("/department", (req, res) => {
     const createdDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 

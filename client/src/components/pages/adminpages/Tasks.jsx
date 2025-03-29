@@ -53,7 +53,7 @@ const Tasks = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNames(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+   
 
       }).catch(err => {
         console.log(err);
@@ -140,7 +140,7 @@ const Tasks = () => {
             toast.error("Error while creating task")
           }
 
-          console.log(res.data.msg);
+      
           toast.success(res.data.msg);
 
           setOpenCreateTaskModal(false)
@@ -170,7 +170,6 @@ const Tasks = () => {
     onSubmit: (values) => {
       axios.put(`http://localhost:8787/auth/updateTask/${selectedTaskId}`, values)
         .then(res => {
-          console.log(res.data.msg);
           toast.success(res.data.msg);
           setOpenEditTaskModal(false);
           setAddedTask(addedTask === false ? true : false)
@@ -192,10 +191,6 @@ const Tasks = () => {
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
           setTasksList1(task); // Set the task data to local state
-          
-          console.log("tasksList1", task); // Set the task data to local state
-
-
 
           // Populate Formik form with fetched data
           formKiForEditProject.setValues({

@@ -1,23 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@mui/material/CssBaseline';
-import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
+import IconButton from '@mui/material/IconButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import HomeIcon from '@mui/icons-material/Home';
 import GroupIcon from '@mui/icons-material/Group';
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import AddchartIcon from '@mui/icons-material/Addchart';
+import { Link,  Outlet, useNavigate } from 'react-router-dom';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
-import { Typography, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer, Button, Tooltip, Avatar, Menu, MenuItem, styled } from '@mui/material';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
+import {  List, ListItem, ListItemButton, ListItemIcon, ListItemText, Collapse, Toolbar, Box, AppBar, Drawer,  Tooltip, Avatar,  styled } from '@mui/material';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
@@ -28,6 +21,7 @@ import logo from "../../assets/Logo.png"
 import { CalendarMonthOutlined, Logout } from '@mui/icons-material';
 import "./../../App.css"
 import "./../../index.css"
+import axios from 'axios';
 
 
 
@@ -38,18 +32,12 @@ function Dashboard(props) {
     const [role1, setRole1] = React.useState(null)
     const [email, setEmail] = React.useState(null)
 
+    axios.defaults.withCredentials = true
+
     const navigate = useNavigate()
 
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
 
-    };
 
     
 
@@ -60,6 +48,27 @@ function Dashboard(props) {
         setEmail(email1)
 
     }, [])
+
+    const handleLogout = ()=>{
+        axios.get("http://localhost:8787/auth/logout")
+        .then(res=>{
+           
+          if(res.data.Status){
+            localStorage.removeItem("valid")
+         
+            navigate("/")
+
+    
+          }
+         
+          
+        }).catch(err=>{
+          console.log(err);
+          
+        })
+      }
+
+
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
@@ -446,13 +455,16 @@ function Dashboard(props) {
                     <Tooltip title="Logout">
                         <IconButton >
                             <Logout sx={{
-                                color: "white"
+                                color: "white",
+                                mr:3,
+                                fontSize:"28px"
 
                             }} onClick={() => {
                                 navigate("/")
                                 localStorage.removeItem("adminData")
                                 localStorage.removeItem("employeeData")
                                 localStorage.removeItem("role")
+                                handleLogout()
                             }}>Logout</Logout>
                         </IconButton>
                     </Tooltip>
@@ -461,68 +473,13 @@ function Dashboard(props) {
 
                     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', }}>
 
-                        <Tooltip title="Account settings">
-                            <IconButton
-                                onClick={handleClick}
-                                size="small"
-                                sx={{ ml: 2 }}
-                                aria-controls={open ? 'account-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                            >
-                                <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-                            </IconButton>
+                        <Tooltip title="Account settings" component={Link} to="profilePage">
+                            
+                             <Avatar src="/broken-image.jpg" />
                         </Tooltip>
                     </Box>
 
-                    <Menu
-                        anchorEl={anchorEl}
-                        id="account-menu"
-                        open={open}
-                        onClose={handleClose}
-                        onClick={handleClose}
-                        slotProps={{
-                            paper: {
-                                elevation: 0,
-                                sx: {
-                                    overflow: 'visible',
-                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                    mt: 1.5,
-                                    '& .MuiAvatar-root': {
-                                        width: 32,
-                                        height: 32,
-                                        ml: -0.5,
-                                        mr: 1,
-                                    },
-                                    '&::before': {
-                                        content: '""',
-                                        display: 'block',
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: 14,
-                                        width: 10,
-                                        height: 10,
-                                        bgcolor: 'background.paper',
-                                        transform: 'translateY(-50%) rotate(45deg)',
-                                        zIndex: 0,
-                                    },
-                                },
-                            },
-                        }}
-                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                    >
-
-                        <ListItemButton component={Link} to="profilePage">
-                            <ListItemIcon>
-                                <Avatar />
-                            </ListItemIcon>
-                            <ListItemText primary="Profile" />
-                        </ListItemButton>
-
-
-
-                    </Menu>
+                 
 
                 </Toolbar>
 

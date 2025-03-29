@@ -21,7 +21,7 @@ const OrganizationChart = () => {
     axios.get("http://localhost:8787/auth/listEmployees")
       .then(res => {
         setEmployeesData(res.data.result)
-        console.log(res.data.result);
+         
 
       }).catch(err => {
         console.log(err);

@@ -12,7 +12,8 @@ import { employeeAttendanceRouter } from "./Routers/emplyoeeRouter/EmplyoeeAtten
 import { emplyoeeLoginRouter } from "./Routers/emplyoeeRouter/EmplyoeeLoginRouter.js";
 import { leaveRequestsRouter } from "./Routers/adminRouter/LeaveRequestRouter.js";
 
-
+import Jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -26,13 +27,13 @@ app.get("/getData", (req, res) => {
 
 
 app.use(cors({
-    origin:["http://localhost:5173"],
+    origin:["http://localhost:5174"],
     methods:["POST", "GET", "DELETE", "PUT"],
     credentials:true
 }))
 app.use(express.json())
 
-
+app.use(cookieParser())
 app.use("/auth", employeeRouters)
 app.use("/auth", departmentRouters)
 app.use("/auth", designationRouter)
@@ -46,6 +47,29 @@ app.use("/auth", employeeAttendanceRouter)
 app.use("/auth", emplyoeeLoginRouter)
 app.use("/auth", leaveRequestsRouter)
 
+
+
+
+
+
+
+const verifyUser = (req, res, next) => {
+    const token = req.cookies.token;
+    if(token) {
+        Jwt.verify(token, "jwt_secret_key", (err ,decoded) => {
+            if(err) return res.json({Status: false, Error: "Wrong Token"})
+            req.id = decoded.id;
+            req.role = decoded.role;
+            next()
+        })
+    } else {
+        return res.json({Status: false, Error: "Not autheticated"})
+    }
+}
+
+app.get('/verify',verifyUser, (req, res)=> {
+    return res.json({Status: true, role: req.role, id: req.id})
+} )
 
 
 

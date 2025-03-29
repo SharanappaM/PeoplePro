@@ -88,7 +88,7 @@ const EmployeeTasks = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNames(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+         
 
       }).catch(err => {
         console.log(err);
@@ -135,7 +135,7 @@ const EmployeeTasks = () => {
         try {
           const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks/${loggedEmployeeData}`);
           setTasksList(res.data.result);
-          // console.log(res.data.result); // Debugging log
+          //   // Debugging log
           const tasks = res.data.result;
           setTasksList(tasks);
   
@@ -202,7 +202,7 @@ const EmployeeTasks = () => {
             toast.error("Error while creating task")
           }
 
-          console.log(res.data.msg);
+           
           toast.success(res.data.msg);
 
           setOpenCreateTaskModal(false)
@@ -232,7 +232,7 @@ const EmployeeTasks = () => {
     onSubmit: (values) => {
       axios.put(`http://localhost:8787/auth/updateTask/${selectedTaskId}`, values)
         .then(res => {
-          console.log(res.data.msg);
+           
           toast.success(res.data.msg);
           setOpenEditTaskModal(false);
           setAddedTask(addedTask === false ? true : false)
@@ -254,9 +254,6 @@ const EmployeeTasks = () => {
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
           setTasksList1(task); // Set the task data to local state
-          // console.log("task",task.title); // Set the task data to local state
-          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
-          console.log("tasksList1", task); // Set the task data to local state
 
 
 

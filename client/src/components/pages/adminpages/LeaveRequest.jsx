@@ -27,9 +27,9 @@ const LeaveRequest = () => {
 
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const { loading, data, error } = useSelector((state) => state.post);
-  console.log(data, " daat from atted");
+
   const [loggedEmpData, setLoggedEmpData] = useState(null)
-  console.log(loggedEmpData?.first_name, "loggedEmpData");
+
   const [leaveList, setLeaveList] = useState([])
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [leaveStatuses, setLeaveStatuses] = useState({});
@@ -38,7 +38,7 @@ const LeaveRequest = () => {
   const getLeaveList = () => {
     axios.get(`http://localhost:8787/auth/listLeaveRequests`)
       .then(res => {
-        console.log(res.data);
+         
         setLeaveList(res.data.result);
 
       }).catch(err => {
@@ -153,8 +153,7 @@ const LeaveRequest = () => {
 
 
     onSubmit: (values) => {
-      // Handle form submission
-      console.log('Form submitted with values:', values);
+   
       const formadat = {
         ...values,
         // employee_name: loggedEmpData,
@@ -164,7 +163,6 @@ const LeaveRequest = () => {
       axios
         .post(`http://localhost:8787/auth/createLeave`, formadat)
         .then((response) => {
-          // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
           setOpenCreateProjectModal(false)
 
@@ -181,7 +179,7 @@ const LeaveRequest = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+      
 
       }).catch(err => {
         console.log(err);
@@ -200,7 +198,7 @@ const LeaveRequest = () => {
     if (empData) {
       const parsedData = JSON.parse(empData);
       setLoggedEmpData(parsedData.first_name);
-      console.log(parsedData.first_name, "parsedData.first_name");
+    
     }
 
 

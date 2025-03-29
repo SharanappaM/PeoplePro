@@ -7,7 +7,7 @@ export const sendLoginPostRequest = createAsyncThunk(
     async (requestData, {rejectWithValue})=>{
         try{
             const response = await axios.post("http://localhost:8787/auth/employeelogin", requestData);
-            console.log(response.data, "loginadar");
+          
          
            
             return response.data;

@@ -73,7 +73,7 @@ const EmplyoeeProjects = () => {
 
   }, [location]); // Dependency on location (route changes)
 
-  // console.log(projects , "projects");
+
 
   const projectDashboardCountData = () => {
     const tasks = projectList.result;
@@ -124,7 +124,7 @@ const EmplyoeeProjects = () => {
     await axios.get("http://localhost:8787/auth/getEmployeesName")
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-        console.log(res.data.employeeNames);
+         
 
       }).catch(err => {
         console.log(err);
@@ -200,7 +200,7 @@ const EmplyoeeProjects = () => {
     onSubmit: (values) => {
       axios.post("http://localhost:8787/auth/createProject", values)
         .then(res => {
-          console.log(res.data.msg);
+           
           toast.success(res.data.msg);
           setOpenCreateProjectModal(false)
           setAddedProject(addedProject === false ? true : false)
@@ -229,7 +229,7 @@ const EmplyoeeProjects = () => {
     onSubmit: (values) => {
       axios.put(`http://localhost:8787/auth/updateProject/${selectedProjectId}`, values)
         .then(res => {
-          console.log(res.data.msg);
+           
           toast.success(res.data.msg);
           setOpenEditProjectModal(false);
           setAddedProject(addedProject === false ? true : false)
@@ -246,7 +246,7 @@ const EmplyoeeProjects = () => {
 
   const columns = [
     {
-      name: 'title',
+      name: 'Title',
       selector: (row) => row.title,
       sortable: true,
     },
@@ -280,11 +280,7 @@ const EmplyoeeProjects = () => {
       selector: (row) => row.priority,
       sortable: true,
     },
-    {
-      name: 'Progress',
-      selector: (row) => row.progress,
-      sortable: true,
-    },
+ 
     {
       name: 'Status',
       selector: (row) => row.status,
@@ -321,9 +317,7 @@ const EmplyoeeProjects = () => {
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
 
-          // console.log("task",task.title); // Set the task data to local state
-          // console.log("tasksList1",task.map(emp => emp.title)); // Set the task data to local state
-          console.log("priject", task); // Set the task data to local state
+      
 
 
 

@@ -32,7 +32,7 @@ const Designation = () => {
   const getByDepartmetName = () => {
     axios.get("http://localhost:8787/auth/getByDepartmentName")
       .then(res => {
-        console.log(res.data);
+         
         setDepartmentName(res.data.getDepartment_name);
 
       }).catch(err => {
@@ -44,7 +44,7 @@ const Designation = () => {
   const getByDepartmets = () => {
     axios.get("http://localhost:8787/auth/listDesignations")
       .then(res => {
-        console.log(res.data);
+         
         setDesignationData(res.data.result);
 
       }).catch(err => {
@@ -59,7 +59,7 @@ const Designation = () => {
     if(ifUserConfirmed){
     axios.delete("http://localhost:8787/auth/deleteAllDesignations")
     .then(res=>{
-      console.log(res.data.msg);
+       
       toast.success(res.data.msg)
       
     }).catch(err=>{

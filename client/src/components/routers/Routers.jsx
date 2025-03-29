@@ -22,13 +22,22 @@ import EmplyoeeProjects from '../pages/employeepages/EmplyoeeProjects'
 import EmployeeTasks from '../pages/employeepages/EmployeeTasks'
 import ProfilePage from '../pages/ProfilePage'
 import EmpLeaveRequest from '../pages/employeepages/EmpLeaveRequest'
+import PrivateRoute from '../PrivateRoute'
 
 const Routers = () => {
   return (
     <div style={{overflowX:"hidden"}}>
       <Routes>
         <Route path='/' element={<LoginPage />} />
-        <Route path='/dashboard' element={<Dashboard />}>
+        <Route path='/dashboard' element={
+          
+          <PrivateRoute>
+      <Dashboard />
+          </PrivateRoute>
+    
+        
+        }
+        >
           <Route path='' element={<MainPage />} />
           <Route path='employees' element={<Employees />} />
           <Route path='core-hr/department' element={<Department />} />

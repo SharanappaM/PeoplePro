@@ -40,7 +40,7 @@ const Employees = () => {
   const [departmentName, setDepartmentName] = useState([]);
   const [designationName, setDesignationName] = useState([]);
   const [entries, setEntries] = useState(10);
-  const [searchTerm, setSearchTerm] = useState('');
+ 
 
   const [openEmployeeModal, setOpenEmployeeModal] = React.useState(false);
   const handleOpenEmployeeModal = () => setOpenEmployeeModal(true);
@@ -68,7 +68,7 @@ const Employees = () => {
     onSubmit: (values) => {
       axios.post("http://localhost:8787/auth/addEmployees", values)
         .then(res => {
-          console.log(res.data.msg);
+      
           toast.success(res.data.msg)
           setEmployeesCreated(employeeCreated === false ? true : false)
           if (res.data.status === true) {
@@ -90,7 +90,7 @@ const Employees = () => {
   const getByDepartmetName = () => {
     axios.get("http://localhost:8787/auth/getByDepartmentName")
       .then(res => {
-        console.log(res.data);
+         
         setDepartmentName(res.data.getDepartment_name);
 
       }).catch(err => {
@@ -104,7 +104,7 @@ const Employees = () => {
   const getByDesignationName = () => {
     axios.get("http://localhost:8787/auth/getBydesignationName")
       .then(res => {
-        console.log(res.data);
+         
         setDesignationName(res.data.designation_name);
 
       }).catch(err => {
@@ -118,7 +118,7 @@ const Employees = () => {
     axios.get("http://localhost:8787/auth/listEmployees")
       .then(res => {
         setEmployeesData(res.data.result)
-        console.log(res.data.result);
+   
 
       }).catch(err => {
         console.log(err);
