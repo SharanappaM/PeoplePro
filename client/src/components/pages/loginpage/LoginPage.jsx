@@ -32,6 +32,11 @@ const LoginPage = () => {
   axios.defaults.withCredentials = true; // store cookies in 
 
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues((prevState) => ({ ...prevState, [name]: value }));
+  };
+
   useEffect(() => {
     axios.get('http://localhost:8787/verify')
     .then(result => {
@@ -96,6 +101,7 @@ const LoginPage = () => {
 
 
   }
+
 
 
   return (
@@ -168,11 +174,11 @@ const LoginPage = () => {
 
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <AccountCircleIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                  <TextField id="input-with-sx" label="" placeholder='username' fullWidth variant="standard" onChange={(e) => setValues({ ...values, email: e.target.value })} />
+                  <TextField id="input-with-sx" label="" placeholder='email' fullWidth variant="standard" name='email' value={values.email} onChange={handleChange} />
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', }}>
                   <LockIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                  <TextField id="input-with-sx" type='password' label="" placeholder='password' fullWidth variant="standard" onChange={(e) => setValues({ ...values, password: e.target.value })} />
+                  <TextField id="input-with-sx" type='password' label="" placeholder='password' fullWidth variant="standard" name='password' value={values.password} onChange={handleChange} />
                 </Box>
               </Stack>
               <Button fullWidth type='submit' sx={{ mt: 2 }} color='primary' variant='contained'>
@@ -193,8 +199,21 @@ const LoginPage = () => {
                  }}
               >
 
-                <ButtonsLoginAs onClick={() => setLoginTab("Admin")} fullWidth>Admin</ButtonsLoginAs>
-                <ButtonsLoginAs onClick={() => setLoginTab("Employee")} fullWidth>Employee</ButtonsLoginAs>
+                <ButtonsLoginAs onClick={() => {
+                  setLoginTab("Admin")
+                  setValues({
+                    email:"sharan@gmail.com",
+                    password:"sharan@123"
+                  })
+                
+                }} fullWidth>Default Admin</ButtonsLoginAs>
+                <ButtonsLoginAs onClick={() =>{
+                   setLoginTab("Employee")
+                   setValues({
+                    email:"basava@gmail.com",
+                    password:"basava@123"
+                  })
+                }} fullWidth>Default Employee</ButtonsLoginAs>
                 {/* <ButtonsLoginAs onClick={() => setLoginTab("Client")} fullWidth>Client</ButtonsLoginAs> */}
               </ButtonGroup>
             </form>

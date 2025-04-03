@@ -11,13 +11,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchDepartmentData } from '../../../redux/features/employee/departmentSlice';
 
 const Department = () => {
-  const dishpacth = useDispatch();
+
 
   const [entries, setEntries] = useState(7);
   const [searchTerm, setSearchTerm] = useState('');
   const [employeesNameData, setEmployeesNameData] = useState([])
+  const [departmentList, setDepartmentList] = useState([])
   const [addedDepartment, setAddedDepartment] = useState(false)
-  const { departmentList, loading, error } = useSelector((state) => state.department)
+
 
 
 
@@ -34,6 +35,23 @@ const Department = () => {
 
 
   }
+
+  const getListDepartments = async () => {
+    await axios.get("http://localhost:8787/auth/listDepartments")
+      .then(res => {
+        setDepartmentList(res.data)
+        setAddedDepartment(addedDepartment === false ? true : false)
+
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+
+
   const handelDeleteAlltDepartments = () => {
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all departments?")
     if(ifUserConfirmed){
@@ -80,13 +98,10 @@ const Department = () => {
 
   useEffect(() => {
     getEmployeesNameData();
+    getListDepartments();
   }, [addedDepartment])
 
-  useEffect(() => {
-    if (departmentList.length === 0) {
-      dishpacth(fetchDepartmentData())
-    }
-  }, [dishpacth, addedDepartment])
+
   const columns = [
     {
       name: 'Department Head',

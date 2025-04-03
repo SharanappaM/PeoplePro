@@ -32,7 +32,7 @@ const Employees = () => {
 
 
   const dispatch = useDispatch();
-  const { employees, loading, error } = useSelector((state) => state.employee);
+  // const { employees, loading, error } = useSelector((state) => state.employee);
 
 
   const [employeesData, setEmployeesData] = useState([]);
@@ -118,7 +118,7 @@ const Employees = () => {
     axios.get("http://localhost:8787/auth/listEmployees")
       .then(res => {
         setEmployeesData(res.data.result)
-   
+        setEmployeesCreated(employeeCreated === false ? true : false)
 
       }).catch(err => {
         console.log(err);
@@ -128,22 +128,16 @@ const Employees = () => {
 
   }
   useEffect(() => {
-    // getEmployeeData();
+    getEmployeeData();
     getByDepartmetName();
     getByDesignationName()
   }, [employeeCreated])
 
 
 
-  useEffect(() => {
-    // dispatch(fetchEmployeesData());
-    if (employees.length === 0) {
-      dispatch(fetchEmployeesData());
-    }
-  }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+
+
 
 
   const columns = [
@@ -253,7 +247,7 @@ const Employees = () => {
           <DataTable
             columns={columns}
             // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-            data={employees.result}
+            data={employeesData}
             pagination
             paginationPerPage={entries}
             customStyles={customStyles}

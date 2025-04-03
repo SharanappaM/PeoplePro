@@ -27,7 +27,7 @@ app.get("/getData", (req, res) => {
 
 
 app.use(cors({
-    origin:["http://localhost:5174"],
+    origin:["http://localhost:5173"],
     methods:["POST", "GET", "DELETE", "PUT"],
     credentials:true
 }))

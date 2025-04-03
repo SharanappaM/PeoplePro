@@ -82,6 +82,8 @@ const Tasks = () => {
       .then(res => {
         const tasks = res.data.result;
         setTasksList(tasks);
+        console.log(tasks, "tasks");
+        
 
 
         const completedTasks = tasks.filter(task => {
