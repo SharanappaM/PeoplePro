@@ -17,6 +17,8 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+
+
 app.get("/getData", (req, res) => {
     res.json("Hello Get method");
 });
