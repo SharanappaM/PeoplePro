@@ -23,43 +23,23 @@
 // export default con;
 
 
-// import mysql from "mysql2";
-// import dotenv from 'dotenv';
-
-// // Load environment variables
-// dotenv.config();
-
-// // Create the MySQL connection using the URL from environment variables
-// const con = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
-
-// // Connect to the MySQL database
-// con.connect((error) => {
-//     if (error) {
-//         return console.log("Connection error:", error);
-//     } else {
-//         return console.log("Connected to the MySQL database!");
-//     }
-// });
-
-// // Export the connection object as the default export
-// export default con;
-
 import mysql from "mysql2";
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
-const con = mysql.createConnection({
-  uri: process.env.MYSQL_PUBLIC_URL
-});
+// Create the MySQL connection using the URL from environment variables
+const con = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
 
+// Connect to the MySQL database
 con.connect((error) => {
-  if (error) {
-    console.error("❌ MySQL connection failed:", error);
-  } else {
-    console.log("✅ Connected to the MySQL database via connection URL!");
-  }
+    if (error) {
+        return console.log("Connection error:", error);
+    } else {
+        return console.log("Connected to the MySQL database!");
+    }
 });
 
+// Export the connection object as the default export
 export default con;
