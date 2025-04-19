@@ -46,6 +46,7 @@ const Projects = () => {
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
   const [openEditProjectModal, setOpenEditProjectModal] = useState(false)
   const [employeesNameData, setEmployeesNameData] = useState([])
+  const [totalClientList, setTotalClientList] = useState([])
 
   const [selectedProjectId, setSelectedProjectId] = useState(null)
 
@@ -92,6 +93,7 @@ const Projects = () => {
 
   useEffect(() => {
     getEmployeesNameData();
+    getListClients();
     // projectDashboardCountData();
 
     if (projects.length === 0) {
@@ -101,7 +103,7 @@ const Projects = () => {
   }, [addedProject, dispatch])
 
 
-
+  
 
   useEffect(() => {
     // Recalculate counts whenever projects are updated
@@ -114,6 +116,20 @@ const Projects = () => {
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
+      
+
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
+
+  const getListClients = async () => {
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listClients`)
+      .then(res => {
+        setTotalClientList(res.data.result)
       
 
       }).catch(err => {
@@ -504,9 +520,14 @@ const Projects = () => {
                   value={formki.values.client}
                   onChange={formki.handleChange}
                 >
-                  <MenuItem value="Sharan">Sharan</MenuItem>
+                  {/* <MenuItem value="Sharan">Sharan</MenuItem>
                   <MenuItem value="Raju">Raju</MenuItem>
-                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                  <MenuItem value="Basavaraj">Basavaraj</MenuItem> */}
+                  {
+                    totalClientList.map((item, index)=>(
+                      <MenuItem value={item.first_name}>{item.first_name}</MenuItem>
+                    ))
+                  }
                 </Select>
               </Grid>
               <Grid item mt={2} lg={4}>
@@ -674,9 +695,11 @@ const Projects = () => {
                   value={formKiForEditProject.values.client}
                   onChange={formKiForEditProject.handleChange}
                 >
-                  <MenuItem value="Sharan">Sharan</MenuItem>
-                  <MenuItem value="Raju">Raju</MenuItem>
-                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                    {
+                    totalClientList.map((item, index)=>(
+                      <MenuItem value={item.first_name}>{item.first_name}</MenuItem>
+                    ))
+                  }
                 </Select>
               </Grid>
               <Grid item mt={2} lg={4}>

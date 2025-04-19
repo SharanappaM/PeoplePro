@@ -49,7 +49,7 @@ const EmplyoeeProjects = () => {
   const [projectList, setProjectList] = useState([])
 
   const [selectedProjectId, setSelectedProjectId] = useState(null)
-
+  const [totalClientList, setTotalClientList] = useState([])
 
   const [onHold, setOnHold] = useState(0)
   const [notStated, setNotStated] = useState(0)
@@ -105,9 +105,22 @@ const EmplyoeeProjects = () => {
 
   }
 
+  const getListClients = async () => {
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listClients`)
+      .then(res => {
+        setTotalClientList(res.data.result)
+      
 
+      }).catch(err => {
+        console.log(err);
+
+      })
+
+
+  }
   useEffect(() => {
     getEmployeesNameData();
+    getListClients();
     // projectDashboardCountData();
 
     if (projects.length === 0) {
@@ -509,9 +522,11 @@ const EmplyoeeProjects = () => {
                   value={formKiForEditProject.values.client}
                   onChange={formKiForEditProject.handleChange}
                 >
-                  <MenuItem value="Sharan">Sharan</MenuItem>
-                  <MenuItem value="Raju">Raju</MenuItem>
-                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                  {
+                                    totalClientList.map((item, index)=>(
+                                      <MenuItem value={item.first_name}>{item.first_name}</MenuItem>
+                                    ))
+                                  }
                 </Select>
               </Grid>
               <Grid item mt={2} lg={4}>
@@ -688,9 +703,11 @@ const EmplyoeeProjects = () => {
                   value={formki.values.client}
                   onChange={formki.handleChange}
                 >
-                  <MenuItem value="Sharan">Sharan</MenuItem>
-                  <MenuItem value="Raju">Raju</MenuItem>
-                  <MenuItem value="Basavaraj">Basavaraj</MenuItem>
+                   {
+                                     totalClientList.map((item, index)=>(
+                                       <MenuItem value={item.first_name}>{item.first_name}</MenuItem>
+                                     ))
+                                   }
                 </Select>
               </Grid>
               <Grid item mt={2} lg={4}>

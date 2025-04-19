@@ -70,9 +70,10 @@ const Employees = () => {
         .then(res => {
       
           toast.success(res.data.msg)
-          setEmployeesCreated(employeeCreated === false ? true : false)
+          
           if (res.data.status === true) {
             setOpenEmployeeModal(false)
+            setEmployeesCreated(employeeCreated === false ? true : false)
           }
           if(res.data.error){
             toast.error(res.data.error)
@@ -118,7 +119,6 @@ const Employees = () => {
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
       .then(res => {
         setEmployeesData(res.data.result)
-        setEmployeesCreated(employeeCreated === false ? true : false)
 
       }).catch(err => {
         console.log(err);
@@ -492,18 +492,7 @@ const Employees = () => {
             </Grid>
 
 
-            <Grid container spacing={2} >
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel>Profile Picture <RequiredStar /> </FormLabel>
-                <input type="file"
-                  name="employee_picture"
-                  value={formKi.values.employee_picture}
-                  onChange={formKi.handleChange}
-                />
-              </Grid>
-
-            </Grid>
+            
 
 
             <Box mt={2}>

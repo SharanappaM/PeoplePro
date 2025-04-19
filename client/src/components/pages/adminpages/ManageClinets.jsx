@@ -327,7 +327,7 @@ const ManageClinets = () => {
                             </Grid>
 
                             <Grid item mt={2} lg={4}>
-                                <FormLabel>Profile Picture <RequiredStar /> </FormLabel>
+                                <FormLabel>Profile Picture </FormLabel>
                                 <input type="file"
                                     name="client_picture"
                                     value={formKi.values.client_picture}

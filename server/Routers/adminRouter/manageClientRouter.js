@@ -13,7 +13,7 @@ username VARCHAR(45) NOT NULL,
 password VARCHAR(45) NOT NULL, 
 contact_number  VARCHAR(45) NOT NULL, 
 gender  VARCHAR(45) NOT NULL, 
-client_picture  VARCHAR(45)  NOT NULL, 
+client_picture  VARCHAR(45)   NULL, 
 country  VARCHAR(45)  NULL, 
 address  VARCHAR(85)  NULL, 
 city  VARCHAR(45)  NULL, 
@@ -36,7 +36,7 @@ con.query(createClientTable, (err, result)=>{
 
 
 router.post("/createClient", (req, res)=>{
-    const q = "INSERT INTO clients (`first_name`,`last_name`,`password`,`contact_number`,`gender`,`email`,`username`,`client_picture`) VALUES (?,?,?,?,?,?,?,?)"
+    const q = "INSERT INTO clients (`first_name`,`last_name`,`password`,`contact_number`,`gender`,`email`,`username`) VALUES (?,?,?,?,?,?,?)"
     const VALIUES = [
         req.body.first_name,
         req.body.last_name,
@@ -45,7 +45,6 @@ router.post("/createClient", (req, res)=>{
         req.body.gender,
         req.body.email,
         req.body.username,
-        req.body.client_picture,
     ]
 
     con.query(q, VALIUES, (err, result)=>{

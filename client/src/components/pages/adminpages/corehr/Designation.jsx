@@ -80,7 +80,7 @@ const Designation = () => {
       department_name: null,
 
       designation_name: null,
-      description: null
+ 
     },
     onSubmit: (values) => {
       axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createDesignation`, values)
@@ -151,18 +151,7 @@ const Designation = () => {
 
               />
             </Box>
-            <Box sx={{ mt: 2 }}>
-              <FormLabel>Description</FormLabel>
-              <TextField
-                placeholder="Enter description"
-                size="small"
-                fullWidth
-                name='description'
-                value={formKi.values.description}
-                onChange={formKi.handleChange}
-
-              />
-            </Box>
+          
 
             <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
               <Button type='submit' variant="contained" >
