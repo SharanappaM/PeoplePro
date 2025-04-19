@@ -38,7 +38,7 @@ const EmpLeaveRequest = () => {
 
 
   const getLeaveList = () => {
-    axios.get(`http://localhost:8787/auth/listLeaveRequests/${loggedEmpData}`)
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listLeaveRequests/${loggedEmpData}`)
       .then(res => {
          
         setLeaveList(res.data);
@@ -110,7 +110,7 @@ const EmpLeaveRequest = () => {
 
       }
       axios
-        .post(`http://localhost:8787/auth/createLeave`, formadat)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createLeave`, formadat)
         .then((response) => {
            
           toast.success(response.data.msg)

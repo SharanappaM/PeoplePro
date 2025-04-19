@@ -30,7 +30,7 @@ const Designation = () => {
 
 
   const getByDepartmetName = () => {
-    axios.get("http://localhost:8787/auth/getByDepartmentName")
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getByDepartmentName`)
       .then(res => {
          
         setDepartmentName(res.data.getDepartment_name);
@@ -42,7 +42,7 @@ const Designation = () => {
   }
 
   const getByDepartmets = () => {
-    axios.get("http://localhost:8787/auth/listDesignations")
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listDesignations`)
       .then(res => {
          
         setDesignationData(res.data.result);
@@ -57,7 +57,7 @@ const Designation = () => {
   const handelDeleteAlltDesignations=()=>{
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all designations?")
     if(ifUserConfirmed){
-    axios.delete("http://localhost:8787/auth/deleteAllDesignations")
+    axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/auth/deleteAllDesignations`)
     .then(res=>{
        
       toast.success(res.data.msg)
@@ -83,7 +83,7 @@ const Designation = () => {
       description: null
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createDesignation", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createDesignation`, values)
         .then(res => {
           toast.success(res.data.msg)
           setAddedDesignation(addedDesignation === false ? true : false)

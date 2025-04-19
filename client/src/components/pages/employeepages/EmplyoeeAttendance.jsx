@@ -46,7 +46,7 @@ const EmplyoeeAttendance = () => {
 
 
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
          
@@ -61,7 +61,7 @@ const EmplyoeeAttendance = () => {
 
 
   const getDepartmentData = async () => {
-    await axios.get(`http://localhost:8787/auth/attendanceList/${loggedEmpData}`)
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/attendanceList/${loggedEmpData}`)
       .then(res => {
         setAttendanceList(res.data.result)
          
@@ -92,7 +92,7 @@ const EmplyoeeAttendance = () => {
         emplyoee_name: loggedEmpData
       }
       axios
-        .post(`http://localhost:8787/auth/addemployeeattendance/${loggedEmpData}`, formadat)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addemployeeattendance/${loggedEmpData}`, formadat)
         .then((response) => {
            
           toast.success(response.data.msg)

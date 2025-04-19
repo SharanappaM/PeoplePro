@@ -6,7 +6,7 @@ export const sendLoginPostRequest = createAsyncThunk(
     "post/sendLoginPostRequest",
     async (requestData, {rejectWithValue})=>{
         try{
-            const response = await axios.post("http://localhost:8787/auth/employeelogin", requestData);
+            const response = await axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, requestData);
           
          
            

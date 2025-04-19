@@ -50,7 +50,7 @@ function Dashboard(props) {
     }, [])
 
     const handleLogout = ()=>{
-        axios.get("http://localhost:8787/auth/logout")
+        axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/logout`)
         .then(res=>{
            
           if(res.data.Status){

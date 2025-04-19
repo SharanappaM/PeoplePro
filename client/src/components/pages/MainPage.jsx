@@ -73,7 +73,7 @@ const MainPage = () => {
     const employeeData = localStorage.getItem("employeeData")
     const parsedEmployeeData = JSON.parse(employeeData)
     const first_name = (parsedEmployeeData?.first_name);
-    axios.get(`http://localhost:8787/auth/listTasks/${first_name}`)
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks/${first_name}`)
       .then(res => {
         const tasks = res.data.result;
         setLengthOfTasks(res.data.result?.length);
@@ -106,7 +106,7 @@ const MainPage = () => {
         console.log(err);
 
       })
-    axios.get(`http://localhost:8787/auth/listProjects/${first_name}`)
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects/${first_name}`)
       .then(res => {
         const projects = res.data.result;
         setLengthOfProject(res.data.result?.length);

@@ -6,7 +6,7 @@ export const sendLoginPostRequestForAdmin = createAsyncThunk(
     "post/sendLoginPostRequestForAdmin",
     async (requestData, {rejectWithValue})=>{
         try{
-            const response = await axios.post("http://localhost:8787/auth/adminlogin", requestData);
+            const response = await axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, requestData);
        
           
            

@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const fetchEmployeesData = createAsyncThunk(
   'employee/fetchEmployeesData',
   async () => {
-    const response = await fetch("http://localhost:8787/auth/listEmployees");
+    const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`);
     if (!response.ok) { // Fix the condition to check for errors
       throw new Error('Failed to fetch employee data');
     }

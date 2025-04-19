@@ -59,7 +59,7 @@ const ManageClinets = () => {
             client_picture: null
         },
         onSubmit: (values) => {
-            axios.post("http://localhost:8787/auth/createClient", values)
+            axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createClient`, values)
                 .then(res => {
                     if (res.data.msg === "Query Error") {
                         toast.error("Same Erro Ouccred")

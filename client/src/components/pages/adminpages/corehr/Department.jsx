@@ -23,7 +23,7 @@ const Department = () => {
 
 
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
          
@@ -37,7 +37,7 @@ const Department = () => {
   }
 
   const getListDepartments = async () => {
-    await axios.get("http://localhost:8787/auth/listDepartments")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listDepartments`)
       .then(res => {
         setDepartmentList(res.data)
         setAddedDepartment(addedDepartment === false ? true : false)
@@ -55,7 +55,7 @@ const Department = () => {
   const handelDeleteAlltDepartments = () => {
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all departments?")
     if(ifUserConfirmed){
-      axios.delete("http://localhost:8787/auth/deleteAlltDepartments")
+      axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/auth/deleteAlltDepartments`)
       .then(res => {
         toast.success(res.data.msg)
         setAddedDepartment(addedDepartment === false ? true : false)
@@ -80,7 +80,7 @@ const Department = () => {
     onSubmit: (values) => {
  
       axios
-        .post('http://localhost:8787/auth/department', values)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/department`, values)
         .then((response) => {
            
           toast.success(response.data.msg)

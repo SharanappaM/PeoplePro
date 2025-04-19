@@ -111,7 +111,7 @@ const Projects = () => {
   }, [projects]);
 
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
       
@@ -179,7 +179,7 @@ const Projects = () => {
       description: null,
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createProject", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createProject`, values)
         .then(res => {
       
           toast.success(res.data.msg);
@@ -206,7 +206,7 @@ const Projects = () => {
       status: '',
     },
     onSubmit: (values) => {
-      axios.put(`http://localhost:8787/auth/updateProject/${selectedProjectId}`, values)
+      axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/auth/updateProject/${selectedProjectId}`, values)
         .then(res => {
        
           toast.success(res.data.msg);
@@ -285,7 +285,7 @@ const Projects = () => {
   const handleDeleteAllProjects = () => {
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all projects?")
     if(ifUserConfirmed){
-    axios.delete("http://localhost:8787/auth/deleteAllProjects")
+    axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/auth/deleteAllProjects`)
       .then(res => {
         toast.success(res.data.msg)
         setAddedProject(addedProject === false ? true : false)
@@ -305,7 +305,7 @@ const Projects = () => {
   useEffect(() => {
     if (selectedProjectId) {
       // Fetch task details from the backend when a task ID is selected
-      axios.get(`http://localhost:8787/auth/listProjectsById/${selectedProjectId}`)
+      axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjectsById/${selectedProjectId}`)
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
 

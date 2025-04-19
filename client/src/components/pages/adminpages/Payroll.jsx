@@ -116,7 +116,8 @@ const Payroll = () => {
         // Add more columns as needed
     ];
     const getEmployeeData = () => {
-        axios.get("http://localhost:8787/auth/listEmployees")
+       
+        axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
             .then(res => {
                 setEmployeesData(res.data.result)
         

@@ -24,7 +24,7 @@ const ManualAttendance = () => {
 
 
   const getDepartmentData = async () => {
-    await axios.get("http://localhost:8787/auth/attendanceList")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/attendanceList`)
       .then(res => {
         setAttendanceList(res.data.result)
         console.log(res.data.result);
@@ -37,7 +37,7 @@ const ManualAttendance = () => {
 
   }
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
         console.log(res.data.employeeNames);
@@ -61,7 +61,7 @@ const ManualAttendance = () => {
       // Handle form submission
       console.log('Form submitted with values:', values);
       axios
-        .post('http://localhost:8787/auth/departments', values)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/departments`, values)
         .then((response) => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
@@ -87,7 +87,7 @@ const ManualAttendance = () => {
       // Handle form submission
       console.log('Form submitted with values:', values);
       axios
-        .post('http://localhost:8787/auth/addemplyoeeattendance', values)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addemplyoeeattendance`, values)
         .then((response) => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)

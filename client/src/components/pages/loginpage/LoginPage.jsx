@@ -38,7 +38,7 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:8787/verify')
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/verify`)
     .then(result => {
       if(result.data.Status) {
         if(result.data.role === "admin") {
@@ -60,7 +60,7 @@ const LoginPage = () => {
   
 
     if (loginTab === "Admin") {
-      axios.post("http://localhost:8787/auth/adminlogin", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, values)
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
@@ -79,7 +79,7 @@ const LoginPage = () => {
 
     }
     if (loginTab === "Employee") {
-      axios.post("http://localhost:8787/auth/employeelogin", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, values)
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")

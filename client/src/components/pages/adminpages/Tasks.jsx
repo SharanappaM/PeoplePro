@@ -50,7 +50,7 @@ const Tasks = () => {
 
 
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNames(res.data.employeeNames)
    
@@ -63,7 +63,7 @@ const Tasks = () => {
 
   }
   const getProjectsNames = async () => {
-    await axios.get("http://localhost:8787/auth/getByProjectName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getByProjectName`)
       .then(res => {
         setProjectsNames(res.data.projectNames)
 
@@ -136,7 +136,7 @@ const Tasks = () => {
       description: null,
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/createTasks", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createTasks`, values)
         .then(res => {
           if (res.data.status === 500) {
             toast.error("Error while creating task")
@@ -170,7 +170,7 @@ const Tasks = () => {
       status: '',
     },
     onSubmit: (values) => {
-      axios.put(`http://localhost:8787/auth/updateTask/${selectedTaskId}`, values)
+      axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/auth/updateTask/${selectedTaskId}`, values)
         .then(res => {
           toast.success(res.data.msg);
           setOpenEditTaskModal(false);
@@ -189,7 +189,7 @@ const Tasks = () => {
   useEffect(() => {
     if (selectedTaskId) {
       // Fetch task details from the backend when a task ID is selected
-      axios.get(`http://localhost:8787/auth/listTasksById/${selectedTaskId}`)
+      axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasksById/${selectedTaskId}`)
         .then(res => {
           const task = res.data; // Assuming the API returns the task data
           setTasksList1(task); // Set the task data to local state
@@ -282,7 +282,7 @@ const Tasks = () => {
   const handleDeleteAllTasks = () => {
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all tasks?")
     if(ifUserConfirmed){
-    axios.delete("http://localhost:8787/auth/deleteAllTasks")
+    axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/auth/deleteAllTasks`)
       .then(res => {
         toast.success(res.data.msg)
         setAddedTask(addedTask === false ? true : false)

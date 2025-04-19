@@ -36,7 +36,7 @@ const LeaveRequest = () => {
   const [reloadTheTableWhenChanged, setreLoadTheTableWhenChanged] = useState(false)
 
   const getLeaveList = () => {
-    axios.get(`http://localhost:8787/auth/listLeaveRequests`)
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listLeaveRequests`)
       .then(res => {
          
         setLeaveList(res.data.result);
@@ -49,7 +49,7 @@ const LeaveRequest = () => {
 
   const handleApproveLeave = async (leaveId, status) => {
     try {
-      const response = await axios.put(`http://localhost:8787/auth/updateLeaveStatus/${leaveId}`, {
+      const response = await axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/auth/updateLeaveStatus/${leaveId}`, {
         leave_status: status // "Approved" or "Rejected"
       });
 
@@ -161,7 +161,7 @@ const LeaveRequest = () => {
 
       }
       axios
-        .post(`http://localhost:8787/auth/createLeave`, formadat)
+        .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createLeave`, formadat)
         .then((response) => {
           toast.success(response.data.msg)
           setOpenCreateProjectModal(false)
@@ -176,7 +176,7 @@ const LeaveRequest = () => {
 
 
   const getEmployeesNameData = async () => {
-    await axios.get("http://localhost:8787/auth/getEmployeesName")
+    await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
       

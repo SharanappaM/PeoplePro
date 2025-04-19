@@ -66,7 +66,7 @@ const Employees = () => {
       employee_picture: null
     },
     onSubmit: (values) => {
-      axios.post("http://localhost:8787/auth/addEmployees", values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addEmployees`, values)
         .then(res => {
       
           toast.success(res.data.msg)
@@ -88,7 +88,7 @@ const Employees = () => {
 
 
   const getByDepartmetName = () => {
-    axios.get("http://localhost:8787/auth/getByDepartmentName")
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getByDepartmentName`)
       .then(res => {
          
         setDepartmentName(res.data.getDepartment_name);
@@ -102,7 +102,7 @@ const Employees = () => {
 
 
   const getByDesignationName = () => {
-    axios.get("http://localhost:8787/auth/getBydesignationName")
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getBydesignationName`)
       .then(res => {
          
         setDesignationName(res.data.designation_name);
@@ -115,7 +115,7 @@ const Employees = () => {
 
 
   const getEmployeeData = () => {
-    axios.get("http://localhost:8787/auth/listEmployees")
+    axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
       .then(res => {
         setEmployeesData(res.data.result)
         setEmployeesCreated(employeeCreated === false ? true : false)
@@ -188,7 +188,7 @@ const Employees = () => {
     const ifUserConfirmed  = window.confirm("Are you sure you want to delete all employees?")
     if(ifUserConfirmed){
 
-      axios.delete("http://localhost:8787/auth/deleteAllEmployees")
+      axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/auth/deleteAllEmployees`)
       .then(res => {
         toast.success(res.data.msg)
         setEmployeesCreated(employeeCreated === false ? true : false)
