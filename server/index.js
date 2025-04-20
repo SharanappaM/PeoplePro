@@ -151,6 +151,11 @@ app.get('/verify', verifyUser, (req, res) => {
     return res.json({ Status: true, role: req.role, id: req.id });
 });
 
+
+app.get("/testingserver", (req, res) => {
+    res.json({ message: "Server is up and running!" });
+});
+
 // Start Server
 app.listen(8787, () => {
     console.log("Server Connected on port 8787");
