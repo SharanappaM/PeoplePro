@@ -60,7 +60,9 @@ const LoginPage = () => {
   
 
     if (loginTab === "Admin") {
-      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, values,{
+        withCredentials: true
+      })
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
@@ -79,7 +81,9 @@ const LoginPage = () => {
 
     }
     if (loginTab === "Employee") {
-      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, values)
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, values,{
+        withCredentials: true
+      })
         .then(res => {
           if (res.data.loginStatus) {
             navigate("/dashboard")
