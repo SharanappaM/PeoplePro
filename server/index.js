@@ -79,8 +79,6 @@
 //     console.log("Server Connected");
 // });
 
-
-
 import express from "express";
 import cors from "cors";
 import { employeeRouters } from "./Routers/adminRouter/EmployeeRoutes.js";
@@ -100,17 +98,27 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-// CORS middleware should be the first one
+// CORS Middleware Setup - Applied before any routes
 app.use(cors({
-    origin: ["http://localhost:5173", "https://people-pro.netlify.app"],
-    methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"],
-    credentials: true,
+    origin: ["http://localhost:5173", "https://people-pro.netlify.app"], // Allow these origins
+    methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"], // Allow these HTTP methods
+    credentials: true,  // Enable cookies
 }));
 
-app.use(express.json());  // Middleware to parse incoming requests as JSON
-app.use(cookieParser());  // Middleware for parsing cookies
+// Handle OPTIONS preflight requests
+app.options('*', (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.sendStatus(200);  // Respond with status 200 for OPTIONS request
+});
 
-// Define your routes after CORS middleware
+// Middleware to parse JSON and cookies
+app.use(express.json());
+app.use(cookieParser());
+
+// Define Routes
 app.use("/auth", employeeRouters);
 app.use("/auth", departmentRouters);
 app.use("/auth", designationRouter);
@@ -123,16 +131,9 @@ app.use("/auth", employeeAttendanceRouter);
 app.use("/auth", emplyoeeLoginRouter);
 app.use("/auth", leaveRequestsRouter);
 
-// Handle the CORS preflight request (OPTIONS)
-app.options('*', cors({
-    origin: ["http://localhost:5173", "https://people-pro.netlify.app"],
-    methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"],
-    credentials: true,
-}));
-
-// Verify JWT token for protected routes
+// Verify User Token Middleware
 const verifyUser = (req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.cookies.token;  // Retrieve token from cookies
     if (token) {
         Jwt.verify(token, "jwt_secret_key", (err, decoded) => {
             if (err) return res.json({ Status: false, Error: "Wrong Token" });
@@ -145,13 +146,12 @@ const verifyUser = (req, res, next) => {
     }
 };
 
-// Protected route for verifying user
+// Protected Route: /verify
 app.get('/verify', verifyUser, (req, res) => {
     return res.json({ Status: true, role: req.role, id: req.id });
 });
 
+// Start Server
 app.listen(8787, () => {
-    console.log("Server Connected");
+    console.log("Server Connected on port 8787");
 });
-
-
