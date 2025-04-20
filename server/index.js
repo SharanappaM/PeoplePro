@@ -29,7 +29,7 @@ app.get("/getData", (req, res) => {
 
 
 app.use(cors({
-    origin:["http://localhost:5173"],
+    origin:["http://localhost:5173", "https://people-pro.netlify.app"],
     methods:["POST", "GET", "DELETE", "PUT"],
     credentials:true
 }))
