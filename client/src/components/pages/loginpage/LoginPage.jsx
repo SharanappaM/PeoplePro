@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import authImg from "../../../assets/img-auth-big.jpg";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -13,12 +13,14 @@ const ButtonsLoginAs = styled(Button)({
   textTransform: "capitalize"
 
 });
+
 const LoginPage = () => {
 
 
   const [loginTab, setLoginTab] = useState("Admin")
 
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -39,32 +41,34 @@ const LoginPage = () => {
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/verify`)
-    .then(result => {
-      if(result.data.Status) {
-        if(result.data.role === "admin") {
-          navigate('/dashboard')
+      .then(result => {
+        if (result.data.Status) {
+          if (result.data.role === "admin") {
+            navigate('/dashboard')
+          } else {
+            navigate('/dashboard')
+          }
         } else {
-          navigate('/dashboard')
-        }
-      }else{
-        navigate('/')
+          navigate('/')
 
-      }
-    }).catch(err =>console.log(err))
+        }
+      }).catch(err => console.log(err))
   }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
 
-  
+    setLoading(true); 
 
     if (loginTab === "Admin") {
-      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, values,{
+  
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/adminlogin`, values, {
         withCredentials: true
       })
         .then(res => {
           if (res.data.loginStatus) {
+      
             navigate("/dashboard")
             localStorage.setItem("valid", true)
             localStorage.setItem("role", res.data.role)
@@ -77,11 +81,14 @@ const LoginPage = () => {
           }
         })
         .catch(error => console.log(error))
+        .finally(() => {
+          setLoading(false); // Stop loading whether success or fail
+        });
 
 
     }
     if (loginTab === "Employee") {
-      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, values,{
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/employeelogin`, values, {
         withCredentials: true
       })
         .then(res => {
@@ -98,7 +105,9 @@ const LoginPage = () => {
           }
         })
         .catch(error => console.log(error))
-
+        .finally(() => {
+          setLoading(false); // Stop loading whether success or fail
+        });
 
     }
 
@@ -110,7 +119,7 @@ const LoginPage = () => {
 
   return (
     <div>
-        <ToastContainer position='bottom-right' />
+      <ToastContainer position='bottom-right' />
       <Box display="flex" height="100vh" >
         {/* position="relative" */}
 
@@ -145,10 +154,10 @@ const LoginPage = () => {
         <Box
           sx={{
             width: {
-              lg:"35%",
-              xs:"100%",
-              sm:"80%",
-              md:"60%"
+              lg: "35%",
+              xs: "100%",
+              sm: "80%",
+              md: "60%"
 
             },
             padding: 3,
@@ -174,7 +183,7 @@ const LoginPage = () => {
                 autoComplete="off"
                 sx={{ width: '100%' }} // Ensures the stack stretches to fill its parent
               >
-             
+
 
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <AccountCircleIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
@@ -186,8 +195,9 @@ const LoginPage = () => {
                 </Box>
               </Stack>
               <Button fullWidth type='submit' sx={{ mt: 2 }} color='primary' variant='contained'>
-                Submit
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
               </Button>
+              
 
 
 
@@ -197,25 +207,25 @@ const LoginPage = () => {
                 disableElevation
                 variant="outlined"
                 aria-label="Disabled button group"
-                sx={{ 
-                  display:"flex",
-                  alignSelf:"center",
-                 }}
+                sx={{
+                  display: "flex",
+                  alignSelf: "center",
+                }}
               >
 
                 <ButtonsLoginAs onClick={() => {
                   setLoginTab("Admin")
                   setValues({
-                    email:"sharan@gmail.com",
-                    password:"sharan@123"
+                    email: "sharan@gmail.com",
+                    password: "sharan@123"
                   })
-                
+
                 }} fullWidth>Default Admin</ButtonsLoginAs>
-                <ButtonsLoginAs onClick={() =>{
-                   setLoginTab("Employee")
-                   setValues({
-                    email:"basava@gmail.com",
-                    password:"basava@123"
+                <ButtonsLoginAs onClick={() => {
+                  setLoginTab("Employee")
+                  setValues({
+                    email: "basava@gmail.com",
+                    password: "basava@123"
                   })
                 }} fullWidth>Default Employee</ButtonsLoginAs>
                 {/* <ButtonsLoginAs onClick={() => setLoginTab("Client")} fullWidth>Client</ButtonsLoginAs> */}

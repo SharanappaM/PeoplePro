@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { toast, ToastContainer } from 'react-toastify';
 import { customStyles } from '../../ReactDataTableStyle';
+import LoadingComponent from '../../../layouts/LoadingComponent';
 
 const Designation = () => {
   const [designationData, setDesignationData] = useState([]);
@@ -13,7 +14,7 @@ const Designation = () => {
   const [depratmentName, setDepartmentName] = useState([])
   const [addedDesignation, setAddedDesignation] = useState(false)
 
-
+  const [loading , setLoading] = useState(false)
   const columns = [
     {
       name: 'Department',
@@ -42,13 +43,15 @@ const Designation = () => {
   }
 
   const getByDepartmets = () => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listDesignations`)
       .then(res => {
          
         setDesignationData(res.data.result);
-
+        setLoading(false)
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
   }
@@ -83,13 +86,16 @@ const Designation = () => {
  
     },
     onSubmit: (values) => {
+      setLoading(true)
       axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createDesignation`, values)
         .then(res => {
           toast.success(res.data.msg)
+          setLoading(false)
           setAddedDesignation(addedDesignation === false ? true : false)
 
         }).catch(err => {
           console.log(err);
+          setLoading(false)
         })
 
     }
@@ -161,78 +167,81 @@ const Designation = () => {
           </form>
         </Card>
 
-        <Card sx={{ width: {
-          lg:"60%",
-          xs:"100%",
-          sm:"80%",
-          md:"70%"
-
-        },  padding: 2 }}>
-          <Typography variant="h6" mb={2}>Designation List</Typography>
-          <Divider />
-
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{
-              display:{
-                xs:"none",
-                lg:"block",
-                sm:"none",
-                md:"block"
-              }
-            }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
-                onChange={(e) => setEntries(e.target.value)}
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
+       
+        {
+          loading ? <LoadingComponent/> : <Card sx={{ width: {
+            lg:"60%",
+            xs:"100%",
+            sm:"80%",
+            md:"70%"
+  
+          },  padding: 2 }}>
+            <Typography variant="h6" mb={2}>Designation List</Typography>
+            <Divider />
+  
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box sx={{
+                display:{
+                  xs:"none",
+                  lg:"block",
+                  sm:"none",
+                  md:"block"
+                }
+              }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Show</Typography>
+                <Select
+                  value={entries}
+                  onChange={(e) => setEntries(e.target.value)}
+                  size="small"
+                  sx={{ ml: 1 }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+                </Select>
+                <Typography sx={{ ml: 1 }}>entries</Typography>
+              </Box>
+              </Box>
+           
+  
+             <Box  sx={{
+                display:{
+                  xs:"none",
+                  lg:"block",
+                  sm:"none",
+                  md:"block"
+                }
+              }}>
+             <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Search</Typography>
+                <TextField
+                  size="small"
+                  sx={{ ml: 1 }}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  variant="outlined"
+                />
+              </Box>
+             </Box>
+  
+  
+              <Button variant='outlined' onClick={handelDeleteAlltDesignations}>Delete All Designations</Button>
+  
             </Box>
-            </Box>
-         
-
-           <Box  sx={{
-              display:{
-                xs:"none",
-                lg:"block",
-                sm:"none",
-                md:"block"
-              }
-            }}>
-           <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                variant="outlined"
+  
+            <Box sx={{ mt: 2 }}>
+              <DataTable
+                columns={columns}
+                // data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+                data={designationData}
+                pagination
+                paginationPerPage={entries}
+                customStyles={customStyles}
               />
             </Box>
-           </Box>
-
-
-            <Button variant='outlined' onClick={handelDeleteAlltDesignations}>Delete All Designations</Button>
-
-          </Box>
-
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={data.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={designationData}
-              pagination
-              paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
+          </Card>
+        }
       </Box>
     </>
   );

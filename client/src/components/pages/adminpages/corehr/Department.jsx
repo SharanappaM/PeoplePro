@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDepartmentData } from '../../../redux/features/employee/departmentSlice';
+import LoadingComponent from '../../../layouts/LoadingComponent';
 
 const Department = () => {
 
@@ -18,34 +19,36 @@ const Department = () => {
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [departmentList, setDepartmentList] = useState([])
   const [addedDepartment, setAddedDepartment] = useState(false)
-
+  const [loading , setLoading] = useState(false)
 
 
 
   const getEmployeesNameData = async () => {
+   
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNameData(res.data.employeeNames)
-         
+       
 
       }).catch(err => {
         console.log(err);
-
+       
       })
 
 
   }
 
   const getListDepartments = async () => {
+    setLoading(true)
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listDepartments`)
       .then(res => {
         setDepartmentList(res.data)
-        setAddedDepartment(addedDepartment === false ? true : false)
-
+        // setAddedDepartment(addedDepartment === false ? true : false)
+        setLoading(false)
 
       }).catch(err => {
         console.log(err);
-
+        setLoading(false)
       })
 
 
@@ -78,16 +81,18 @@ const Department = () => {
     },
 
     onSubmit: (values) => {
- 
+      setLoading(true)
       axios
         .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/department`, values)
         .then((response) => {
            
           toast.success(response.data.msg)
+          setLoading(false)
           setAddedDepartment(addedDepartment === false ? true : false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
+          setLoading(false)
         });
     },
   });
@@ -192,6 +197,8 @@ const Department = () => {
 
         </Card>
 
+       {
+        loading ? <LoadingComponent/> :
         <Card sx={{ width: {
           lg:"60%",
           xs:"100%",
@@ -230,6 +237,7 @@ const Department = () => {
             />
           </Box>
         </Card>
+       }
       </Box>
     </>
   );

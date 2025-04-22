@@ -10,6 +10,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClientData } from '../../redux/features/employee/clientSlice';
 import { ModalStyle } from '../ModalStyle';
+import LoadingComponent from '../../layouts/LoadingComponent';
 
 
 const style = {
@@ -32,7 +33,8 @@ const ManageClinets = () => {
 
     const dispatch = useDispatch();
 
-    const { clientList, loading, error } = useSelector((state) => state.clints)
+    const { clientList, error } = useSelector((state) => state.clints)
+    const [loading,  setLoading] = useState(false)
 
 
 
@@ -59,6 +61,7 @@ const ManageClinets = () => {
             client_picture: null
         },
         onSubmit: (values) => {
+            setLoading(true)
             axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createClient`, values)
                 .then(res => {
                     if (res.data.msg === "Query Error") {
@@ -66,6 +69,7 @@ const ManageClinets = () => {
                     }
                
                     toast.success(res.data.msg)
+                    setLoading(false)
                     setClientCreated(clientCreated === false ? true : false)
 
                     if (res.data.status === true) {
@@ -75,7 +79,7 @@ const ManageClinets = () => {
 
                 }).catch(err => {
                     console.log(err);
-
+                    setLoading(false)
                 })
         }
     })
@@ -140,7 +144,10 @@ const ManageClinets = () => {
     return (
         <>
             <ToastContainer position='bottom-right' />
-            <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
+            {
+                loading ? <LoadingComponent/> :
+<Box>
+<Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
                 <Typography variant="h6" mb={2}>List All Clients</Typography>
                 <Divider />
 
@@ -349,6 +356,9 @@ const ManageClinets = () => {
 
                 </Box>
             </Modal>
+</Box>
+            }
+           
         </>
     )
 }

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { customStyles } from '../ReactDataTableStyle';
 import { toast, ToastContainer } from 'react-toastify';
+import LoadingComponent from '../../layouts/LoadingComponent';
 
 
 const style = {
@@ -26,6 +27,7 @@ const Payroll = () => {
     const [emplyoeeBasicSalary, setEmplyoeeBasicSalary] = useState(null)
     const [employeeId, setEmployeeId] = useState(null)
     const [paymentSuccess, setPaymentSuccess] = useState(false)
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -116,15 +118,15 @@ const Payroll = () => {
         // Add more columns as needed
     ];
     const getEmployeeData = () => {
-       
+       setLoading(true)
         axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
             .then(res => {
                 setEmployeesData(res.data.result)
-        
+                setLoading(false)
 
             }).catch(err => {
                 console.log(err);
-
+                setLoading(false)
             })
 
 
@@ -136,7 +138,11 @@ const Payroll = () => {
     return (
         <>
             <ToastContainer position='bottom-right' />
-            <Card sx={{ padding: 2 }}>
+            
+
+            {
+                loading ? <LoadingComponent/> :
+                <Card sx={{ padding: 2 }}>
                 <Typography variant="h6" mb={2}>Emplyoees List</Typography>
                 <Divider />
 
@@ -179,6 +185,7 @@ const Payroll = () => {
                     />
                 </Box>
             </Card>
+             }
 
 
             <Modal

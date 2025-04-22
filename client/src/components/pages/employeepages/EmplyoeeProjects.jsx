@@ -19,6 +19,7 @@ import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { ModalStyle } from '../ModalStyle';
+import LoadingComponent from '../../layouts/LoadingComponent';
 
 const style = {
   position: 'absolute',
@@ -38,7 +39,7 @@ const EmplyoeeProjects = () => {
 
   const dispatch = useDispatch();
 
-  const { projects, loading, error } = useSelector((state) => state.project)
+  const { projects, error } = useSelector((state) => state.project)
 
 
   const [addedProject, setAddedProject] = useState(false);
@@ -47,6 +48,7 @@ const EmplyoeeProjects = () => {
   const [openEditProjectModal, setOpenEditProjectModal] = useState(false)
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [projectList, setProjectList] = useState([])
+  const [loading2, setLoading2] = useState(false);
 
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [totalClientList, setTotalClientList] = useState([])
@@ -153,9 +155,11 @@ const EmplyoeeProjects = () => {
     if (loggedEmployeeData) {
 
       const getProjectList = async () => {
+        setLoading2(true)
         await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listProjects/${loggedEmployeeData}`)
           .then(res => {
             const tasks = res.data.result;
+            setLoading2(false)
             setProjectList(tasks)
 
 
@@ -184,6 +188,7 @@ const EmplyoeeProjects = () => {
 
           }).catch(err => {
             console.log(err);
+            setLoading2(false)
 
           })
 
@@ -211,15 +216,18 @@ const EmplyoeeProjects = () => {
       description: null,
     },
     onSubmit: (values) => {
+      setLoading2(true)
       axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createProject`, values)
         .then(res => {
            
           toast.success(res.data.msg);
+          setLoading2(false)
           setOpenCreateProjectModal(false)
           setAddedProject(addedProject === false ? true : false)
 
         }).catch(err => {
           console.log(err);
+          setLoading2(false)
 
         })
     }
@@ -467,7 +475,8 @@ const EmplyoeeProjects = () => {
  <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}> Add  </Button>
           </Box>
 
-          <Box sx={{ mt: 2 }}>
+          {
+            loading2 ? <LoadingComponent/> :<Box sx={{ mt: 2 }}>
             <DataTable
               columns={columns}
               // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
@@ -477,6 +486,7 @@ const EmplyoeeProjects = () => {
               customStyles={customStyles}
             />
           </Box>
+          }
         </Card>
 
       </Box>
@@ -669,7 +679,10 @@ const EmplyoeeProjects = () => {
 
         </Box>
       </Modal>
-      <Modal
+
+      {
+        loading2 ? <LoadingComponent/> : 
+        <Modal
         open={openCreateProjectModal}
         onClose={() => setOpenCreateProjectModal(false)}
         aria-labelledby="modal-modal-title"
@@ -835,6 +848,8 @@ const EmplyoeeProjects = () => {
 
         </Box>
       </Modal>
+      }
+   
     </Box>
   )
 }

@@ -435,10 +435,12 @@ function Dashboard(props) {
                     ml: { sm: `${drawerWidth}px` },
                 }}
             >
-                <Toolbar sx={{
+                {/* <Toolbar sx={{
                     display: "flex",
-                    alignSelf: "end"
+                    
                 }}>
+
+                    <img src={logo} alt="" width={150} />
 
                     <IconButton
                         color="inherit"
@@ -481,7 +483,52 @@ function Dashboard(props) {
 
                  
 
-                </Toolbar>
+                </Toolbar> */}
+
+<Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+    {/* Left: Logo */}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box  sx={{ mr: 2, display: { sm: 'none' } }}>
+        <img src={logo} alt="Logo" width={150} />
+        </Box>
+      
+    </Box>
+
+    {/* Right: Menu Icon (for mobile), Logout, and Avatar */}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+        {/* Menu icon - visible only on small screens */}
+        <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+        >
+            <MenuIcon />
+        </IconButton>
+
+        {/* Logout button with icon */}
+        <Tooltip title="Logout">
+            <IconButton onClick={() => {
+                navigate("/");
+                localStorage.removeItem("adminData");
+                localStorage.removeItem("employeeData");
+                localStorage.removeItem("role");
+                handleLogout();
+            }}>
+                <Logout sx={{ color: "white", mr: 3, fontSize: "28px" }} />
+            </IconButton>
+        </Tooltip>
+
+        {/* Avatar/Profile Link */}
+        <Tooltip title="Account settings">
+            <IconButton component={Link} to="profilePage">
+                <Avatar src="/broken-image.jpg" />
+            </IconButton>
+        </Tooltip>
+    </Box>
+</Toolbar>
+
 
 
             </AppBar>

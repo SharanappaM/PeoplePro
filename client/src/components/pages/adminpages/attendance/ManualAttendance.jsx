@@ -8,6 +8,7 @@ import { useFormik } from "formik"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RequiredStar from '../../../RequiredStar';
+import LoadingComponent from '../../../layouts/LoadingComponent';
 
 
 
@@ -22,15 +23,18 @@ const ManualAttendance = () => {
 
   const [openAddAttendanceModal, setOpenAttendenceModal] = useState(false)
 
-
+  const [loading , setLoading] = useState(false)
   const getDepartmentData = async () => {
+    setLoading(true)
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/attendanceList`)
       .then(res => {
         setAttendanceList(res.data.result)
         console.log(res.data.result);
+        setLoading(false)
 
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
 
@@ -85,17 +89,20 @@ const ManualAttendance = () => {
 
     onSubmit: (values) => {
       // Handle form submission
+      setLoading(true)
       console.log('Form submitted with values:', values);
       axios
         .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addemplyoeeattendance`, values)
         .then((response) => {
           // console.log('Employee added successfully', response);
           toast.success(response.data.msg)
+          setLoading(false)
           setEmployeesName(employeesName === false ? true : false)
           setOpenAttendenceModal(false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
+          setLoading(false)
         });
     },
   });
@@ -206,57 +213,60 @@ const ManualAttendance = () => {
 
         </Card>
 
+       {
+        loading ? <LoadingComponent/> :
         <Card sx={{ width: {
-         lg:"60%",
-         xs:"100%",
-         sm:"80%",
-         md:"70%"
-        }, padding: 2 }}>
-          <Typography variant="h6" mb={2}>View Attendance</Typography>
-          <Divider />
-
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-
-
-
-
-           <Box  sx={{
-              display:{
-                xs:"none",
-                lg:"block",
-                sm:"none",
-                md:"block"
-              }
-            }}>
-           <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                placeholder='search departments'
-                sx={{ ml: 1 }}
-                value={searchTerm}
-
-                variant="outlined"
-              />
+          lg:"60%",
+          xs:"100%",
+          sm:"80%",
+          md:"70%"
+         }, padding: 2 }}>
+           <Typography variant="h6" mb={2}>View Attendance</Typography>
+           <Divider />
+ 
+           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+ 
+ 
+ 
+ 
+            <Box  sx={{
+               display:{
+                 xs:"none",
+                 lg:"block",
+                 sm:"none",
+                 md:"block"
+               }
+             }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+               <Typography>Search</Typography>
+               <TextField
+                 size="small"
+                 placeholder='search departments'
+                 sx={{ ml: 1 }}
+                 value={searchTerm}
+ 
+                 variant="outlined"
+               />
+             </Box>
             </Box>
+ 
+             <Button onClick={() => setOpenAttendenceModal(true)} variant='outlined'>Add Attendance</Button>
+ 
+ 
            </Box>
-
-            <Button onClick={() => setOpenAttendenceModal(true)} variant='outlined'>Add Attendance</Button>
-
-
-          </Box>
-
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={epartmentData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={attendanceList}
-              pagination
-              paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
+ 
+           <Box sx={{ mt: 2 }}>
+             <DataTable
+               columns={columns}
+               // data={epartmentData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+               data={attendanceList}
+               pagination
+               paginationPerPage={entries}
+               customStyles={customStyles}
+             />
+           </Box>
+         </Card>
+       }
       </Box>
 
 

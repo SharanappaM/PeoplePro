@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import axios, { } from "axios"
 import { customStyles } from '../../ReactDataTableStyle';
+import LoadingComponent from '../../../layouts/LoadingComponent';
 
 
 
@@ -15,16 +16,18 @@ const OrganizationChart = () => {
   const [employeeCreated, setEmployeesCreated] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [loading , setLoading] = useState(false)
 
   const getEmployeeData = () => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
       .then(res => {
         setEmployeesData(res.data.result)
-         
+        setLoading(false)
 
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
 
@@ -117,16 +120,18 @@ const OrganizationChart = () => {
 
         </Box>
 
-        <Box sx={{ mt: 2 }}>
-          <DataTable
-            columns={columns}
-            // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-            data={employeesData}
-            pagination
-            paginationPerPage={entries}
-            customStyles={customStyles}
-          />
-        </Box>
+       {
+        loading ? <LoadingComponent/> : <Box sx={{ mt: 2 }}>
+        <DataTable
+          columns={columns}
+          // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+          data={employeesData}
+          pagination
+          paginationPerPage={entries}
+          customStyles={customStyles}
+        />
+      </Box>
+       }
       </Card>
 
 

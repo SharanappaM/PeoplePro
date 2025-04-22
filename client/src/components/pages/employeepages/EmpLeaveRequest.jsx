@@ -13,6 +13,7 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import StreamIcon from '@mui/icons-material/Stream';
+import LoadingComponent from '../../layouts/LoadingComponent';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -30,21 +31,23 @@ const style = {
 const EmpLeaveRequest = () => {
 
   const [employeesName, setEmployeesName] = useState(false)
-  const { loading, data, error } = useSelector((state) => state.post);
+  const { data, error } = useSelector((state) => state.post);
 
   const [loggedEmpData, setLoggedEmpData] = useState(null)
 
   const [leaveList, setLeaveList] = useState([])
 
-
+  const [loading, setLoading] = useState(false)
   const getLeaveList = () => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listLeaveRequests/${loggedEmpData}`)
       .then(res => {
-         
-        setLeaveList(res.data);
 
+        setLeaveList(res.data);
+        setLoading(false)
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
   }
@@ -109,15 +112,18 @@ const EmpLeaveRequest = () => {
         leave_status: "Pending",
 
       }
+      setLoading(true)
       axios
         .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createLeave`, formadat)
         .then((response) => {
-           
+
           toast.success(response.data.msg)
+          setLoading(false)
           setEmployeesName(employeesName === false ? true : false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
+          setLoading(false)
         });
     },
   });
@@ -373,26 +379,30 @@ const EmpLeaveRequest = () => {
       </Box>
 
 
-      <Box mt={2}>
 
-        <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '78vw' }, padding: 2 }}>
-          <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
-          <Divider />
+      {
+        loading ? <LoadingComponent /> : <Box mt={2}>
+
+          <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '78vw' }, padding: 2 }}>
+            <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
+            <Divider />
 
 
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={leaveList}
-              pagination
-              // paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
+            <Box sx={{ mt: 2 }}>
+              <DataTable
+                columns={columns}
+                // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+                data={leaveList}
+                pagination
+                // paginationPerPage={entries}
+                customStyles={customStyles}
+              />
+            </Box>
+          </Card>
 
-      </Box>
+        </Box>
+      }
+
 
 
 

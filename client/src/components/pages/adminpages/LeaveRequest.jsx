@@ -9,6 +9,7 @@ import { customStyles } from '../ReactDataTableStyle';
 import RequiredStar from '../../RequiredStar';
 import { useSelector } from 'react-redux';
 import { ModalStyle } from '../ModalStyle';
+import LoadingComponent from '../../layouts/LoadingComponent';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -26,7 +27,7 @@ const style = {
 const LeaveRequest = () => {
 
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false)
-  const { loading, data, error } = useSelector((state) => state.post);
+  const [loading , setLoading] = useState(false)
 
   const [loggedEmpData, setLoggedEmpData] = useState(null)
 
@@ -36,13 +37,16 @@ const LeaveRequest = () => {
   const [reloadTheTableWhenChanged, setreLoadTheTableWhenChanged] = useState(false)
 
   const getLeaveList = () => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listLeaveRequests`)
       .then(res => {
          
         setLeaveList(res.data.result);
+        setLoading(false)
 
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
   }
@@ -220,210 +224,219 @@ const LeaveRequest = () => {
 
       <ToastContainer position='bottom-right' />
 
-      <Box m={2}>
+      {
+        loading ? <LoadingComponent/> :
 
-        <Card sx={{ width: { xs: '85vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
-          <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
-          <Divider />
+        <Box>
+              <Box m={2}>
 
-
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Box sx={{
-              display: {
-                xs: "none",
-                lg: "block"
-              }
-            }}>
-               <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                // value={entries}
-
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
-            </Box>
-            </Box>
-            <Box sx={{
-              display: {
-                xs: "none",
-                lg: "block"
-              }
-            }}>
-                 <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                // value={searchTerm}
-
-                variant="outlined"
-              />
-            </Box>
-            </Box>
-           
-
-         
-
-            <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}>Apply Leave </Button>
-          </Box>
+<Card sx={{ width: { xs: '85vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
+  <Typography variant="h6" mb={2}>Total Applied Leaves</Typography>
+  <Divider />
 
 
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={leaveList}
-              pagination
-              // paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
+  <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <Box sx={{
+      display: {
+        xs: "none",
+        lg: "block"
+      }
+    }}>
+       <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Typography>Show</Typography>
+      <Select
+        // value={entries}
 
-      </Box>
-
-
-
-      <Modal
-        open={openCreateProjectModal}
-        onClose={() => setOpenCreateProjectModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        size="small"
+        sx={{ ml: 1 }}
       >
+        <MenuItem value={10}>10</MenuItem>
+        <MenuItem value={50}>50</MenuItem>
+        <MenuItem value={100}>100</MenuItem>
+      </Select>
+      <Typography sx={{ ml: 1 }}>entries</Typography>
+    </Box>
+    </Box>
+    <Box sx={{
+      display: {
+        xs: "none",
+        lg: "block"
+      }
+    }}>
+         <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Typography>Search</Typography>
+      <TextField
+        size="small"
+        sx={{ ml: 1 }}
+        // value={searchTerm}
 
-        <Card sx={ModalStyle}>
-          <Typography variant="h6" mb={2}>Apply Leave </Typography>
-          <Divider />
+        variant="outlined"
+      />
+    </Box>
+    </Box>
+   
 
-          <form action="" onSubmit={formik.handleSubmit} >
+ 
 
-
-
-            <Grid container spacing={2}  >
-              <Grid item mt={2} lg={6}>
-                <FormLabel>Employee Name or Id<RequiredStar /> </FormLabel>
-                <Select
-                  labelId="department-select-label"
-                  id="department-select"
-                  fullWidth
-                  size="small"
-                  name='employee_name'
-                  onChange={formik.handleChange}
-                  value={formik.values.employee_name}
-
-                >
-
-                  {employeesNameData.map((items, index) => (
-                    <MenuItem key={index} value={items}>{items}</MenuItem>
-                  ))}
-
-                </Select>
-              </Grid>
+    <Button variant='outlined' onClick={() => setOpenCreateProjectModal(true)}>Apply Leave </Button>
+  </Box>
 
 
-              <Grid item mt={2} lg={6}>
-                <FormLabel>Leave Type</FormLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  name='leave_type'
-                  displayEmpty
-                  value={formik.values.leave_type}
-                  onChange={formik.handleChange}
-                >
-                  <MenuItem value="" disabled>Choose..</MenuItem>
-                  <MenuItem value="Casual Leave">Casual Leave</MenuItem>
-                  <MenuItem value="Compensatory Off">Compensatory Off</MenuItem>
-                  <MenuItem value="Sick Leave">Sick Leave</MenuItem>
-                  <MenuItem value="Leave Without Pay">Leave Without Pay</MenuItem>
-                </Select>
-              </Grid>
+  <Box sx={{ mt: 2 }}>
+    <DataTable
+      columns={columns}
+      // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+      data={leaveList}
+      pagination
+      // paginationPerPage={entries}
+      customStyles={customStyles}
+    />
+  </Box>
+</Card>
+
+</Box>
 
 
 
+<Modal
+open={openCreateProjectModal}
+onClose={() => setOpenCreateProjectModal(false)}
+aria-labelledby="modal-modal-title"
+aria-describedby="modal-modal-description"
+>
 
-            </Grid>
-            <Grid container spacing={2}  >
-              <Grid item mt={2} lg={6}>
-                <FormLabel> From<RequiredStar /> </FormLabel>
-                <TextField
-                  // placeholder="Enter firstname"
-                  size="small"
-                  fullWidth
-                  name="from_date"
-                  type='date'
-                  value={formik.values.from_date}
-                  onChange={formik.handleChange}
-                />
-              </Grid>
-              <Grid item mt={2} lg={6}>
-                <FormLabel> To<RequiredStar /> </FormLabel>
-                <TextField
-                  // placeholder="Enter firstname"
-                  size="small"
-                  fullWidth
-                  name="to_date"
-                  type='date'
-                  value={formik.values.to_date}
-                  onChange={formik.handleChange}
-                />
-              </Grid>
+<Card sx={ModalStyle}>
+  <Typography variant="h6" mb={2}>Apply Leave </Typography>
+  <Divider />
 
-            </Grid>
+  <form action="" onSubmit={formik.handleSubmit} >
 
 
 
-            <Grid container spacing={2}  >
-              <Grid item mt={2} lg={6}>
-                <FormLabel>Reason for leave</FormLabel>
-                <TextField
+    <Grid container spacing={2}  >
+      <Grid item mt={2} lg={6}>
+        <FormLabel>Employee Name or Id<RequiredStar /> </FormLabel>
+        <Select
+          labelId="department-select-label"
+          id="department-select"
+          fullWidth
+          size="small"
+          name='employee_name'
+          onChange={formik.handleChange}
+          value={formik.values.employee_name}
 
-                  size="small"
-                  placeholder='Enter here...'
-                  fullWidth
-                  name="reason_for_leave"
-                  type='text'
-                  value={formik.values.reason_for_leave}
-                  onChange={formik.handleChange}
-                />
-              </Grid>
-              <Grid item mt={2} lg={6}>
-                <FormLabel>Team Email Id</FormLabel>
-                <TextField
+        >
 
-                  size="small"
-                  placeholder='Enter here...'
-                  fullWidth
-                  name="team_email_id"
-                  type='text'
-                  value={formik.values.team_email_id}
-                  onChange={formik.handleChange}
-                />
-              </Grid>
+          {employeesNameData.map((items, index) => (
+            <MenuItem key={index} value={items}>{items}</MenuItem>
+          ))}
+
+        </Select>
+      </Grid>
 
 
-
-            </Grid>
+      <Grid item mt={2} lg={6}>
+        <FormLabel>Leave Type</FormLabel>
+        <Select
+          fullWidth
+          size="small"
+          name='leave_type'
+          displayEmpty
+          value={formik.values.leave_type}
+          onChange={formik.handleChange}
+        >
+          <MenuItem value="" disabled>Choose..</MenuItem>
+          <MenuItem value="Casual Leave">Casual Leave</MenuItem>
+          <MenuItem value="Compensatory Off">Compensatory Off</MenuItem>
+          <MenuItem value="Sick Leave">Sick Leave</MenuItem>
+          <MenuItem value="Leave Without Pay">Leave Without Pay</MenuItem>
+        </Select>
+      </Grid>
 
 
 
 
-            <Box mt={2}>
-              <Button variant='contained'>Reset</Button>
-              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
-            </Box>
+    </Grid>
+    <Grid container spacing={2}  >
+      <Grid item mt={2} lg={6}>
+        <FormLabel> From<RequiredStar /> </FormLabel>
+        <TextField
+          // placeholder="Enter firstname"
+          size="small"
+          fullWidth
+          name="from_date"
+          type='date'
+          value={formik.values.from_date}
+          onChange={formik.handleChange}
+        />
+      </Grid>
+      <Grid item mt={2} lg={6}>
+        <FormLabel> To<RequiredStar /> </FormLabel>
+        <TextField
+          // placeholder="Enter firstname"
+          size="small"
+          fullWidth
+          name="to_date"
+          type='date'
+          value={formik.values.to_date}
+          onChange={formik.handleChange}
+        />
+      </Grid>
 
-          </form>
+    </Grid>
 
 
-        </Card>
-      </Modal>
+
+    <Grid container spacing={2}  >
+      <Grid item mt={2} lg={6}>
+        <FormLabel>Reason for leave</FormLabel>
+        <TextField
+
+          size="small"
+          placeholder='Enter here...'
+          fullWidth
+          name="reason_for_leave"
+          type='text'
+          value={formik.values.reason_for_leave}
+          onChange={formik.handleChange}
+        />
+      </Grid>
+      <Grid item mt={2} lg={6}>
+        <FormLabel>Team Email Id</FormLabel>
+        <TextField
+
+          size="small"
+          placeholder='Enter here...'
+          fullWidth
+          name="team_email_id"
+          type='text'
+          value={formik.values.team_email_id}
+          onChange={formik.handleChange}
+        />
+      </Grid>
+
+
+
+    </Grid>
+
+
+
+
+    <Box mt={2}>
+      <Button variant='contained'>Reset</Button>
+      <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+    </Box>
+
+  </form>
+
+
+</Card>
+</Modal>
+        </Box>
+
+      }
+
+  
 
 
 

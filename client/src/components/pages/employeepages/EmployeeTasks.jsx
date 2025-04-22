@@ -17,6 +17,8 @@ import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import { ModalStyle } from '../ModalStyle';
+import LoadingComponent from '../../layouts/LoadingComponent';
+
 
 
 
@@ -36,6 +38,7 @@ const style = {
 
 const EmployeeTasks = () => {
   const [addedTask, setAddedTask] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [openCreateTaskModal, setOpenCreateTaskModal] = useState(false)
@@ -88,7 +91,7 @@ const EmployeeTasks = () => {
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/getEmployeesName`)
       .then(res => {
         setEmployeesNames(res.data.employeeNames)
-         
+
 
       }).catch(err => {
         console.log(err);
@@ -117,7 +120,7 @@ const EmployeeTasks = () => {
       const parsedEmployeeData = JSON.parse(employeeData1);
       if (parsedEmployeeData && parsedEmployeeData.first_name) {
         setLoggedEmployeeData(parsedEmployeeData.first_name);
-       
+
       }
     }
 
@@ -129,17 +132,19 @@ const EmployeeTasks = () => {
 
 
 
-    useEffect(() => {
+  useEffect(() => {
     if (loggedEmployeeData) {
       const getTasksList = async () => {
+        setLoading(true)
         try {
           const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listTasks/${loggedEmployeeData}`);
           setTasksList(res.data.result);
           //   // Debugging log
           const tasks = res.data.result;
           setTasksList(tasks);
-  
-  
+          setLoading(false)
+
+
           const completedTasks = tasks.filter(task => {
             const status = task.status?.toLowerCase();
             return status === 'completed' || status === 'Completed';  // Match both "Completed" and "Completed"
@@ -156,14 +161,15 @@ const EmployeeTasks = () => {
             const status = onHold.status?.toLowerCase();
             return status === 'on hold' || status === 'on hold';  // Match both "Completed" and "Completed"
           }).length;
-  
-  
+
+
           setCompleted(completedTasks);
           setProgress(progressTasks);
           setOnHold(onHoldTasks);
           setNotStated(notStatedTasks);
         } catch (err) {
           console.log(err);
+          setLoading(false)
         }
       };
 
@@ -172,7 +178,7 @@ const EmployeeTasks = () => {
 
 
     projectDashboardCountData();
-  }, [loggedEmployeeData , addedTask]); // Dependency on loggedEmployeeData
+  }, [loggedEmployeeData, addedTask]); // Dependency on loggedEmployeeData
 
 
 
@@ -196,13 +202,14 @@ const EmployeeTasks = () => {
       description: null,
     },
     onSubmit: (values) => {
+
       axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/createTasks`, values)
         .then(res => {
           if (res.data.status === 500) {
             toast.error("Error while creating task")
           }
 
-           
+
           toast.success(res.data.msg);
 
           setOpenCreateTaskModal(false)
@@ -214,7 +221,7 @@ const EmployeeTasks = () => {
         })
     }
   })
- 
+
 
   const formKiForEditProject = useFormik({
     initialValues: {
@@ -232,7 +239,7 @@ const EmployeeTasks = () => {
     onSubmit: (values) => {
       axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/auth/updateTask/${selectedTaskId}`, values)
         .then(res => {
-           
+
           toast.success(res.data.msg);
           setOpenEditTaskModal(false);
           setAddedTask(addedTask === false ? true : false)
@@ -317,7 +324,7 @@ const EmployeeTasks = () => {
       selector: (row) => row.priority,
       sortable: true,
     },
-   
+
     {
       name: 'Status',
       selector: (row) => row.status,
@@ -357,6 +364,8 @@ const EmployeeTasks = () => {
 
   return (
     <Box>
+
+
       <ToastContainer position='bottom-right' />
       <Box>
         <Grid container spacing={4}>
@@ -424,245 +433,252 @@ const EmployeeTasks = () => {
         </Grid>
 
       </Box>
-      <Box mt={4}>
 
-        <Card sx={{  width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
-          <Typography variant="h6" mb={2}>List All Task</Typography>
-          <Divider />
+      {
+        loading ? <LoadingComponent /> :
+          <Box>
+            <Box mt={4}>
 
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-           
-            <Box  sx={{
-              display:{
-                xs:"none",
-                lg:"block",
-                sm:"none",
-                md:"block"
-              }
-            }}>
-               <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
+              <Card sx={{ width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }, padding: 2 }}>
+                <Typography variant="h6" mb={2}>List All Task</Typography>
+                <Divider />
 
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
+                <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+
+                  <Box sx={{
+                    display: {
+                      xs: "none",
+                      lg: "block",
+                      sm: "none",
+                      md: "block"
+                    }
+                  }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography>Show</Typography>
+                      <Select
+                        value={entries}
+
+                        size="small"
+                        sx={{ ml: 1 }}
+                      >
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={50}>50</MenuItem>
+                        <MenuItem value={100}>100</MenuItem>
+                      </Select>
+                      <Typography sx={{ ml: 1 }}>entries</Typography>
+                    </Box>
+
+                  </Box>
+                  <Box sx={{
+                    display: {
+                      xs: "none",
+                      lg: "block",
+                      sm: "none",
+                      md: "block"
+                    }
+                  }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography>Search</Typography>
+                      <TextField
+                        size="small"
+                        sx={{ ml: 1 }}
+                        value={searchTerm}
+
+                        variant="outlined"
+                      />
+                    </Box>
+                  </Box>
+
+
+                  <Button variant='outlined' onClick={() => setOpenCreateTaskModal(true)}> Add  </Button>
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                  <DataTable
+                    columns={columns}
+                    // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+                    data={tasksList}
+                    pagination
+                    paginationPerPage={entries}
+                    customStyles={customStyles}
+                  />
+                </Box>
+              </Card>
+
             </Box>
 
-            </Box>
-            <Box  sx={{
-              display:{
-                xs:"none",
-                lg:"block",
-                sm:"none",
-                md:"block"
-              }
-            }}>
- <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Search</Typography>
-              <TextField
-                size="small"
-                sx={{ ml: 1 }}
-                value={searchTerm}
 
-                variant="outlined"
-              />
-            </Box>
-            </Box>
-           
+            <Modal
+              open={openCreateTaskModal}
+              onClose={() => setOpenCreateTaskModal(false)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
 
-            <Button variant='outlined' onClick={() => setOpenCreateTaskModal(true)}> Add  </Button>
+              <Box sx={ModalStyle}>
+                <form action="" onSubmit={formki.handleSubmit} >
+                  <Typography>Add New Task</Typography>
+
+
+                  <Grid container spacing={2}  >
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Title<RequiredStar /> </FormLabel>
+                      <TextField
+                        placeholder="Enter title"
+                        size="small"
+                        fullWidth
+                        name="title"
+                        value={formki.values.title}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Project <RequiredStar /> </FormLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        name='project'
+                        displayEmpty
+                        value={formki.values.project}
+                        onChange={formki.handleChange}
+                      >
+                        {projectNames.map((items, index) => (
+                          <MenuItem key={index} value={items}>{items}</MenuItem>
+                        ))}
+
+
+                      </Select>
+                    </Grid>
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Priority <RequiredStar /> </FormLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        name='priority'
+                        displayEmpty
+                        value={formki.values.priority}
+                        onChange={formki.handleChange}
+                      >
+                        <MenuItem value="High">High</MenuItem>
+                        <MenuItem value="noraml">Noraml</MenuItem>
+                        <MenuItem value="Low">Low</MenuItem>
+                      </Select>
+                    </Grid>
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Estimated Hour<RequiredStar /> </FormLabel>
+                      <TextField
+                        placeholder="Enter estimated hour"
+                        size="small"
+                        fullWidth
+                        name="estimated_hour"
+                        value={formki.values.estimated_hour}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container spacing={2} >
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Start Date<RequiredStar /> </FormLabel>
+                      <TextField
+                        type='date'
+                        size="small"
+                        fullWidth
+                        name="start_date"
+                        value={formki.values.start_date}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> End Date <RequiredStar /> </FormLabel>
+                      <TextField
+                        type='date'
+                        size="small"
+                        fullWidth
+                        name="end_date"
+                        value={formki.values.end_date}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Summary<RequiredStar /> </FormLabel>
+                      <TextField
+                        placeholder="Enter summary"
+                        type='text'
+                        size="small"
+                        fullWidth
+                        name="summary"
+                        value={formki.values.summary}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+                  </Grid>
+
+
+
+                  <Grid container spacing={2}  >
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Team <RequiredStar /> </FormLabel>
+                      <Select
+                        fullWidth
+                        size="small"
+                        name='team'
+                        displayEmpty
+                        value={formki.values.team}
+                        onChange={formki.handleChange}
+                      >
+                        {employeesNames.map((items, index) => (
+                          <MenuItem key={index} value={items}>{items}</MenuItem>
+                        ))}
+
+
+                      </Select>
+                    </Grid>
+
+
+                    <Grid item mt={2} lg={4}>
+                      <FormLabel> Description </FormLabel>
+                      <TextField
+                        placeholder="Enter title"
+                        size="small"
+                        fullWidth
+                        name="description"
+                        value={formki.values.description}
+                        onChange={formki.handleChange}
+                      />
+                    </Grid>
+
+
+
+
+                  </Grid>
+
+                  <Box mt={2}>
+                    <Button variant='contained'>Reset</Button>
+                    <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
+                  </Box>
+
+
+
+
+                </form>
+
+              </Box>
+            </Modal>
           </Box>
+      }
 
-          <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={tasksList}
-              pagination
-              paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
-        </Card>
-
-      </Box>
-
-
-      <Modal
-        open={openCreateTaskModal}
-        onClose={() => setOpenCreateTaskModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-
-        <Box sx={ModalStyle}>
-          <form action="" onSubmit={formki.handleSubmit} >
-            <Typography>Add New Task</Typography>
-
-
-            <Grid container spacing={2}  >
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Title<RequiredStar /> </FormLabel>
-                <TextField
-                  placeholder="Enter title"
-                  size="small"
-                  fullWidth
-                  name="title"
-                  value={formki.values.title}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Project <RequiredStar /> </FormLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  name='project'
-                  displayEmpty
-                  value={formki.values.project}
-                  onChange={formki.handleChange}
-                >
-                  {projectNames.map((items, index) => (
-                    <MenuItem key={index} value={items}>{items}</MenuItem>
-                  ))}
-
-
-                </Select>
-              </Grid>
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Priority <RequiredStar /> </FormLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  name='priority'
-                  displayEmpty
-                  value={formki.values.priority}
-                  onChange={formki.handleChange}
-                >
-                  <MenuItem value="High">High</MenuItem>
-                  <MenuItem value="noraml">Noraml</MenuItem>
-                  <MenuItem value="Low">Low</MenuItem>
-                </Select>
-              </Grid>
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Estimated Hour<RequiredStar /> </FormLabel>
-                <TextField
-                  placeholder="Enter estimated hour"
-                  size="small"
-                  fullWidth
-                  name="estimated_hour"
-                  value={formki.values.estimated_hour}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2} >
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Start Date<RequiredStar /> </FormLabel>
-                <TextField
-                  type='date'
-                  size="small"
-                  fullWidth
-                  name="start_date"
-                  value={formki.values.start_date}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> End Date <RequiredStar /> </FormLabel>
-                <TextField
-                  type='date'
-                  size="small"
-                  fullWidth
-                  name="end_date"
-                  value={formki.values.end_date}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Summary<RequiredStar /> </FormLabel>
-                <TextField
-                  placeholder="Enter summary"
-                  type='text'
-                  size="small"
-                  fullWidth
-                  name="summary"
-                  value={formki.values.summary}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-            </Grid>
-
-
-
-            <Grid container spacing={2}  >
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Team <RequiredStar /> </FormLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  name='team'
-                  displayEmpty
-                  value={formki.values.team}
-                  onChange={formki.handleChange}
-                >
-                  {employeesNames.map((items, index) => (
-                    <MenuItem key={index} value={items}>{items}</MenuItem>
-                  ))}
-
-
-                </Select>
-              </Grid>
-
-
-              <Grid item mt={2} lg={4}>
-                <FormLabel> Description </FormLabel>
-                <TextField
-                  placeholder="Enter title"
-                  size="small"
-                  fullWidth
-                  name="description"
-                  value={formki.values.description}
-                  onChange={formki.handleChange}
-                />
-              </Grid>
-
-
-
-
-            </Grid>
-
-            <Box mt={2}>
-              <Button variant='contained'>Reset</Button>
-              <Button type='submit' variant='contained' sx={{ ml: 5 }}>Save</Button>
-            </Box>
-
-
-
-
-          </form>
-
-        </Box>
-      </Modal>
 
 
 

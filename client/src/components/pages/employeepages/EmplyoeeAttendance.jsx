@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { customStyles } from '../ReactDataTableStyle';
 import RequiredStar from '../../RequiredStar';
 import { useSelector } from 'react-redux';
+import LoadingComponent from '../../layouts/LoadingComponent';
 
 
 const style = {
@@ -32,10 +33,10 @@ const EmplyoeeAttendance = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [employeesNameData, setEmployeesNameData] = useState([])
   const [employeesName, setEmployeesName] = useState(false)
-  const { loading, data, error } = useSelector((state) => state.post);
+  const {  data, error } = useSelector((state) => state.post);
   const [loggedEmpData ,setLoggedEmpData] = useState(null)
 
-  
+  const [loading , setLoading] = useState(false)
   
 
 
@@ -61,13 +62,16 @@ const EmplyoeeAttendance = () => {
 
 
   const getDepartmentData = async () => {
+    setLoading(true)
     await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/attendanceList/${loggedEmpData}`)
       .then(res => {
         setAttendanceList(res.data.result)
+        setLoading(false)
          
 
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
 
@@ -91,15 +95,18 @@ const EmplyoeeAttendance = () => {
         ...values,
         emplyoee_name: loggedEmpData
       }
+      setLoading(true)
       axios
         .post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addemployeeattendance/${loggedEmpData}`, formadat)
         .then((response) => {
            
           toast.success(response.data.msg)
+          setLoading(false)
           setEmployeesName(employeesName === false ? true : false)
         })
         .catch((error) => {
           console.error('Error adding employee', error);
+          setLoading(false)
         });
     },
   });
@@ -277,16 +284,19 @@ const EmplyoeeAttendance = () => {
 
           </Box>
 
+        {
+          loading ? <LoadingComponent/> :
           <Box sx={{ mt: 2 }}>
-            <DataTable
-              columns={columns}
-              // data={epartmentData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-              data={attendanceList}
-              pagination
-              paginationPerPage={entries}
-              customStyles={customStyles}
-            />
-          </Box>
+          <DataTable
+            columns={columns}
+            // data={epartmentData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+            data={attendanceList}
+            pagination
+            paginationPerPage={entries}
+            customStyles={customStyles}
+          />
+        </Box>
+        }
         </Card>
       </Box>
 

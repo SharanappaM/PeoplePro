@@ -10,6 +10,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployeesData } from '../../redux/features/employee/employeeSlice';
 import { ModalStyle } from '../ModalStyle';
+import LoadingComponent from '../../layouts/LoadingComponent';
 
 
 const style = {
@@ -40,11 +41,13 @@ const Employees = () => {
   const [departmentName, setDepartmentName] = useState([]);
   const [designationName, setDesignationName] = useState([]);
   const [entries, setEntries] = useState(10);
+  const [loading , setLoading ] = useState(false)
  
 
   const [openEmployeeModal, setOpenEmployeeModal] = React.useState(false);
   const handleOpenEmployeeModal = () => setOpenEmployeeModal(true);
   const handleCloseEmployeeModal = () => setOpenEmployeeModal(false);
+
 
 
   const formKi = useFormik({
@@ -66,10 +69,13 @@ const Employees = () => {
       employee_picture: null
     },
     onSubmit: (values) => {
+      setLoading(true)
       axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/addEmployees`, values)
         .then(res => {
+          
       
           toast.success(res.data.msg)
+          setLoading(false)
           
           if (res.data.status === true) {
             setOpenEmployeeModal(false)
@@ -82,6 +88,7 @@ const Employees = () => {
 
         }).catch(err => {
           console.log(err);
+          setLoading(false)
 
         })
     }
@@ -116,12 +123,15 @@ const Employees = () => {
 
 
   const getEmployeeData = () => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/auth/listEmployees`)
       .then(res => {
+       
         setEmployeesData(res.data.result)
-
+        setLoading(false)
       }).catch(err => {
         console.log(err);
+        setLoading(false)
 
       })
 
@@ -206,57 +216,63 @@ const Employees = () => {
   return (
     <>
       <ToastContainer position='bottom-right' />
-      <Card sx={{
-        width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }
-        , padding: 2
-      }}>
-        <Typography variant="h6" mb={2}>List All Employees</Typography>
-        <Divider />
+      
 
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{
-            display: {
-              xs: "none",
-              xl: "block",
-              lg: "block",
-            }
-          }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>Show</Typography>
-              <Select
-                value={entries}
-
-                size="small"
-                sx={{ ml: 1 }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <Typography sx={{ ml: 1 }}>entries</Typography>
+      {
+        loading ? <LoadingComponent/> : 
+       <Box>
+         <Card sx={{
+          width: { xs: '93vw', sm: '70vw', md: '50vw', lg: '70vw', xl: '75vw' }
+          , padding: 2
+        }}>
+          <Typography variant="h6" mb={2}>List All Employees</Typography>
+          <Divider />
+  
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{
+              display: {
+                xs: "none",
+                xl: "block",
+                lg: "block",
+              }
+            }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography>Show</Typography>
+                <Select
+                  value={entries}
+  
+                  size="small"
+                  sx={{ ml: 1 }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+                </Select>
+                <Typography sx={{ ml: 1 }}>entries</Typography>
+              </Box>
+  
+  
             </Box>
-
-
+  
+            <Button variant='outlined' onClick={handleOpenEmployeeModal}> Add Employees </Button>
+            <Button variant='outlined' onClick={handleDeleteAllEmplyoess}> Delete All Employees </Button>
           </Box>
-
-          <Button variant='outlined' onClick={handleOpenEmployeeModal}> Add Employees </Button>
-          <Button variant='outlined' onClick={handleDeleteAllEmplyoess}> Delete All Employees </Button>
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <DataTable
-            columns={columns}
-            // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
-            data={employeesData}
-            pagination
-            paginationPerPage={entries}
-            customStyles={customStyles}
-          />
-        </Box>
-      </Card>
+  
+          <Box sx={{ mt: 2 }}>
+            <DataTable
+              columns={columns}
+              // data={employeesData.filter(item => item.designation.toLowerCase().includes(searchTerm.toLowerCase()))}
+              data={employeesData}
+              pagination
+              paginationPerPage={entries}
+              customStyles={customStyles}
+            />
+          </Box>
+        </Card>
 
 
-      <Modal
+
+        <Modal
         open={openEmployeeModal}
         onClose={handleCloseEmployeeModal}
         aria-labelledby="modal-modal-title"
@@ -504,6 +520,11 @@ const Employees = () => {
 
         </Box>
       </Modal>
+       </Box>
+       }
+
+
+    
     </>
   )
 }
